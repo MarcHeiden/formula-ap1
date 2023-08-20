@@ -1,0 +1,1161 @@
+openapi: "3.0.0"
+info:
+  title: F1 API
+  version: "1.0"
+tags:
+  - name: SeasonController
+  - name: RaceController
+  - name: TeamController
+  - name: DriverController
+  - name: EngineController
+  - name: TeamsPerSeasonController
+  - name: Seasons
+  - name: Races
+  - name: Qualifyings
+  - name: Teams
+  - name: Drivers
+  - name: Engines
+  - name: TeamsPerSeasons
+paths:
+  # SeasonController
+  /seasons:
+    post:
+      summary: Create season
+      tags:
+        - "Seasons"
+        - "SeasonController"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./components/schemas.yml#/Season"
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/Season"
+        422:
+          $ref: "./components/responses.yml#/422"
+        409:
+          $ref: "./components/responses.yml#/409"
+        500:
+          $ref: "./components/responses.yml#/500"
+    get:
+      summary: Get seasons / Get season by seasonYear
+      tags:
+        - "Seasons"
+        - "SeasonController"
+      parameters:
+        - $ref: "./components/parameters.yml#/seasonYear"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/Seasons"
+        400:
+          $ref: "./components/responses.yml#/400"
+        500:
+          $ref: "./components/responses.yml#/500"
+  /seasons/{seasonId}:
+    get:
+      summary: Get season
+      tags:
+        - "Seasons"
+        - "SeasonController"
+      parameters:
+        - $ref: "./components/parameters.yml#/seasonId"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/Season"
+        400:
+          $ref: "./components/responses.yml#/400"
+        404:
+          $ref: "./components/responses.yml#/404"
+        422:
+          $ref: "./components/responses.yml#/422"
+        500:
+          $ref: "./components/responses.yml#/500"
+  /seasons/{seasonId}/races:
+    post:
+      summary: Create race of a season
+      tags:
+        - "Races"
+        - "SeasonController"
+      parameters:
+        - $ref: "./components/parameters.yml#/seasonId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./components/schemas.yml#/Race"
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/Race"
+        400:
+          $ref: "./components/responses.yml#/400"
+        422:
+          $ref: "./components/responses.yml#/422"
+        409:
+          $ref: "./components/responses.yml#/409"
+        500:
+          $ref: "./components/responses.yml#/500"
+    get:
+      summary: Get races of a season / Get race of a season by raceName
+      tags:
+        - "Races"
+        - "SeasonController"
+      parameters:
+        - $ref: "./components/parameters.yml#/seasonId"
+        - $ref: "./components/parameters.yml#/raceName"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/Races"
+        400:
+          $ref: "./components/responses.yml#/400"
+        404:
+          $ref: "./components/responses.yml#/404"
+        500:
+          $ref: "./components/responses.yml#/500"
+  /seasons/{seasonId}/teams:
+    get:
+      summary: Get teams of a season
+      #/ Get team of a season by teamName
+      #description: |
+      #  - Get teams of a season
+      #  - Get team of a season by teamName
+      tags:
+        - "Teams"
+        - "SeasonController"
+      parameters:
+        - $ref: "./components/parameters.yml#/seasonId"
+        #- $ref: "./components/parameters.yml#/teamName"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/Teams"
+        400:
+          $ref: "./components/responses.yml#/400"
+        404:
+          $ref: "./components/responses.yml#/404"
+        500:
+          $ref: "./components/responses.yml#/500"
+  #/seasons/{seasonId}/teams/{teamId}:
+  #  get:
+  #    summary: Get team of a season
+  #    tags:
+  #      - "Teams"
+  #      - "SeasonController"
+  #    parameters:
+  #      - $ref: "./components/parameters.yml#/seasonId"
+  #      - $ref: "./components/parameters.yml#/teamId"
+  #    responses:
+  #      200:
+  #        description: OK
+  #        content:
+  #          application/json:
+  #            schema:
+  #              $ref: "./components/schemas.yml#/Team"
+  #      400:
+  #        $ref: "./components/responses.yml#/400"
+  #      404:
+  #        $ref: "./components/responses.yml#/404"
+  #      500:
+  #        $ref: "./components/responses.yml#/500"
+  /seasons/{seasonId}/teams/{teamId}/drivers:
+    get:
+      summary: Get drivers of a team of a season
+      tags:
+        - "Drivers"
+        - "SeasonController"
+      parameters:
+        - $ref: "./components/parameters.yml#/seasonId"
+        - $ref: "./components/parameters.yml#/teamId"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/Drivers"
+        400:
+          $ref: "./components/responses.yml#/400"
+        404:
+          $ref: "./components/responses.yml#/404"
+        500:
+          $ref: "./components/responses.yml#/500"
+  /seasons/{seasonId}/teams/{teamId}/engine:
+    get:
+      summary: Get engine of a team of a season
+      tags:
+        - "Engines"
+        - "SeasonController"
+      parameters:
+        - $ref: "./components/parameters.yml#/seasonId"
+        - $ref: "./components/parameters.yml#/teamId"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/Engine"
+        400:
+          $ref: "./components/responses.yml#/400"
+        404:
+          $ref: "./components/responses.yml#/404"
+        500:
+          $ref: "./components/responses.yml#/500"
+  /seasons/{seasonId}/drivers:
+    get:
+      summary: Get drivers of a season / Get driver of a season by driverCode
+      tags:
+        - "Drivers"
+        - "SeasonController"
+      parameters:
+        - $ref: "./components/parameters.yml#/seasonId"
+        - $ref: "./components/parameters.yml#/driverCode"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/Drivers"
+        400:
+          $ref: "./components/responses.yml#/400"
+        404:
+          $ref: "./components/responses.yml#/404"
+        500:
+          $ref: "./components/responses.yml#/500"
+  /seasons/{seasonId}/drivers/{driverId}/team:
+    get:
+      summary: Get team of a driver of a season
+      tags:
+        - "Teams"
+        - "SeasonController"
+      parameters:
+        - $ref: "./components/parameters.yml#/seasonId"
+        - $ref: "./components/parameters.yml#/driverId"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/Team"
+        400:
+          $ref: "./components/responses.yml#/400"
+        404:
+          $ref: "./components/responses.yml#/404"
+        500:
+          $ref: "./components/responses.yml#/500"
+  /seasons/{seasonId}/engines:
+    get:
+      summary: Get engines of a season
+      #/ Get engine of a season by manufacturer
+      tags:
+        - "Engines"
+        - "SeasonController"
+      parameters:
+        - $ref: "./components/parameters.yml#/seasonId"
+      #  - $ref: "./components/parameters.yml#/manufacturer"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/Engines"
+        400:
+          $ref: "./components/responses.yml#/400"
+        404:
+          $ref: "./components/responses.yml#/404"
+        500:
+          $ref: "./components/responses.yml#/500"
+  /seasons/{seasonId}/engines/{engineId}/teams:
+    get:
+      summary: Get teams which use the engine in the season
+      tags:
+        - "Teams"
+        - "SeasonController"
+      parameters:
+        - $ref: "./components/parameters.yml#/seasonId"
+        - $ref: "./components/parameters.yml#/engineId"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/Teams"
+        400:
+          $ref: "./components/responses.yml#/400"
+        404:
+          $ref: "./components/responses.yml#/404"
+        500:
+          $ref: "./components/responses.yml#/500"
+
+  # RaceController
+  /races:
+    get:
+      summary: Get races / Get races by raceName / Get race by date
+      tags:
+        - "Races"
+        - "RaceController"
+      parameters:
+        - $ref: "./components/parameters.yml#/raceName"
+        - $ref: "./components/parameters.yml#/date"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/Races"
+        400:
+          $ref: "./components/responses.yml#/400"
+        404:
+          $ref: "./components/responses.yml#/404"
+        500:
+          $ref: "./components/responses.yml#/500"
+  /races/{raceId}:
+    get:
+      summary: Get race
+      tags:
+        - "Races"
+        - "RaceController"
+      parameters:
+        - $ref: "./components/parameters.yml#/raceId"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/Race"
+        400:
+          $ref: "./components/responses.yml#/400"
+        404:
+          $ref: "./components/responses.yml#/404"
+        500:
+          $ref: "./components/responses.yml#/500"
+    patch:
+      summary: Update race
+      tags:
+        - "Races"
+        - "RaceController"
+      parameters:
+        - $ref: "./components/parameters.yml#/raceId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./components/schemas.yml#/Race"
+              #allOf:
+              #  - type: object
+              #    properties:
+              #      seasonId:
+              #        readOnly: false
+              #        allOf:
+              #          - $ref: "./components/schemas.yml#/seasonId"
+              #  - $ref: "./components/schemas.yml#/Race"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/Race"
+        400:
+          $ref: "./components/responses.yml#/400"
+        409:
+          $ref: "./components/responses.yml#/409"
+        422:
+          $ref: "./components/responses.yml#/422"
+        500:
+          $ref: "./components/responses.yml#/500"
+  /races/{raceId}/qualifying:
+    post:
+      summary: Create qualifying for a driver of a race
+      description: |
+        **Notice:** The driver must be in a team of the season to which the race belongs. <br>
+        If the driver is not a in team of the season, he can be added to a one by patching the associated `teamsPerSeason`.
+      tags:
+        - "Qualifyings"
+        - "RaceController"
+      parameters:
+        - $ref: "./components/parameters.yml#/raceId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./components/schemas.yml#/Qualifying"
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/Qualifying"
+        400:
+          $ref: "./components/responses.yml#/400"
+        422:
+          $ref: "./components/responses.yml#/422"
+        409:
+          $ref: "./components/responses.yml#/409"
+        500:
+          $ref: "./components/responses.yml#/500"
+    get:
+      summary: Get qualifying of a race / Get qualifying of a driver of a race by driverId/driverCode
+      tags:
+        - "Qualifyings"
+        - "RaceController"
+      parameters:
+        - $ref: "./components/parameters.yml#/raceId"
+        - $ref: "./components/parameters.yml#/driverIdQuery"
+        - $ref: "./components/parameters.yml#/driverCode"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/Qualifyings"
+        400:
+          $ref: "./components/responses.yml#/400"
+        404:
+          $ref: "./components/responses.yml#/404"
+        500:
+          $ref: "./components/responses.yml#/500"
+    put:
+      summary: Change qualifying for a driver of a race
+      tags:
+        - "Qualifyings"
+        - "RaceController"
+      parameters:
+        - $ref: "./components/parameters.yml#/raceId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./components/schemas.yml#/Qualifying"
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/Qualifying"
+        400:
+          $ref: "./components/responses.yml#/400"
+        422:
+          $ref: "./components/responses.yml#/422"
+        409:
+          $ref: "./components/responses.yml#/409"
+        500:
+          $ref: "./components/responses.yml#/500"
+    delete:
+      summary: Delete qualifying for a driver of the race
+      tags:
+        - "Qualifyings"
+        - "RaceController"
+      parameters:
+        - $ref: "./components/parameters.yml#/raceId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./components/schemas.yml#/Qualifying"
+      responses:
+        204:
+          $ref: "./components/responses.yml#/204"
+        400:
+          $ref: "./components/responses.yml#/400"
+        422:
+          $ref: "./components/responses.yml#/422"
+        409:
+          $ref: "./components/responses.yml#/409"
+        500:
+          $ref: "./components/responses.yml#/500"
+
+  # TeamController
+  /teams:
+    post:
+      summary: Create team
+      tags:
+        - "Teams"
+        - "TeamController"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./components/schemas.yml#/Team"
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/Team"
+        422:
+          $ref: "./components/responses.yml#/422"
+        409:
+          $ref: "./components/responses.yml#/409"
+        500:
+          $ref: "./components/responses.yml#/500"
+    get:
+      summary: Get teams / Get team by teamName
+      tags:
+        - "Teams"
+        - "TeamController"
+      parameters:
+        - $ref: "./components/parameters.yml#/teamName"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/Teams"
+        400:
+          $ref: "./components/responses.yml#/400"
+        500:
+          $ref: "./components/responses.yml#/500"
+  /teams/{teamId}:
+    get:
+      summary: Get team
+      tags:
+        - "Teams"
+        - "TeamController"
+      parameters:
+        - $ref: "./components/parameters.yml#/teamId"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/Team"
+        400:
+          $ref: "./components/responses.yml#/400"
+        404:
+          $ref: "./components/responses.yml#/404"
+        500:
+          $ref: "./components/responses.yml#/500"
+    #patch:
+    #  summary: Change teamName
+    #  tags:
+    #    - "Teams"
+    #    - "TeamController"
+    #  parameters:
+    #    - $ref: "./components/parameters.yml#/teamId"
+    #  requestBody:
+    #    required: true
+    #    content:
+    #      application/json:
+    #        schema:
+    #          type: object
+    #          properties:
+    #            teamName:
+    #              $ref: "./components/schemas.yml#/teamName"
+    #  responses:
+    #    200:
+    #      description: OK
+    #      content:
+    #        application/json:
+    #          schema:
+    #            $ref: "./components/schemas.yml#/Team"
+    #    400:
+    #      $ref: "./components/responses.yml#/400"
+    #    #409:
+    #    #  $ref: "./components/responses.yml#/409"
+    #    422:
+    #      $ref: "./components/responses.yml#/422"
+    #    500:
+    #      $ref: "./components/responses.yml#/500"
+    patch:
+      summary: Update team
+      tags:
+        - "Teams"
+        - "TeamController"
+      parameters:
+        - $ref: "./components/parameters.yml#/teamId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./components/schemas.yml#/Team"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/Team"
+        400:
+          $ref: "./components/responses.yml#/400"
+        409:
+          $ref: "./components/responses.yml#/409"
+        422:
+          $ref: "./components/responses.yml#/422"
+        500:
+          $ref: "./components/responses.yml#/500"
+  /teams/{teamId}/drivers:
+    get:
+      summary: Get all drivers a team has ever had
+      tags:
+        - "Drivers"
+        - "TeamController"
+      parameters:
+        - $ref: "./components/parameters.yml#/teamId"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/Drivers"
+        400:
+          $ref: "./components/responses.yml#/400"
+        404:
+          $ref: "./components/responses.yml#/404"
+        500:
+          $ref: "./components/responses.yml#/500"
+  /teams/{teamId}/drivers/{driverId}/seasons:
+    get:
+      summary: Get all seasons in which the driver participated in the team
+      tags:
+        - "Seasons"
+        - "TeamController"
+      parameters:
+        - $ref: "./components/parameters.yml#/teamId"
+        - $ref: "./components/parameters.yml#/driverId"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/Seasons"
+        400:
+          $ref: "./components/responses.yml#/400"
+        404:
+          $ref: "./components/responses.yml#/404"
+        500:
+          $ref: "./components/responses.yml#/500"
+  /teams/{teamId}/engines:
+    get:
+      summary: Get all engines a team has ever had
+      tags:
+        - "Engines"
+        - "TeamController"
+      parameters:
+        - $ref: "./components/parameters.yml#/teamId"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/Engines"
+        400:
+          $ref: "./components/responses.yml#/400"
+        404:
+          $ref: "./components/responses.yml#/404"
+        500:
+          $ref: "./components/responses.yml#/500"
+  /teams/{teamId}/engines/{engineId}/seasons:
+    get:
+      summary: Get all seasons in which the team used the engine
+      tags:
+        - "Seasons"
+        - "TeamController"
+      parameters:
+        - $ref: "./components/parameters.yml#/teamId"
+        - $ref: "./components/parameters.yml#/engineId"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/Seasons"
+        400:
+          $ref: "./components/responses.yml#/400"
+        404:
+          $ref: "./components/responses.yml#/404"
+        500:
+          $ref: "./components/responses.yml#/500"
+  /teams/{teamId}/seasons:
+    get:
+      summary: Get all seasons in which the team participated
+      tags:
+        - "Seasons"
+        - "TeamController"
+      parameters:
+        - $ref: "./components/parameters.yml#/teamId"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/Seasons"
+        400:
+          $ref: "./components/responses.yml#/400"
+        404:
+          $ref: "./components/responses.yml#/404"
+        500:
+          $ref: "./components/responses.yml#/500"
+
+  # DriverController
+  /drivers:
+    post:
+      summary: Create driver
+      tags:
+        - "Drivers"
+        - "DriverController"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./components/schemas.yml#/Driver"
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/Driver"
+        422:
+          $ref: "./components/responses.yml#/422"
+        409:
+          $ref: "./components/responses.yml#/409"
+        500:
+          $ref: "./components/responses.yml#/500"
+    get:
+      summary: Get drivers
+      tags:
+        - "Drivers"
+        - "DriverController"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/Drivers"
+        500:
+          $ref: "./components/responses.yml#/500"
+  /drivers/{driverId}:
+    get:
+      summary: Get driver
+      tags:
+        - "Drivers"
+        - "DriverController"
+      parameters:
+        - $ref: "./components/parameters.yml#/driverId"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/Driver"
+        400:
+          $ref: "./components/responses.yml#/400"
+        404:
+          $ref: "./components/responses.yml#/404"
+        500:
+          $ref: "./components/responses.yml#/500"
+    patch:
+      summary: Update driver
+      tags:
+        - "Drivers"
+        - "DriverController"
+      parameters:
+        - $ref: "./components/parameters.yml#/teamId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./components/schemas.yml#/Driver"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/Driver"
+        400:
+          $ref: "./components/responses.yml#/400"
+        409:
+          $ref: "./components/responses.yml#/409"
+        422:
+          $ref: "./components/responses.yml#/422"
+        500:
+          $ref: "./components/responses.yml#/500"
+  /drivers/{driverId}/teams:
+    get:
+      summary: Get all teams in which the driver was
+      tags:
+        - "Teams"
+        - "DriverController"
+      parameters:
+        - $ref: "./components/parameters.yml#/driverId"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/Teams"
+        400:
+          $ref: "./components/responses.yml#/400"
+        404:
+          $ref: "./components/responses.yml#/404"
+        500:
+          $ref: "./components/responses.yml#/500"
+  /drivers/{driverId}/seasons:
+    get:
+      summary: Get all seasons in which the driver participated
+      tags:
+        - "Seasons"
+        - "DriverController"
+      parameters:
+        - $ref: "./components/parameters.yml#/driverId"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/Seasons"
+        400:
+          $ref: "./components/responses.yml#/400"
+        404:
+          $ref: "./components/responses.yml#/404"
+        500:
+          $ref: "./components/responses.yml#/500"
+
+  # EngineController
+  /engines:
+    post:
+      summary: Create engine
+      tags:
+        - "Engines"
+        - "EngineController"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./components/schemas.yml#/Engine"
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/Engine"
+        422:
+          $ref: "./components/responses.yml#/422"
+        409:
+          $ref: "./components/responses.yml#/409"
+        500:
+          $ref: "./components/responses.yml#/500"
+    get:
+      summary: Get engines / Get engine by manufacturer
+      tags:
+        - "Engines"
+        - "EngineController"
+      parameters:
+        - $ref: "./components/parameters.yml#/manufacturer"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/Engines"
+        400:
+          $ref: "./components/responses.yml#/400"
+        500:
+          $ref: "./components/responses.yml#/500"
+  /engines/{engineId}:
+    get:
+      summary: Get engine
+      tags:
+        - "Engines"
+        - "EngineController"
+      parameters:
+        - $ref: "./components/parameters.yml#/engineId"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/Engine"
+        400:
+          $ref: "./components/responses.yml#/400"
+        404:
+          $ref: "./components/responses.yml#/404"
+        500:
+          $ref: "./components/responses.yml#/500"
+    #patch:
+    #  summary: Change manufacturer
+    #  tags:
+    #    - "Engines"
+    #    - "EngineController"
+    #  parameters:
+    #    - $ref: "./components/parameters.yml#/engineId"
+    #  requestBody:
+    #    required: true
+    #    content:
+    #      application/json:
+    #        schema:
+    #          type: object
+    #          properties:
+    #            manufacturer:
+    #              $ref: "./components/schemas.yml#/manufacturer"
+    #  responses:
+    #    200:
+    #      description: OK
+    #      content:
+    #        application/json:
+    #          schema:
+    #            $ref: "./components/schemas.yml#/Engine"
+    #    400:
+    #      $ref: "./components/responses.yml#/400"
+    #    #409:
+    #    #  $ref: "./components/responses.yml#/409"
+    #    422:
+    #      $ref: "./components/responses.yml#/422"
+    #    500:
+    #      $ref: "./components/responses.yml#/500"
+    patch:
+      summary: Update engine
+      tags:
+        - "Engines"
+        - "EngineController"
+      parameters:
+        - $ref: "./components/parameters.yml#/engineId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./components/schemas.yml#/Engine"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/Engine"
+        400:
+          $ref: "./components/responses.yml#/400"
+        409:
+          $ref: "./components/responses.yml#/409"
+        422:
+          $ref: "./components/responses.yml#/422"
+        500:
+          $ref: "./components/responses.yml#/500"
+  /engines/{engineId}/teams:
+    get:
+      summary: Get all teams which used the engine
+      tags:
+        - "Teams"
+        - "EngineController"
+      parameters:
+        - $ref: "./components/parameters.yml#/engineId"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/Teams"
+        400:
+          $ref: "./components/responses.yml#/400"
+        404:
+          $ref: "./components/responses.yml#/404"
+        500:
+          $ref: "./components/responses.yml#/500"
+  /engines/{engineId}/seasons:
+    get:
+      summary: Get all seasons in that the engine was used
+      tags:
+        - "Seasons"
+        - "EngineController"
+      parameters:
+        - $ref: "./components/parameters.yml#/engineId"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/Seasons"
+        400:
+          $ref: "./components/responses.yml#/400"
+        404:
+          $ref: "./components/responses.yml#/404"
+        500:
+          $ref: "./components/responses.yml#/500"
+
+  # TeamsPerSeasonController
+  /teamsPerSeasons:
+    post:
+      summary: Add drivers and engine to a team of a season
+      tags:
+        - "TeamsPerSeasons"
+        - "TeamsPerSeasonController"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./components/schemas.yml#/TeamsPerSeason"
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/TeamsPerSeason"
+        422:
+          $ref: "./components/responses.yml#/422"
+        409:
+          $ref: "./components/responses.yml#/409"
+        500:
+          $ref: "./components/responses.yml#/500"
+    get:
+      summary: Get teamsPerSeasons / Get teamsPerSeason by seasonId and teamId
+      tags:
+        - "TeamsPerSeasons"
+        - "TeamsPerSeasonController"
+      parameters:
+        - $ref: "./components/parameters.yml#/seasonIdQuery"
+        - $ref: "./components/parameters.yml#/teamIdQuery"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/TeamsPerSeasons"
+        400:
+          $ref: "./components/responses.yml#/400"
+        500:
+          $ref: "./components/responses.yml#/500"
+  /teamsPerSeasons/{teamsPerSeasonId}:
+    #patch:
+    #  summary: Change drivers of a team in a season
+    #  tags:
+    #    - "TeamsPerSeasons"
+    #    - "TeamsPerSeasonController"
+    #  parameters:
+    #    - $ref: "./components/parameters.yml#/teamsPerSeasonId"
+    #  requestBody:
+    #    required: true
+    #    content:
+    #      application/json:
+    #        schema:
+    #          type: object
+    #          properties:
+    #            driverIds:
+    #              $ref: "./components/schemas.yml#/driverIds"
+    #  responses:
+    #    200:
+    #      description: OK
+    #      content:
+    #        application/json:
+    #          schema:
+    #            $ref: "./components/schemas.yml#/TeamsPerSeason"
+    #    400:
+    #      $ref: "./components/responses.yml#/400"
+    #    #409:
+    #    #  $ref: "./components/responses.yml#/409"
+    #    422:
+    #      $ref: "./components/responses.yml#/422"
+    #    500:
+    #      $ref: "./components/responses.yml#/500"
+    patch:
+      summary: Update teamsPerSeason
+      tags:
+        - "TeamsPerSeasons"
+        - "TeamsPerSeasonController"
+      parameters:
+        - $ref: "./components/parameters.yml#/teamsPerSeasonId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./components/schemas.yml#/TeamsPerSeason"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/TeamsPerSeason"
+        400:
+          $ref: "./components/responses.yml#/400"
+        409:
+          $ref: "./components/responses.yml#/409"
+        422:
+          $ref: "./components/responses.yml#/422"
+        500:
+          $ref: "./components/responses.yml#/500"
+    get:
+      summary: Get teamsPerSeason / Not particularly needed
+      tags:
+        - "TeamsPerSeasons"
+        - "TeamsPerSeasonController"
+      parameters:
+        - $ref: "./components/parameters.yml#/teamsPerSeasonId"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/TeamsPerSeason"
+        400:
+          $ref: "./components/responses.yml#/400"
+        404:
+          $ref: "./components/responses.yml#/404"
+        500:
+          $ref: "./components/responses.yml#/500"

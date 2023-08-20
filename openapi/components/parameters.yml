@@ -1,0 +1,92 @@
+# Season
+seasonId:
+  name: seasonId
+  in: path
+  required: true
+  schema:
+    $ref: "./schemas.yml#/seasonId"
+seasonIdQuery:
+  in: query
+  required: false
+  allOf:
+    - $ref: "#/seasonId"
+seasonYear:
+  name: seasonYear
+  in: query
+  schema:
+    $ref: "./schemas.yml#/seasonYear"
+
+# Race
+raceId:
+  name: raceId
+  in: path
+  required: true
+  schema:
+    $ref: "./schemas.yml#/raceId"
+raceName:
+  name: raceName
+  in: query
+  schema:
+    $ref: "./schemas.yml#/raceName"
+date:
+  name: date
+  in: query
+  schema:
+    $ref: "./schemas.yml#/date"
+
+# Team
+teamId:
+  name: teamId
+  in: path
+  required: true
+  schema:
+    $ref: "./schemas.yml#/teamId"
+teamIdQuery:
+  in: query
+  required: false
+  allOf:
+    - $ref: "#/teamId"
+teamName:
+  name: teamName
+  in: query
+  schema:
+    $ref: "./schemas.yml#/teamName"
+
+# Driver
+driverId:
+  name: driverId
+  in: path
+  required: true
+  schema:
+    $ref: "./schemas.yml#/driverId"
+driverIdQuery:
+  in: query
+  required: false
+  allOf:
+    - $ref: "#/driverId"
+driverCode:
+  name: driverCode
+  in: query
+  schema:
+    $ref: "./schemas.yml#/driverCode"
+
+# Engine
+engineId:
+  name: engineId
+  in: path
+  required: true
+  schema:
+    $ref: "./schemas.yml#/engineId"
+manufacturer:
+  name: manufacturer
+  in: query
+  schema:
+    $ref: "./schemas.yml#/manufacturer"
+
+# TeamsPerSeason
+teamsPerSeasonId:
+  name: teamsPerSeasonId
+  in: path
+  required: true
+  schema:
+    $ref: "./schemas.yml#/teamsPerSeasonId"

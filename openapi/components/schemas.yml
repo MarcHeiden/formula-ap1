@@ -1,0 +1,233 @@
+# Generic
+id:
+  type: string
+  format: uuid
+Error:
+  type: object
+  properties:
+    httpStatusCode:
+      type: integer
+    message:
+      type: string
+    timestamp:
+      type: string
+    validationErrors:
+      type: array
+      items:
+        type: object
+        properties:
+          fieldName:
+            type: string
+          message:
+            type: string
+
+# Season
+seasonId:
+  readOnly: true
+  allOf:
+    - $ref: "#/id"
+  example: "548ca0a9-6ea0-4571-bcb2-6b1defe9f13f"
+seasonYear:
+  type: integer
+  example: 2023
+Season:
+  type: object
+  properties:
+    seasonId:
+      $ref: "#/seasonId"
+    seasonYear:
+      $ref: "#/seasonYear"
+Seasons:
+  type: array
+  items:
+    $ref: "#/Season"
+  # needed for redoc
+  #example:
+  #  - seasonId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+  #    seasonYear: 2023
+
+# Race
+raceId:
+  readOnly: true
+  allOf:
+    - $ref: "#/id"
+  example: "22d223c2-049a-4927-8e6e-1d2986d15864"
+raceName:
+  type: string
+  example: "Belgian Grand Prix"
+date:
+  type: string
+  format: date
+  example: "2023-07-30"
+Race:
+  type: object
+  properties:
+    raceId:
+      $ref: "#/raceId"
+    raceName:
+      $ref: "#/raceName"
+    date:
+      $ref: "#/date"
+    time:
+      type: string
+      example: "13:00:00Z"
+    cancelled:
+      type: boolean
+      example: false
+    season:
+      readOnly: true
+      allOf:
+        - $ref: "#/Season"
+Races:
+  type: array
+  items:
+    $ref: "#/Race"
+
+# Qualifying
+Qualifying:
+  type: object
+  properties:
+    position:
+      type: integer
+      minimum: 1
+      example: 1
+    driverId:
+      readOnly: false
+      writeOnly: true
+      allOf:
+        - $ref: "#/driverId"
+    driver:
+      readOnly: true
+      allOf:
+        - $ref: "#/Driver"
+    team:
+      readOnly: true
+      allOf:
+        - $ref: "#/Team"
+    engine:
+      readOnly: true
+      allOf:
+        - $ref: "#/Engine"
+Qualifyings:
+  type: object
+  properties:
+    race:
+      $ref: "#/Race"
+    qualifying:
+      type: array
+      items:
+        $ref: "#/Qualifying"
+#Qualifyings:
+#  type: array
+#  items:
+#    $ref: "#/Qualifying"
+
+# Team
+teamId:
+  readOnly: true
+  allOf:
+    - $ref: "#/id"
+  example: "fbfd53d3-64ac-458a-bbfa-7e6d60089602"
+teamName:
+  type: string
+  example: Ferrari
+Team:
+  type: object
+  properties:
+    teamId:
+      $ref: "#/teamId"
+    teamName:
+      $ref: "#/teamName"
+Teams:
+  type: array
+  items:
+    $ref: "#/Team"
+
+# Driver
+driverId:
+  readOnly: true
+  allOf:
+    - $ref: "#/id"
+  example: "28f76df1-e54f-4d1b-891e-599a5df98209"
+driverIds:
+  type: array
+  items:
+    $ref: "#/id"
+  minItems: 2
+  uniqueItems: true
+  example: ["28f76df1-e54f-4d1b-891e-599a5df98209", "95878f98-df83-4e45-a82e-745a0b8fdbb8"]
+driverCode:
+  type: string
+  example: LEC
+Driver:
+  type: object
+  #required:
+  #  - firstName
+  #  - lastName
+  #  - driverCode
+  properties:
+    driverId:
+      $ref: "#/driverId"
+    firstName:
+      type: string
+      example: Charles
+    lastName:
+      type: string
+      example: Leclerc
+    driverCode:
+      $ref: "#/driverCode"
+Drivers:
+  type: array
+  items:
+    $ref: "#/Driver"
+
+# Engine
+engineId:
+  readOnly: true
+  allOf:
+    - $ref: "#/id"
+  example: "1bebd42a-2054-4678-be6a-b076064c4585"
+manufacturer:
+  type: string
+  example: Ferrari
+Engine:
+  type: object
+  properties:
+    engineId:
+      $ref: "#/engineId"
+    manufacturer:
+      $ref: "#/manufacturer"
+Engines:
+  type: array
+  items:
+    $ref: "#/Engine"
+
+# TeamsPerSeason
+teamsPerSeasonId:
+  readOnly: true
+  allOf:
+    - $ref: "#/id"
+  example: "71c398ff-8ecd-480a-a5f2-fbfa6a8cc851"
+TeamsPerSeason:
+  type: object
+  properties:
+    teamsPerSeasonId:
+      $ref: "#/teamsPerSeasonId"
+    seasonId:
+      readOnly: false
+      allOf:
+        - $ref: "#/seasonId"
+    teamId:
+      readOnly: false
+      allOf:
+        - $ref: "#/teamId"
+    engineId:
+      readOnly: false
+      allOf:
+        - $ref: "#/engineId"
+    driverIds:
+      $ref: "#/driverIds"
+TeamsPerSeasons:
+  type: array
+  items:
+    $ref: "#/TeamsPerSeason"
