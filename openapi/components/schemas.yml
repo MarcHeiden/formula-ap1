@@ -2,6 +2,10 @@
 id:
   type: string
   format: uuid
+position:
+  type: integer
+  minimum: 1
+  example: 1
 Error:
   type: object
   properties:
@@ -41,10 +45,6 @@ Seasons:
   type: array
   items:
     $ref: "#/Season"
-  # needed for redoc
-  #example:
-  #  - seasonId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
-  #    seasonYear: 2023
 
 # Race
 raceId:
@@ -78,6 +78,16 @@ Race:
       readOnly: true
       allOf:
         - $ref: "#/Season"
+# Race for patch with seasonId
+#RacePatch:
+#  allOf:
+#    - type: object
+#      properties:
+#        seasonId:
+#          readOnly: false
+#          allOf:
+#            - $ref: "#/seasonId"
+#    - $ref: "#/Race"
 Races:
   type: array
   items:
@@ -88,14 +98,49 @@ Qualifying:
   type: object
   properties:
     position:
-      type: integer
-      minimum: 1
-      example: 1
+      $ref: "#/position"
     driverId:
+      $ref: "#/driverIdWriteOnly"
+    driver:
+      readOnly: true
+      allOf:
+        - $ref: "#/Driver"
+    teamId:
       readOnly: false
       writeOnly: true
       allOf:
-        - $ref: "#/driverId"
+        - $ref: "#/teamId"
+    team:
+      readOnly: true
+      allOf:
+        - $ref: "#/Team"
+    engine:
+      readOnly: true
+      allOf:
+        - $ref: "#/Engine"
+QualifyingPatch:
+  type: object
+  properties:
+    position:
+      $ref: "#/position"
+Qualifyings:
+  type: array
+  items:
+    $ref: "#/Qualifying"
+
+# Result
+dnf:
+  type: boolean
+  example: false
+Result:
+  type: object
+  properties:
+    position:
+      $ref: "#/position"
+    dnf:
+      $ref: "#/dnf"
+    driverId:
+      $ref: "#/driverIdWriteOnly"
     driver:
       readOnly: true
       allOf:
@@ -108,19 +153,142 @@ Qualifying:
       readOnly: true
       allOf:
         - $ref: "#/Engine"
-Qualifyings:
+ResultPatch:
   type: object
   properties:
-    race:
-      $ref: "#/Race"
-    qualifying:
-      type: array
-      items:
-        $ref: "#/Qualifying"
-#Qualifyings:
-#  type: array
-#  items:
-#    $ref: "#/Qualifying"
+    position:
+      $ref: "#/position"
+    dnf:
+      $ref: "#/dnf"
+Results:
+  type: array
+  items:
+    $ref: "#/Result"
+
+# FastestLap
+time:
+  type: string
+  pattern: "^([0-9]):([0-5][0-9])\\.([0-9]{3})$"
+  example: 1:50.436
+FastestLap:
+  type: object
+  properties:
+    time:
+      $ref: "#/time"
+    driverId:
+      $ref: "#/driverIdWriteOnly"
+    driver:
+      readOnly: true
+      allOf:
+        - $ref: "#/Driver"
+    team:
+      readOnly: true
+      allOf:
+        - $ref: "#/Team"
+    engine:
+      readOnly: true
+      allOf:
+        - $ref: "#/Engine"
+FastestLapPatch:
+  type: object
+  properties:
+    time:
+      $ref: "#/time"
+FastestLaps:
+  type: array
+  items:
+    $ref: "#/FastestLap"
+
+# TopSpeed
+speed:
+  type: number
+  minimum: 0.0
+  example: 310.1
+TopSpeed:
+  type: object
+  properties:
+    speed:
+      $ref: "#/speed"
+    driverId:
+      $ref: "#/driverIdWriteOnly"
+    driver:
+      readOnly: true
+      allOf:
+        - $ref: "#/Driver"
+    team:
+      readOnly: true
+      allOf:
+        - $ref: "#/Team"
+    engine:
+      readOnly: true
+      allOf:
+        - $ref: "#/Engine"
+TopSpeedPatch:
+  type: object
+  properties:
+    speed:
+      $ref: "#/speed"
+TopSpeeds:
+  type: array
+  items:
+    $ref: "#/TopSpeed"
+
+# LeadingLaps
+numberOfLaps:
+  type: integer
+  minimum: 0
+  example: 0
+LeadingLaps:
+  type: object
+  properties:
+    numberOfLaps:
+      $ref: "#/numberOfLaps"
+    driverId:
+      $ref: "#/driverIdWriteOnly"
+    driver:
+      readOnly: true
+      allOf:
+        - $ref: "#/Driver"
+    team:
+      readOnly: true
+      allOf:
+        - $ref: "#/Team"
+    engine:
+      readOnly: true
+      allOf:
+        - $ref: "#/Engine"
+LeadingLapsPatch:
+  type: object
+  properties:
+    numberOfLaps:
+      $ref: "#/numberOfLaps"
+LeadingLapsList:
+  type: array
+  items:
+    $ref: "#/LeadingLaps"
+
+# FastestPitStop
+FastestPitStop:
+  type: object
+  properties:
+    duration:
+      type: string
+      pattern: "^([0-5][0-9])\\.([0-9]{3})$"
+      example: "22.610"
+    driverId:
+      $ref: "#/driverIdWriteOnly"
+    driver:
+      readOnly: true
+      allOf:
+        - $ref: "#/Driver"
+    team:
+      readOnly: true
+      allOf:
+        - $ref: "#/Team"
+    engine:
+      readOnly: true
+      allOf:
+        - $ref: "#/Engine"
 
 # Team
 teamId:
@@ -149,6 +317,11 @@ driverId:
   allOf:
     - $ref: "#/id"
   example: "28f76df1-e54f-4d1b-891e-599a5df98209"
+driverIdWriteOnly:
+  readOnly: false
+  writeOnly: true
+  allOf:
+    - $ref: "#/driverId"
 driverIds:
   type: array
   items:
@@ -161,10 +334,6 @@ driverCode:
   example: LEC
 Driver:
   type: object
-  #required:
-  #  - firstName
-  #  - lastName
-  #  - driverCode
   properties:
     driverId:
       $ref: "#/driverId"
@@ -202,17 +371,17 @@ Engines:
   items:
     $ref: "#/Engine"
 
-# TeamsPerSeason
-teamsPerSeasonId:
+# TeamOfSeason
+teamOfSeasonId:
   readOnly: true
   allOf:
     - $ref: "#/id"
   example: "71c398ff-8ecd-480a-a5f2-fbfa6a8cc851"
-TeamsPerSeason:
+TeamOfSeason:
   type: object
   properties:
-    teamsPerSeasonId:
-      $ref: "#/teamsPerSeasonId"
+    teamOfSeasonId:
+      $ref: "#/teamOfSeasonId"
     seasonId:
       readOnly: false
       allOf:
@@ -227,7 +396,35 @@ TeamsPerSeason:
         - $ref: "#/engineId"
     driverIds:
       $ref: "#/driverIds"
-TeamsPerSeasons:
+TeamsOfSeasons:
   type: array
   items:
-    $ref: "#/TeamsPerSeason"
+    $ref: "#/TeamOfSeason"
+
+# DriverOfRace
+driverOfRaceId:
+  readOnly: true
+  allOf:
+    - $ref: "#/id"
+  example: "5b66f5a1-a512-4819-9312-70268b3dfabe"
+DriverOfRace:
+  type: object
+  properties:
+    driverOfRaceId:
+      $ref: "#/driverOfRaceId"
+    driverId:
+      readOnly: false
+      allOf:
+        - $ref: "#/driverId"
+    teamId:
+      readOnly: false
+      allOf:
+        - $ref: "#/teamId"
+    raceId:
+      readOnly: false
+      allOf:
+        - $ref: "#/raceId"
+DriversOfRaces:
+  type: array
+  items:
+    $ref: "#/DriverOfRace"

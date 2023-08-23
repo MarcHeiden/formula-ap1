@@ -8,14 +8,21 @@ tags:
   - name: TeamController
   - name: DriverController
   - name: EngineController
-  - name: TeamsPerSeasonController
+  - name: TeamOfSeasonController
+  - name: DriverOfRaceController
   - name: Seasons
   - name: Races
   - name: Qualifyings
+  - name: Results
+  - name: FastestLaps
+  - name: TopSpeeds
+  - name: LeadingLaps
+  - name: FastestPitStops
   - name: Teams
   - name: Drivers
   - name: Engines
-  - name: TeamsPerSeasons
+  - name: TeamsOfSeasons
+  - name: DriversOfRaces
 paths:
   # SeasonController
   /seasons:
@@ -37,10 +44,10 @@ paths:
             application/json:
               schema:
                 $ref: "./components/schemas.yml#/Season"
-        422:
-          $ref: "./components/responses.yml#/422"
         409:
           $ref: "./components/responses.yml#/409"
+        422:
+          $ref: "./components/responses.yml#/422"
         500:
           $ref: "./components/responses.yml#/500"
     get:
@@ -107,10 +114,12 @@ paths:
                 $ref: "./components/schemas.yml#/Race"
         400:
           $ref: "./components/responses.yml#/400"
-        422:
-          $ref: "./components/responses.yml#/422"
+        404:
+          $ref: "./components/responses.yml#/404"
         409:
           $ref: "./components/responses.yml#/409"
+        422:
+          $ref: "./components/responses.yml#/422"
         500:
           $ref: "./components/responses.yml#/500"
     get:
@@ -137,16 +146,11 @@ paths:
   /seasons/{seasonId}/teams:
     get:
       summary: Get teams of a season
-      #/ Get team of a season by teamName
-      #description: |
-      #  - Get teams of a season
-      #  - Get team of a season by teamName
       tags:
         - "Teams"
         - "SeasonController"
       parameters:
         - $ref: "./components/parameters.yml#/seasonId"
-        #- $ref: "./components/parameters.yml#/teamName"
       responses:
         200:
           description: OK
@@ -160,28 +164,6 @@ paths:
           $ref: "./components/responses.yml#/404"
         500:
           $ref: "./components/responses.yml#/500"
-  #/seasons/{seasonId}/teams/{teamId}:
-  #  get:
-  #    summary: Get team of a season
-  #    tags:
-  #      - "Teams"
-  #      - "SeasonController"
-  #    parameters:
-  #      - $ref: "./components/parameters.yml#/seasonId"
-  #      - $ref: "./components/parameters.yml#/teamId"
-  #    responses:
-  #      200:
-  #        description: OK
-  #        content:
-  #          application/json:
-  #            schema:
-  #              $ref: "./components/schemas.yml#/Team"
-  #      400:
-  #        $ref: "./components/responses.yml#/400"
-  #      404:
-  #        $ref: "./components/responses.yml#/404"
-  #      500:
-  #        $ref: "./components/responses.yml#/500"
   /seasons/{seasonId}/teams/{teamId}/drivers:
     get:
       summary: Get drivers of a team of a season
@@ -248,9 +230,9 @@ paths:
           $ref: "./components/responses.yml#/404"
         500:
           $ref: "./components/responses.yml#/500"
-  /seasons/{seasonId}/drivers/{driverId}/team:
+  /seasons/{seasonId}/drivers/{driverId}/teams:
     get:
-      summary: Get team of a driver of a season
+      summary: Get teams of a driver of a season
       tags:
         - "Teams"
         - "SeasonController"
@@ -263,7 +245,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "./components/schemas.yml#/Team"
+                $ref: "./components/schemas.yml#/Teams"
         400:
           $ref: "./components/responses.yml#/400"
         404:
@@ -273,13 +255,11 @@ paths:
   /seasons/{seasonId}/engines:
     get:
       summary: Get engines of a season
-      #/ Get engine of a season by manufacturer
       tags:
         - "Engines"
         - "SeasonController"
       parameters:
         - $ref: "./components/parameters.yml#/seasonId"
-      #  - $ref: "./components/parameters.yml#/manufacturer"
       responses:
         200:
           description: OK
@@ -335,8 +315,6 @@ paths:
                 $ref: "./components/schemas.yml#/Races"
         400:
           $ref: "./components/responses.yml#/400"
-        404:
-          $ref: "./components/responses.yml#/404"
         500:
           $ref: "./components/responses.yml#/500"
   /races/{raceId}:
@@ -373,14 +351,6 @@ paths:
           application/json:
             schema:
               $ref: "./components/schemas.yml#/Race"
-              #allOf:
-              #  - type: object
-              #    properties:
-              #      seasonId:
-              #        readOnly: false
-              #        allOf:
-              #          - $ref: "./components/schemas.yml#/seasonId"
-              #  - $ref: "./components/schemas.yml#/Race"
       responses:
         200:
           description: OK
@@ -390,6 +360,8 @@ paths:
                 $ref: "./components/schemas.yml#/Race"
         400:
           $ref: "./components/responses.yml#/400"
+        404:
+          $ref: "./components/responses.yml#/404"
         409:
           $ref: "./components/responses.yml#/409"
         422:
@@ -400,8 +372,9 @@ paths:
     post:
       summary: Create qualifying for a driver of a race
       description: |
-        **Notice:** The driver must be in a team of the season to which the race belongs. <br>
-        If the driver is not a in team of the season, he can be added to a one by patching the associated `teamsPerSeason`.
+        **Notice:** The driver must be in the team of the season to which the race belongs. <br>
+        If the driver is not in the team, he can be added to it by patching the associated `teamOfSeason` entity. <br>
+        **Notice:** Creates new `driverOfRace` entity for the given `raceId`, `driverId` and `teamId`.
       tags:
         - "Qualifyings"
         - "RaceController"
@@ -422,10 +395,12 @@ paths:
                 $ref: "./components/schemas.yml#/Qualifying"
         400:
           $ref: "./components/responses.yml#/400"
-        422:
-          $ref: "./components/responses.yml#/422"
+        404:
+          $ref: "./components/responses.yml#/404"
         409:
           $ref: "./components/responses.yml#/409"
+        422:
+          $ref: "./components/responses.yml#/422"
         500:
           $ref: "./components/responses.yml#/500"
     get:
@@ -450,38 +425,66 @@ paths:
           $ref: "./components/responses.yml#/404"
         500:
           $ref: "./components/responses.yml#/500"
-    put:
-      summary: Change qualifying for a driver of a race
+    patch:
+      summary: Update qualifying for a driver of a race
       tags:
         - "Qualifyings"
         - "RaceController"
       parameters:
         - $ref: "./components/parameters.yml#/raceId"
+        - $ref: "./components/parameters.yml#/driverIdQueryRequired"
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "./components/schemas.yml#/Qualifying"
+              $ref: "./components/schemas.yml#/QualifyingPatch"
       responses:
-        201:
-          description: Created
+        200:
+          description: OK
           content:
             application/json:
               schema:
                 $ref: "./components/schemas.yml#/Qualifying"
         400:
           $ref: "./components/responses.yml#/400"
-        422:
-          $ref: "./components/responses.yml#/422"
+        404:
+          $ref: "./components/responses.yml#/404"
         409:
           $ref: "./components/responses.yml#/409"
+        422:
+          $ref: "./components/responses.yml#/422"
         500:
           $ref: "./components/responses.yml#/500"
-    delete:
-      summary: Delete qualifying for a driver of the race
+    # Delete example for VOs
+    #delete:
+    #  summary: Delete qualifying for a driver of a race
+    #  tags:
+    #    - "Qualifyings"
+    #    - "RaceController"
+    #  parameters:
+    #    - $ref: "./components/parameters.yml#/raceId"
+    #    - $ref: "./components/parameters.yml#/driverIdQueryRequired"
+    #  responses:
+    #    204:
+    #      $ref: "./components/responses.yml#/204"
+    #    400:
+    #      $ref: "./components/responses.yml#/400"
+    #    404:
+    #      $ref: "./components/responses.yml#/404"
+    #    422:
+    #      $ref: "./components/responses.yml#/422"
+    #    409:
+    #      $ref: "./components/responses.yml#/409"
+    #    500:
+    #      $ref: "./components/responses.yml#/500"#
+  /races/{raceId}/result:
+    post:
+      summary: Create race result for a driver of a race
+      description: |
+        **Notice:** The driver must have a qualifying entry for the race.
       tags:
-        - "Qualifyings"
+        - "Results"
         - "RaceController"
       parameters:
         - $ref: "./components/parameters.yml#/raceId"
@@ -490,16 +493,411 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "./components/schemas.yml#/Qualifying"
+              $ref: "./components/schemas.yml#/Result"
       responses:
-        204:
-          $ref: "./components/responses.yml#/204"
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/Result"
         400:
           $ref: "./components/responses.yml#/400"
-        422:
-          $ref: "./components/responses.yml#/422"
+        404:
+          $ref: "./components/responses.yml#/404"
         409:
           $ref: "./components/responses.yml#/409"
+        422:
+          $ref: "./components/responses.yml#/422"
+        500:
+          $ref: "./components/responses.yml#/500"
+    get:
+      summary: Get race result of a race / Get race result of a driver of a race by driverId/driverCode
+      tags:
+        - "Results"
+        - "RaceController"
+      parameters:
+        - $ref: "./components/parameters.yml#/raceId"
+        - $ref: "./components/parameters.yml#/driverIdQuery"
+        - $ref: "./components/parameters.yml#/driverCode"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/Results"
+        400:
+          $ref: "./components/responses.yml#/400"
+        404:
+          $ref: "./components/responses.yml#/404"
+        500:
+          $ref: "./components/responses.yml#/500"
+    patch:
+      summary: Update race result for a driver of a race
+      tags:
+        - "Results"
+        - "RaceController"
+      parameters:
+        - $ref: "./components/parameters.yml#/raceId"
+        - $ref: "./components/parameters.yml#/driverIdQueryRequired"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./components/schemas.yml#/ResultPatch"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/Result"
+        400:
+          $ref: "./components/responses.yml#/400"
+        404:
+          $ref: "./components/responses.yml#/404"
+        409:
+          $ref: "./components/responses.yml#/409"
+        422:
+          $ref: "./components/responses.yml#/422"
+        500:
+          $ref: "./components/responses.yml#/500"
+  /races/{raceId}/fastestLaps:
+    post:
+      summary: Create fastestLap for a driver of a race
+      description: |
+        **Notice:** The driver must have a race result for the race.
+      tags:
+        - "FastestLaps"
+        - "RaceController"
+      parameters:
+        - $ref: "./components/parameters.yml#/raceId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./components/schemas.yml#/FastestLap"
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/FastestLap"
+        400:
+          $ref: "./components/responses.yml#/400"
+        404:
+          $ref: "./components/responses.yml#/404"
+        409:
+          $ref: "./components/responses.yml#/409"
+        422:
+          $ref: "./components/responses.yml#/422"
+        500:
+          $ref: "./components/responses.yml#/500"
+    get:
+      summary: Get fastestLaps of a race / Get fastestLap of a driver of a race by driverId/driverCode
+      tags:
+        - "FastestLaps"
+        - "RaceController"
+      parameters:
+        - $ref: "./components/parameters.yml#/raceId"
+        - $ref: "./components/parameters.yml#/driverIdQuery"
+        - $ref: "./components/parameters.yml#/driverCode"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/FastestLaps"
+        400:
+          $ref: "./components/responses.yml#/400"
+        404:
+          $ref: "./components/responses.yml#/404"
+        500:
+          $ref: "./components/responses.yml#/500"
+    patch:
+      summary: Update fastestLap for a driver of a race
+      tags:
+        - "FastestLaps"
+        - "RaceController"
+      parameters:
+        - $ref: "./components/parameters.yml#/raceId"
+        - $ref: "./components/parameters.yml#/driverIdQueryRequired"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./components/schemas.yml#/FastestLapPatch"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/FastestLap"
+        400:
+          $ref: "./components/responses.yml#/400"
+        404:
+          $ref: "./components/responses.yml#/404"
+        422:
+          $ref: "./components/responses.yml#/422"
+        500:
+          $ref: "./components/responses.yml#/500"
+  /races/{raceId}/topSpeeds:
+    post:
+      summary: Create topSpeed for a driver of a race
+      description: |
+        **Notice:** The driver must have a race result for the race.
+      tags:
+        - "TopSpeeds"
+        - "RaceController"
+      parameters:
+        - $ref: "./components/parameters.yml#/raceId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./components/schemas.yml#/TopSpeed"
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/TopSpeed"
+        400:
+          $ref: "./components/responses.yml#/400"
+        404:
+          $ref: "./components/responses.yml#/404"
+        409:
+          $ref: "./components/responses.yml#/409"
+        422:
+          $ref: "./components/responses.yml#/422"
+        500:
+          $ref: "./components/responses.yml#/500"
+    get:
+      summary: Get topSpeeds of a race / Get topSpeed of a driver of a race by driverId/driverCode
+      tags:
+        - "TopSpeeds"
+        - "RaceController"
+      parameters:
+        - $ref: "./components/parameters.yml#/raceId"
+        - $ref: "./components/parameters.yml#/driverIdQuery"
+        - $ref: "./components/parameters.yml#/driverCode"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/TopSpeeds"
+        400:
+          $ref: "./components/responses.yml#/400"
+        404:
+          $ref: "./components/responses.yml#/404"
+        500:
+          $ref: "./components/responses.yml#/500"
+    patch:
+      summary: Update topSpeed for a driver of a race
+      tags:
+        - "TopSpeeds"
+        - "RaceController"
+      parameters:
+        - $ref: "./components/parameters.yml#/raceId"
+        - $ref: "./components/parameters.yml#/driverIdQueryRequired"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./components/schemas.yml#/TopSpeedPatch"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/TopSpeed"
+        400:
+          $ref: "./components/responses.yml#/400"
+        404:
+          $ref: "./components/responses.yml#/404"
+        422:
+          $ref: "./components/responses.yml#/422"
+        500:
+          $ref: "./components/responses.yml#/500"
+  /races/{raceId}/leadingLaps:
+    post:
+      summary: Create leadingLaps for a driver of a race
+      description: |
+        **Notice:** The driver must have a race result for the race.
+      tags:
+        - "LeadingLaps"
+        - "RaceController"
+      parameters:
+        - $ref: "./components/parameters.yml#/raceId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./components/schemas.yml#/LeadingLaps"
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/LeadingLaps"
+        400:
+          $ref: "./components/responses.yml#/400"
+        404:
+          $ref: "./components/responses.yml#/404"
+        409:
+          $ref: "./components/responses.yml#/409"
+        422:
+          $ref: "./components/responses.yml#/422"
+        500:
+          $ref: "./components/responses.yml#/500"
+    get:
+      summary: Get leadingLaps of a race / Get leadingLaps of a driver of a race by driverId/driverCode
+      tags:
+        - "LeadingLaps"
+        - "RaceController"
+      parameters:
+        - $ref: "./components/parameters.yml#/raceId"
+        - $ref: "./components/parameters.yml#/driverIdQuery"
+        - $ref: "./components/parameters.yml#/driverCode"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/LeadingLapsList"
+        400:
+          $ref: "./components/responses.yml#/400"
+        404:
+          $ref: "./components/responses.yml#/404"
+        500:
+          $ref: "./components/responses.yml#/500"
+    patch:
+      summary: Update leadingLaps for a driver of a race
+      tags:
+        - "LeadingLaps"
+        - "RaceController"
+      parameters:
+        - $ref: "./components/parameters.yml#/raceId"
+        - $ref: "./components/parameters.yml#/driverIdQueryRequired"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./components/schemas.yml#/LeadingLapsPatch"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/LeadingLaps"
+        400:
+          $ref: "./components/responses.yml#/400"
+        404:
+          $ref: "./components/responses.yml#/404"
+        422:
+          $ref: "./components/responses.yml#/422"
+        500:
+          $ref: "./components/responses.yml#/500"
+  /races/{raceId}/fastestPitStop:
+    post:
+      summary: Create fastestPitStop of a race
+      description: |
+        **Notice:** There can only be one fastestPitStop of the race. <br>
+        **Notice:** The driver must have a race result for the race.
+      tags:
+        - "FastestPitStops"
+        - "RaceController"
+      parameters:
+        - $ref: "./components/parameters.yml#/raceId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./components/schemas.yml#/FastestPitStop"
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/FastestPitStop"
+        400:
+          $ref: "./components/responses.yml#/400"
+        404:
+          $ref: "./components/responses.yml#/404"
+        409:
+          $ref: "./components/responses.yml#/409"
+        422:
+          $ref: "./components/responses.yml#/422"
+        500:
+          $ref: "./components/responses.yml#/500"
+    get:
+      summary: Get fastestPitStop of a race
+      tags:
+        - "FastestPitStops"
+        - "RaceController"
+      parameters:
+        - $ref: "./components/parameters.yml#/raceId"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/FastestPitStop"
+        400:
+          $ref: "./components/responses.yml#/400"
+        404:
+          $ref: "./components/responses.yml#/404"
+        500:
+          $ref: "./components/responses.yml#/500"
+    patch:
+      summary: Update fastestPitStop of a race
+      tags:
+        - "FastestPitStops"
+        - "RaceController"
+      parameters:
+        - $ref: "./components/parameters.yml#/raceId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./components/schemas.yml#/FastestPitStop"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/FastestPitStop"
+        400:
+          $ref: "./components/responses.yml#/400"
+        404:
+          $ref: "./components/responses.yml#/404"
+        409:
+          $ref: "./components/responses.yml#/409"
+        422:
+          $ref: "./components/responses.yml#/422"
         500:
           $ref: "./components/responses.yml#/500"
 
@@ -523,10 +921,10 @@ paths:
             application/json:
               schema:
                 $ref: "./components/schemas.yml#/Team"
-        422:
-          $ref: "./components/responses.yml#/422"
         409:
           $ref: "./components/responses.yml#/409"
+        422:
+          $ref: "./components/responses.yml#/422"
         500:
           $ref: "./components/responses.yml#/500"
     get:
@@ -568,37 +966,6 @@ paths:
           $ref: "./components/responses.yml#/404"
         500:
           $ref: "./components/responses.yml#/500"
-    #patch:
-    #  summary: Change teamName
-    #  tags:
-    #    - "Teams"
-    #    - "TeamController"
-    #  parameters:
-    #    - $ref: "./components/parameters.yml#/teamId"
-    #  requestBody:
-    #    required: true
-    #    content:
-    #      application/json:
-    #        schema:
-    #          type: object
-    #          properties:
-    #            teamName:
-    #              $ref: "./components/schemas.yml#/teamName"
-    #  responses:
-    #    200:
-    #      description: OK
-    #      content:
-    #        application/json:
-    #          schema:
-    #            $ref: "./components/schemas.yml#/Team"
-    #    400:
-    #      $ref: "./components/responses.yml#/400"
-    #    #409:
-    #    #  $ref: "./components/responses.yml#/409"
-    #    422:
-    #      $ref: "./components/responses.yml#/422"
-    #    500:
-    #      $ref: "./components/responses.yml#/500"
     patch:
       summary: Update team
       tags:
@@ -621,6 +988,8 @@ paths:
                 $ref: "./components/schemas.yml#/Team"
         400:
           $ref: "./components/responses.yml#/400"
+        404:
+          $ref: "./components/responses.yml#/404"
         409:
           $ref: "./components/responses.yml#/409"
         422:
@@ -755,10 +1124,10 @@ paths:
             application/json:
               schema:
                 $ref: "./components/schemas.yml#/Driver"
-        422:
-          $ref: "./components/responses.yml#/422"
         409:
           $ref: "./components/responses.yml#/409"
+        422:
+          $ref: "./components/responses.yml#/422"
         500:
           $ref: "./components/responses.yml#/500"
     get:
@@ -818,6 +1187,8 @@ paths:
                 $ref: "./components/schemas.yml#/Driver"
         400:
           $ref: "./components/responses.yml#/400"
+        404:
+          $ref: "./components/responses.yml#/404"
         409:
           $ref: "./components/responses.yml#/409"
         422:
@@ -887,10 +1258,10 @@ paths:
             application/json:
               schema:
                 $ref: "./components/schemas.yml#/Engine"
-        422:
-          $ref: "./components/responses.yml#/422"
         409:
           $ref: "./components/responses.yml#/409"
+        422:
+          $ref: "./components/responses.yml#/422"
         500:
           $ref: "./components/responses.yml#/500"
     get:
@@ -932,37 +1303,6 @@ paths:
           $ref: "./components/responses.yml#/404"
         500:
           $ref: "./components/responses.yml#/500"
-    #patch:
-    #  summary: Change manufacturer
-    #  tags:
-    #    - "Engines"
-    #    - "EngineController"
-    #  parameters:
-    #    - $ref: "./components/parameters.yml#/engineId"
-    #  requestBody:
-    #    required: true
-    #    content:
-    #      application/json:
-    #        schema:
-    #          type: object
-    #          properties:
-    #            manufacturer:
-    #              $ref: "./components/schemas.yml#/manufacturer"
-    #  responses:
-    #    200:
-    #      description: OK
-    #      content:
-    #        application/json:
-    #          schema:
-    #            $ref: "./components/schemas.yml#/Engine"
-    #    400:
-    #      $ref: "./components/responses.yml#/400"
-    #    #409:
-    #    #  $ref: "./components/responses.yml#/409"
-    #    422:
-    #      $ref: "./components/responses.yml#/422"
-    #    500:
-    #      $ref: "./components/responses.yml#/500"
     patch:
       summary: Update engine
       tags:
@@ -985,6 +1325,8 @@ paths:
                 $ref: "./components/schemas.yml#/Engine"
         400:
           $ref: "./components/responses.yml#/400"
+        404:
+          $ref: "./components/responses.yml#/404"
         409:
           $ref: "./components/responses.yml#/409"
         422:
@@ -1034,37 +1376,37 @@ paths:
         500:
           $ref: "./components/responses.yml#/500"
 
-  # TeamsPerSeasonController
-  /teamsPerSeasons:
+  # TeamOfSeasonController
+  /teamsOfSeasons:
     post:
       summary: Add drivers and engine to a team of a season
       tags:
-        - "TeamsPerSeasons"
-        - "TeamsPerSeasonController"
+        - "TeamsOfSeasons"
+        - "TeamOfSeasonController"
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "./components/schemas.yml#/TeamsPerSeason"
+              $ref: "./components/schemas.yml#/TeamsOfSeasons"
       responses:
         201:
           description: Created
           content:
             application/json:
               schema:
-                $ref: "./components/schemas.yml#/TeamsPerSeason"
-        422:
-          $ref: "./components/responses.yml#/422"
+                $ref: "./components/schemas.yml#/TeamsOfSeasons"
         409:
           $ref: "./components/responses.yml#/409"
+        422:
+          $ref: "./components/responses.yml#/422"
         500:
           $ref: "./components/responses.yml#/500"
     get:
-      summary: Get teamsPerSeasons / Get teamsPerSeason by seasonId and teamId
+      summary: Get teamsOfSeasons / Get teamOfSeason by seasonId and teamId
       tags:
-        - "TeamsPerSeasons"
-        - "TeamsPerSeasonController"
+        - "TeamsOfSeasons"
+        - "TeamOfSeasonController"
       parameters:
         - $ref: "./components/parameters.yml#/seasonIdQuery"
         - $ref: "./components/parameters.yml#/teamIdQuery"
@@ -1074,65 +1416,36 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "./components/schemas.yml#/TeamsPerSeasons"
+                $ref: "./components/schemas.yml#/TeamsOfSeasons"
         400:
           $ref: "./components/responses.yml#/400"
         500:
           $ref: "./components/responses.yml#/500"
-  /teamsPerSeasons/{teamsPerSeasonId}:
-    #patch:
-    #  summary: Change drivers of a team in a season
-    #  tags:
-    #    - "TeamsPerSeasons"
-    #    - "TeamsPerSeasonController"
-    #  parameters:
-    #    - $ref: "./components/parameters.yml#/teamsPerSeasonId"
-    #  requestBody:
-    #    required: true
-    #    content:
-    #      application/json:
-    #        schema:
-    #          type: object
-    #          properties:
-    #            driverIds:
-    #              $ref: "./components/schemas.yml#/driverIds"
-    #  responses:
-    #    200:
-    #      description: OK
-    #      content:
-    #        application/json:
-    #          schema:
-    #            $ref: "./components/schemas.yml#/TeamsPerSeason"
-    #    400:
-    #      $ref: "./components/responses.yml#/400"
-    #    #409:
-    #    #  $ref: "./components/responses.yml#/409"
-    #    422:
-    #      $ref: "./components/responses.yml#/422"
-    #    500:
-    #      $ref: "./components/responses.yml#/500"
+  /teamsOfSeasons/{teamOfSeasonId}:
     patch:
-      summary: Update teamsPerSeason
+      summary: Update teamOfSeason
       tags:
-        - "TeamsPerSeasons"
-        - "TeamsPerSeasonController"
+        - "TeamsOfSeasons"
+        - "TeamOfSeasonController"
       parameters:
-        - $ref: "./components/parameters.yml#/teamsPerSeasonId"
+        - $ref: "./components/parameters.yml#/teamOfSeasonId"
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "./components/schemas.yml#/TeamsPerSeason"
+              $ref: "./components/schemas.yml#/TeamOfSeason"
       responses:
         200:
           description: OK
           content:
             application/json:
               schema:
-                $ref: "./components/schemas.yml#/TeamsPerSeason"
+                $ref: "./components/schemas.yml#/TeamOfSeason"
         400:
           $ref: "./components/responses.yml#/400"
+        404:
+          $ref: "./components/responses.yml#/404"
         409:
           $ref: "./components/responses.yml#/409"
         422:
@@ -1140,19 +1453,92 @@ paths:
         500:
           $ref: "./components/responses.yml#/500"
     get:
-      summary: Get teamsPerSeason / Not particularly needed
+      summary: Get teamOfSeason / Not particularly needed
       tags:
-        - "TeamsPerSeasons"
-        - "TeamsPerSeasonController"
+        - "TeamsOfSeasons"
+        - "TeamOfSeasonController"
       parameters:
-        - $ref: "./components/parameters.yml#/teamsPerSeasonId"
+        - $ref: "./components/parameters.yml#/teamOfSeasonId"
       responses:
         200:
           description: OK
           content:
             application/json:
               schema:
-                $ref: "./components/schemas.yml#/TeamsPerSeason"
+                $ref: "./components/schemas.yml#/TeamOfSeason"
+        400:
+          $ref: "./components/responses.yml#/400"
+        404:
+          $ref: "./components/responses.yml#/404"
+        500:
+          $ref: "./components/responses.yml#/500"
+
+  # DriverOfRaceController
+  /driversOfRaces:
+    get:
+      summary: Get driversOfRaces / Get driverOfRace by raceId and driverId
+      tags:
+        - "DriversOfRaces"
+        - "DriverOfRaceController"
+      parameters:
+        - $ref: "./components/parameters.yml#/raceIdQuery"
+        - $ref: "./components/parameters.yml#/driverIdQuery"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/DriversOfRaces"
+        400:
+          $ref: "./components/responses.yml#/400"
+        500:
+          $ref: "./components/responses.yml#/500"
+  /driversOfRaces/{driverOfRaceId}:
+    patch:
+      summary: Update driverOfRace
+      tags:
+        - "DriversOfRaces"
+        - "DriverOfRaceController"
+      parameters:
+        - $ref: "./components/parameters.yml#/driverOfRaceId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./components/schemas.yml#/DriverOfRace"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/DriverOfRace"
+        400:
+          $ref: "./components/responses.yml#/400"
+        404:
+          $ref: "./components/responses.yml#/404"
+        409:
+          $ref: "./components/responses.yml#/409"
+        422:
+          $ref: "./components/responses.yml#/422"
+        500:
+          $ref: "./components/responses.yml#/500"
+    get:
+      summary: Get driverOfRace / Not particularly needed
+      tags:
+        - "DriversOfRaces"
+        - "DriverOfRaceController"
+      parameters:
+        - $ref: "./components/parameters.yml#/driverOfRaceId"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/DriverOfRace"
         400:
           $ref: "./components/responses.yml#/400"
         404:

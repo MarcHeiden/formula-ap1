@@ -9,7 +9,6 @@
       example:
         httpStatusCode: 400
         message: "Invalid value for parameter"
-        #message: "Missing value for required field"
 404:
   description: Not found
   content:

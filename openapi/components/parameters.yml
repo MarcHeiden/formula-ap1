@@ -23,6 +23,11 @@ raceId:
   required: true
   schema:
     $ref: "./schemas.yml#/raceId"
+raceIdQuery:
+  in: query
+  required: false
+  allOf:
+    - $ref: "#/raceId"
 raceName:
   name: raceName
   in: query
@@ -64,6 +69,10 @@ driverIdQuery:
   required: false
   allOf:
     - $ref: "#/driverId"
+driverIdQueryRequired:
+  required: true
+  allOf:
+    - $ref: "#/driverIdQuery"
 driverCode:
   name: driverCode
   in: query
@@ -83,10 +92,18 @@ manufacturer:
   schema:
     $ref: "./schemas.yml#/manufacturer"
 
-# TeamsPerSeason
-teamsPerSeasonId:
-  name: teamsPerSeasonId
+# TeamOfSeason
+teamOfSeasonId:
+  name: teamOfSeasonId
   in: path
   required: true
   schema:
-    $ref: "./schemas.yml#/teamsPerSeasonId"
+    $ref: "./schemas.yml#/teamOfSeasonId"
+
+# DriverOfRace
+driverOfRaceId:
+  name: driverOfRaceId
+  in: path
+  required: true
+  schema:
+    $ref: "./schemas.yml#/driverOfRaceId"
