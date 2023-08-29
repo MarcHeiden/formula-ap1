@@ -6,10 +6,11 @@ seasonId:
   schema:
     $ref: "./schemas.yml#/seasonId"
 seasonIdQuery:
+  name: seasonId
   in: query
   required: false
-  allOf:
-    - $ref: "#/seasonId"
+  schema:
+    $ref: "./schemas.yml#/seasonId"
 seasonYear:
   name: seasonYear
   in: query
@@ -24,10 +25,11 @@ raceId:
   schema:
     $ref: "./schemas.yml#/raceId"
 raceIdQuery:
+  name: raceId
   in: query
   required: false
-  allOf:
-    - $ref: "#/raceId"
+  schema:
+    $ref: "./schemas.yml#/raceId"
 raceName:
   name: raceName
   in: query
@@ -47,10 +49,11 @@ teamId:
   schema:
     $ref: "./schemas.yml#/teamId"
 teamIdQuery:
+  name: teamId
   in: query
   required: false
-  allOf:
-    - $ref: "#/teamId"
+  schema:
+    $ref: "./schemas.yml#/teamId"
 teamName:
   name: teamName
   in: query
@@ -65,14 +68,17 @@ driverId:
   schema:
     $ref: "./schemas.yml#/driverId"
 driverIdQuery:
+  name: driverId
   in: query
   required: false
-  allOf:
-    - $ref: "#/driverId"
+  schema:
+    $ref: "./schemas.yml#/driverId"
 driverIdQueryRequired:
+  name: driverId
+  in: query
   required: true
-  allOf:
-    - $ref: "#/driverIdQuery"
+  schema:
+    $ref: "./schemas.yml#/driverId"
 driverCode:
   name: driverCode
   in: query

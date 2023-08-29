@@ -27,6 +27,7 @@ paths:
   # SeasonController
   /seasons:
     post:
+      x-internal: true
       summary: Create season
       tags:
         - "Seasons"
@@ -93,6 +94,7 @@ paths:
           $ref: "./components/responses.yml#/500"
   /seasons/{seasonId}/races:
     post:
+      x-internal: true
       summary: Create race of a season
       tags:
         - "Races"
@@ -339,6 +341,7 @@ paths:
         500:
           $ref: "./components/responses.yml#/500"
     patch:
+      x-internal: true
       summary: Update race
       tags:
         - "Races"
@@ -370,6 +373,7 @@ paths:
           $ref: "./components/responses.yml#/500"
   /races/{raceId}/qualifying:
     post:
+      x-internal: true
       summary: Create qualifying for a driver of a race
       description: |
         **Notice:** The driver must be in the team of the season to which the race belongs. <br>
@@ -426,6 +430,7 @@ paths:
         500:
           $ref: "./components/responses.yml#/500"
     patch:
+      x-internal: true
       summary: Update qualifying for a driver of a race
       tags:
         - "Qualifyings"
@@ -480,6 +485,7 @@ paths:
     #      $ref: "./components/responses.yml#/500"#
   /races/{raceId}/result:
     post:
+      x-internal: true
       summary: Create race result for a driver of a race
       description: |
         **Notice:** The driver must have a qualifying entry for the race.
@@ -534,6 +540,7 @@ paths:
         500:
           $ref: "./components/responses.yml#/500"
     patch:
+      x-internal: true
       summary: Update race result for a driver of a race
       tags:
         - "Results"
@@ -566,6 +573,7 @@ paths:
           $ref: "./components/responses.yml#/500"
   /races/{raceId}/fastestLaps:
     post:
+      x-internal: true
       summary: Create fastestLap for a driver of a race
       description: |
         **Notice:** The driver must have a race result for the race.
@@ -620,6 +628,7 @@ paths:
         500:
           $ref: "./components/responses.yml#/500"
     patch:
+      x-internal: true
       summary: Update fastestLap for a driver of a race
       tags:
         - "FastestLaps"
@@ -650,6 +659,7 @@ paths:
           $ref: "./components/responses.yml#/500"
   /races/{raceId}/topSpeeds:
     post:
+      x-internal: true
       summary: Create topSpeed for a driver of a race
       description: |
         **Notice:** The driver must have a race result for the race.
@@ -704,6 +714,7 @@ paths:
         500:
           $ref: "./components/responses.yml#/500"
     patch:
+      x-internal: true
       summary: Update topSpeed for a driver of a race
       tags:
         - "TopSpeeds"
@@ -734,6 +745,7 @@ paths:
           $ref: "./components/responses.yml#/500"
   /races/{raceId}/leadingLaps:
     post:
+      x-internal: true
       summary: Create leadingLaps for a driver of a race
       description: |
         **Notice:** The driver must have a race result for the race.
@@ -788,6 +800,7 @@ paths:
         500:
           $ref: "./components/responses.yml#/500"
     patch:
+      x-internal: true
       summary: Update leadingLaps for a driver of a race
       tags:
         - "LeadingLaps"
@@ -818,6 +831,7 @@ paths:
           $ref: "./components/responses.yml#/500"
   /races/{raceId}/fastestPitStop:
     post:
+      x-internal: true
       summary: Create fastestPitStop of a race
       description: |
         **Notice:** There can only be one fastestPitStop of the race. <br>
@@ -871,6 +885,7 @@ paths:
         500:
           $ref: "./components/responses.yml#/500"
     patch:
+      x-internal: true
       summary: Update fastestPitStop of a race
       tags:
         - "FastestPitStops"
@@ -904,6 +919,7 @@ paths:
   # TeamController
   /teams:
     post:
+      x-internal: true
       summary: Create team
       tags:
         - "Teams"
@@ -967,6 +983,7 @@ paths:
         500:
           $ref: "./components/responses.yml#/500"
     patch:
+      x-internal: true
       summary: Update team
       tags:
         - "Teams"
@@ -1107,6 +1124,7 @@ paths:
   # DriverController
   /drivers:
     post:
+      x-internal: true
       summary: Create driver
       tags:
         - "Drivers"
@@ -1166,12 +1184,13 @@ paths:
         500:
           $ref: "./components/responses.yml#/500"
     patch:
+      x-internal: true
       summary: Update driver
       tags:
         - "Drivers"
         - "DriverController"
       parameters:
-        - $ref: "./components/parameters.yml#/teamId"
+        - $ref: "./components/parameters.yml#/driverId"
       requestBody:
         required: true
         content:
@@ -1241,6 +1260,7 @@ paths:
   # EngineController
   /engines:
     post:
+      x-internal: true
       summary: Create engine
       tags:
         - "Engines"
@@ -1304,6 +1324,7 @@ paths:
         500:
           $ref: "./components/responses.yml#/500"
     patch:
+      x-internal: true
       summary: Update engine
       tags:
         - "Engines"
@@ -1378,6 +1399,7 @@ paths:
 
   # TeamOfSeasonController
   /teamsOfSeasons:
+    x-internal: true
     post:
       summary: Add drivers and engine to a team of a season
       tags:
@@ -1422,6 +1444,7 @@ paths:
         500:
           $ref: "./components/responses.yml#/500"
   /teamsOfSeasons/{teamOfSeasonId}:
+    x-internal: true
     patch:
       summary: Update teamOfSeason
       tags:
@@ -1475,6 +1498,7 @@ paths:
 
   # DriverOfRaceController
   /driversOfRaces:
+    x-internal: true
     get:
       summary: Get driversOfRaces / Get driverOfRace by raceId and driverId
       tags:
@@ -1495,6 +1519,7 @@ paths:
         500:
           $ref: "./components/responses.yml#/500"
   /driversOfRaces/{driverOfRaceId}:
+    x-internal: true
     patch:
       summary: Update driverOfRace
       tags:
