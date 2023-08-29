@@ -12,7 +12,7 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: "./openapi"
+        working-directory: "openapi"
     steps:
       # Checks out the repository under $GITHUB_WORKSPACE, so the job can access it
       - uses: actions/checkout@v3
