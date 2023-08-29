@@ -1,0 +1,35 @@
+rules:
+  # https://redocly.com/docs/cli/rules/built-in-rules/
+  # Special rules
+  spec: error
+  no-unresolved-refs: error
+  spec-components-invalid-map-name: warn
+  no-unused-components: warn
+  # Parameters
+  no-invalid-parameter-examples: error
+  operation-parameters-unique: error
+  path-declaration-must-exist: error
+  path-parameters-defined: error
+  path-not-include-query: error
+  # Paths
+  no-path-trailing-slash: error
+  # Requests, Responses, and Schemas
+  no-enum-type-mismatch: error
+  no-invalid-media-type-examples: error
+  no-invalid-schema-examples: error
+  scalar-property-missing-example: warn
+  # Servers
+  no-empty-servers: warn
+  no-server-trailing-slash: error
+  no-undefined-server-variable: error
+  no-server-variables-empty-enum: warn
+  # Operations
+  operation-tag-defined: error
+
+apis:
+  f1api:
+    root: ./api.yml
+  f1api-public:
+    root: ./api.yml
+    decorators:
+      remove-x-internal: on
