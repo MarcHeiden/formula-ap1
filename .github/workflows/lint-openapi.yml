@@ -1,13 +1,17 @@
-name: Lint
+name: Lint OpenAPI
 on:
-  pull_request:
-    branches: ["main"]
-  #push:
-  #  branches: ["api"]
+  push:
+    paths:
+      - "openapi/**"
+  #pull_request:
+  #  branches: ["main"]
+  #  paths:
+  #    - "openapi/**"
   # Allows to run this workflow manually from the Actions tab
   workflow_dispatch:
 jobs:
   lint-openapi:
+    name: Lint OpenAPI
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -20,7 +24,8 @@ jobs:
         with:
           # Use latest node version
           node-version: "*"
-      - run: npm install -g @redocly/cli
+      # Install redocly cli version >=1.0.2 <2.0.0-0
+      - run: npm install -g @redocly/cli@"^1.0.2"
         name: Install redocly cli
       - run: redocly lint --config ./redocly-cli-config.yml
         name: Lint OpenAPI
