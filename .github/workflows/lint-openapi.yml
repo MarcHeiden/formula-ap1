@@ -3,10 +3,10 @@ on:
   push:
     paths:
       - "openapi/**"
-  #pull_request:
-  #  branches: ["main"]
-  #  paths:
-  #    - "openapi/**"
+  pull_request:
+    branches: ["main"]
+    paths:
+      - "openapi/**"
   # Allows to run this workflow manually from the Actions tab
   workflow_dispatch:
 jobs:
@@ -24,8 +24,8 @@ jobs:
         with:
           # Use latest node version
           node-version: "*"
-      # Install redocly cli version >=1.0.2 <2.0.0-0
-      - run: npm install -g @redocly/cli@"^1.0.2"
+      # Install redocly cli
+      - run: npm install -g ${{ vars.REDOCLY_CLI }}
         name: Install redocly cli
       - run: redocly lint --config ./redocly-cli-config.yml
         name: Lint OpenAPI
