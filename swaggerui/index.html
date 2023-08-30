@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="SwaggerUI" />
+    <title>F1 API</title>
+    <!-- Use swagger ui css version >=5.4.2 <6.0.0-0 with unpkg CDN -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/swagger-ui-dist@^5.4.2/swagger-ui.css"
+    />
+  </head>
+  <body>
+    <div id="swagger-ui"></div>
+    <!-- Use swagger ui version >=5.4.2 <6.0.0-0 with unpkg CDN -->
+    <script src="https://unpkg.com/swagger-ui-dist@^5.4.2/swagger-ui-bundle.js"></script>
+    <script src="https://unpkg.com/swagger-ui-dist@^5.4.2/swagger-ui-standalone-preset.js"></script>
+    <script>
+      window.onload = () => {
+        window.ui = SwaggerUIBundle({
+          // https://swagger.io/docs/open-source-tools/swagger-ui/usage/configuration/
+          urls: [
+            {
+              name: "F1 API",
+              url: "./f1api.yml",
+            },
+            {
+              name: "F1 API Internal",
+              url: "./f1api-internal.yml",
+            },
+          ],
+          dom_id: "#swagger-ui",
+          presets: [SwaggerUIBundle.presets.apis, SwaggerUIStandalonePreset],
+          layout: "StandaloneLayout",
+          displayRequestDuration: true,
+          deepLinking: true,
+        });
+      };
+    </script>
+  </body>
+</html>
