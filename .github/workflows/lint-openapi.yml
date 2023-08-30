@@ -9,6 +9,7 @@ on:
       - "openapi/**"
   # Allows to run this workflow manually from the Actions tab
   workflow_dispatch:
+
 jobs:
   lint-openapi:
     name: Lint OpenAPI
@@ -16,7 +17,6 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: "./openapi"
     steps:
       # Checks out the repository under $GITHUB_WORKSPACE, so the job can access it
       - uses: actions/checkout@v3
@@ -24,8 +24,7 @@ jobs:
         with:
           # Use latest node version
           node-version: "*"
-      # Install redocly cli
-      - run: npm install -g ${{ vars.REDOCLY_CLI }}
-        name: Install redocly cli
-      - run: redocly lint --config ./redocly-cli-config.yml
-        name: Lint OpenAPI
+      - name: Install redocly cli
+        run: npm install -g ${{ vars.REDOCLY_CLI }}
+      - name: Lint OpenAPI
+        run: redocly lint --config ${{ vars.REDOCLY_CLI_CONFIG }}
