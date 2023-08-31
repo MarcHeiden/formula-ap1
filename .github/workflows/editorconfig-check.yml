@@ -18,7 +18,8 @@ jobs:
       - name: Create go module
         run: go mod init editorconfig-checker
       - name: Get editorconfig-checker dependencies
-        run: go get github.com/editorconfig-checker/editorconfig-checker@1fca5cf0414e98154bac7943408cf3c742045fda
+        #run: go get github.com/editorconfig-checker/editorconfig-checker@1fca5cf0414e98154bac7943408cf3c742045fda
+        run: go get github.com/editorconfig-checker/editorconfig-checker
       - name: List cwd
         run: ls -la
       - name: Build editorconfig-checker
