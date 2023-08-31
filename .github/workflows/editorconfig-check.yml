@@ -29,4 +29,4 @@ jobs:
       - name: Build editorconfig-checker
         run: cd editorconfig-checker && make build
       - name: Run editorconfig-checker
-        run: .editorconfig-checker/bin/ec -v
+        run: ./editorconfig-checker/bin/ec -v
