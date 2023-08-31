@@ -1,12 +1,12 @@
 name: Lint OpenAPI
 on:
-  push:
-    paths:
-      - "openapi/**"
+  #push:
+  #  paths:
+  #    - "f1api/openapi/**"
   pull_request:
     branches: ["main"]
     paths:
-      - "openapi/**"
+      - "f1api/openapi/**"
   # Allows to run this workflow manually from the Actions tab
   workflow_dispatch:
 
