@@ -25,8 +25,8 @@ jobs:
       - name: Checkout specifc version by using a commit hash
         run: cd editorconfig-checker && git checkout 1fca5cf0414e98154bac7943408cf3c742045fda
       - name: List cwd
-        run: ls -la
+        run: cd editorconfig-checker && ls -la
       - name: Build editorconfig-checker
-        run: make build
+        run: cd editorconfig-checker && make build
       - name: Run editorconfig-checker
-        run: ./bin/ec -v
+        run: .editorconfig-checker/bin/ec -v
