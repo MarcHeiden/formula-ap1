@@ -28,8 +28,8 @@ rules:
 
 apis:
   f1api-internal:
-    root: ./api.yml
+    root: ./openapi/api.yml
   f1api:
-    root: ./api.yml
+    root: ./openapi/api.yml
     decorators:
       remove-x-internal: on
