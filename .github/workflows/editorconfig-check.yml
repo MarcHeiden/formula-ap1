@@ -15,6 +15,8 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-go@v4
         # Install specifc editorconfig-checker by using a commit hash
+      - name: Create go module
+        run: go mod init github.com/editorconfig-checker/editorconfig-checker
       - name: Get editorconfig-checker dependencies
         run: go get github.com/editorconfig-checker/editorconfig-checker@1fca5cf0414e98154bac7943408cf3c742045fda
       - name: List cwd
