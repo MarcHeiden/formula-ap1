@@ -1,0 +1,26 @@
+name: Editorconfig check
+on:
+  pull_request:
+    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  editorconfig-check:
+    name: Editorconfig check
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v3
+      - name: Clone editorconfig-checker repo
+        run: git clone https://github.com/editorconfig-checker/editorconfig-checker.git
+      - name: Checkout specific version by using a commit hash
+        run: cd editorconfig-checker && git checkout 1fca5cf0414e98154bac7943408cf3c742045fda
+      - uses: actions/setup-go@v4
+        with:
+          cache-dependency-path: editorconfig-checker/go.sum
+      - name: Build editorconfig-checker
+        run: cd editorconfig-checker && make build
+      - name: Run editorconfig-checker
+        run: ./editorconfig-checker/bin/ec -v
