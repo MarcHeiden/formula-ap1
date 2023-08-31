@@ -14,12 +14,16 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-go@v4
-        # Install specifc editorconfig-checker by using a commit hash
-      - name: Create go module
-        run: go mod init editorconfig-checker
-      - name: Get editorconfig-checker dependencies
-        #run: go get github.com/editorconfig-checker/editorconfig-checker@1fca5cf0414e98154bac7943408cf3c742045fda
-        run: go get github.com/editorconfig-checker/editorconfig-checker
+      #  # Install specifc editorconfig-checker by using a commit hash
+      #- name: Create go module
+      #  run: go mod init editorconfig-checker
+      #- name: Get editorconfig-checker dependencies
+      #  #run: go get github.com/editorconfig-checker/editorconfig-checker@1fca5cf0414e98154bac7943408cf3c742045fda
+      #  run: go get github.com/editorconfig-checker/editorconfig-checker
+      - name: Clone editorconfig-checker repo
+        run: git clone https://github.com/editorconfig-checker/editorconfig-checker.git
+      - name: Checkout specifc version by using a commit hash
+        run: cd editorconfig-checker && git checkout 1fca5cf0414e98154bac7943408cf3c742045fda
       - name: List cwd
         run: ls -la
       - name: Build editorconfig-checker
