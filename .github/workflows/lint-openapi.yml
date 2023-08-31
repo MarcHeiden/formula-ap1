@@ -27,4 +27,4 @@ jobs:
       - name: Install redocly cli
         run: npm install -g ${{ vars.REDOCLY_CLI }}
       - name: Lint OpenAPI
-        run: redocly lint f1api --config ${{ vars.REDOCLY_CLI_CONFIG }}
+        run: redocly lint f1api-internal --config ${{ vars.REDOCLY_CLI_CONFIG }}
