@@ -1,0 +1,17 @@
+spring:
+  # not needed when using docker compose dev tools
+  #datasource:
+  #  url: jdbc:postgresql://localhost:5432/postgres
+  #  username: postgres
+  #  password: postgres
+  jpa:
+    hibernate:
+      ddl-auto: update
+  jackson:
+    # do not include empty fields in json
+    default-property-inclusion: non_empty
+  # specify settings for docker compose dev tools
+  docker:
+    compose:
+      profiles:
+        active: "dev"
