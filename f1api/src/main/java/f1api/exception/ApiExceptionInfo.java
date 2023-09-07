@@ -1,6 +1,8 @@
 package f1api.exception;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,8 +12,16 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @RequiredArgsConstructor
+@JsonPropertyOrder({"httpStatusCode"})
 public class ApiExceptionInfo {
+    @JsonProperty("httpStatusCode")
     private final HttpStatus httpStatus;
+
+    @JsonGetter("httpStatusCode")
+    public int getHttpStatusCode() {
+        return httpStatus.value();
+    }
+
     // Get current UTC date and time
     private final Instant timestamp = Instant.now();
     private final String message;
@@ -19,11 +29,6 @@ public class ApiExceptionInfo {
     private record ValidationError(String fieldName, String message) {}
 
     private final List<ValidationError> validationErrors = new ArrayList<>();
-
-    @JsonGetter("httpStatus")
-    public int getHttpStatusValue() {
-        return httpStatus.value();
-    }
 
     public void addValidationError(String fieldName, String message) {
         this.validationErrors.add(new ValidationError(fieldName, message));
