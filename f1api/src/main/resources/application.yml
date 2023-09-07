@@ -7,6 +7,22 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+  data:
+    web:
+      pageable:
+        page-parameter: pageNumber
+        size-parameter: pageSize
+        default-page-size: 20
+        max-page-size: 1000
+  web:
+    locale: en
+    resources:
+      # needed for NoHandlerFoundException handling
+      # https://stackoverflow.com/a/51050702
+      add-mappings: false
+  mvc:
+    # throw NoHandlerFoundException
+    throw-exception-if-no-handler-found: true
   jackson:
     # do not include empty fields in json
     default-property-inclusion: non_empty
