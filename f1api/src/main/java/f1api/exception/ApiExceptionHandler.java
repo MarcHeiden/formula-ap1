@@ -9,6 +9,7 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 @ControllerAdvice
@@ -40,6 +41,16 @@ public class ApiExceptionHandler {
         HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
         ApiExceptionInfo apiExceptionInfo =
                 new ApiExceptionInfo(httpStatus, httpMessageNotReadableException.getMessage());
+        return ResponseEntity.status(httpStatus).body(apiExceptionInfo);
+    }
+
+    // Invalid type for parameter
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ApiExceptionInfo> handleMethodArgumentTypeMismatchException(
+            MethodArgumentTypeMismatchException methodArgumentTypeMismatchException) {
+        HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+        ApiExceptionInfo apiExceptionInfo = new ApiExceptionInfo(
+                httpStatus, "Invalid value for path parameter '" + methodArgumentTypeMismatchException.getName() + "'");
         return ResponseEntity.status(httpStatus).body(apiExceptionInfo);
     }
 
