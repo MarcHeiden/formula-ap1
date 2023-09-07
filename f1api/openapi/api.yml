@@ -45,6 +45,8 @@ paths:
             application/json:
               schema:
                 $ref: "./components/schemas.yml#/Season"
+        400:
+          $ref: "./components/responses.yml#/400"
         409:
           $ref: "./components/responses.yml#/409"
         422:
@@ -67,6 +69,8 @@ paths:
                 $ref: "./components/schemas.yml#/Seasons"
         400:
           $ref: "./components/responses.yml#/400"
+        422:
+          $ref: "./components/responses.yml#/422"
         500:
           $ref: "./components/responses.yml#/500"
   /seasons/{seasonId}:
@@ -88,8 +92,6 @@ paths:
           $ref: "./components/responses.yml#/400"
         404:
           $ref: "./components/responses.yml#/404"
-        422:
-          $ref: "./components/responses.yml#/422"
         500:
           $ref: "./components/responses.yml#/500"
   /seasons/{seasonId}/races:
@@ -143,6 +145,8 @@ paths:
           $ref: "./components/responses.yml#/400"
         404:
           $ref: "./components/responses.yml#/404"
+        422:
+          $ref: "./components/responses.yml#/422"
         500:
           $ref: "./components/responses.yml#/500"
   /seasons/{seasonId}/teams:
@@ -164,6 +168,8 @@ paths:
           $ref: "./components/responses.yml#/400"
         404:
           $ref: "./components/responses.yml#/404"
+        422:
+          $ref: "./components/responses.yml#/422"
         500:
           $ref: "./components/responses.yml#/500"
   /seasons/{seasonId}/teams/{teamId}/drivers:
@@ -186,6 +192,8 @@ paths:
           $ref: "./components/responses.yml#/400"
         404:
           $ref: "./components/responses.yml#/404"
+        422:
+          $ref: "./components/responses.yml#/422"
         500:
           $ref: "./components/responses.yml#/500"
   /seasons/{seasonId}/teams/{teamId}/engine:
@@ -230,6 +238,8 @@ paths:
           $ref: "./components/responses.yml#/400"
         404:
           $ref: "./components/responses.yml#/404"
+        422:
+          $ref: "./components/responses.yml#/422"
         500:
           $ref: "./components/responses.yml#/500"
   /seasons/{seasonId}/drivers/{driverId}/teams:
@@ -252,6 +262,8 @@ paths:
           $ref: "./components/responses.yml#/400"
         404:
           $ref: "./components/responses.yml#/404"
+        422:
+          $ref: "./components/responses.yml#/422"
         500:
           $ref: "./components/responses.yml#/500"
   /seasons/{seasonId}/engines:
@@ -273,6 +285,8 @@ paths:
           $ref: "./components/responses.yml#/400"
         404:
           $ref: "./components/responses.yml#/404"
+        422:
+          $ref: "./components/responses.yml#/422"
         500:
           $ref: "./components/responses.yml#/500"
   /seasons/{seasonId}/engines/{engineId}/teams:
@@ -295,6 +309,8 @@ paths:
           $ref: "./components/responses.yml#/400"
         404:
           $ref: "./components/responses.yml#/404"
+        422:
+          $ref: "./components/responses.yml#/422"
         500:
           $ref: "./components/responses.yml#/500"
 
@@ -317,6 +333,8 @@ paths:
                 $ref: "./components/schemas.yml#/Races"
         400:
           $ref: "./components/responses.yml#/400"
+        422:
+          $ref: "./components/responses.yml#/422"
         500:
           $ref: "./components/responses.yml#/500"
   /races/{raceId}:
@@ -427,6 +445,8 @@ paths:
           $ref: "./components/responses.yml#/400"
         404:
           $ref: "./components/responses.yml#/404"
+        422:
+          $ref: "./components/responses.yml#/422"
         500:
           $ref: "./components/responses.yml#/500"
     patch:
@@ -537,6 +557,8 @@ paths:
           $ref: "./components/responses.yml#/400"
         404:
           $ref: "./components/responses.yml#/404"
+        422:
+          $ref: "./components/responses.yml#/422"
         500:
           $ref: "./components/responses.yml#/500"
     patch:
@@ -625,6 +647,8 @@ paths:
           $ref: "./components/responses.yml#/400"
         404:
           $ref: "./components/responses.yml#/404"
+        422:
+          $ref: "./components/responses.yml#/422"
         500:
           $ref: "./components/responses.yml#/500"
     patch:
@@ -711,6 +735,8 @@ paths:
           $ref: "./components/responses.yml#/400"
         404:
           $ref: "./components/responses.yml#/404"
+        422:
+          $ref: "./components/responses.yml#/422"
         500:
           $ref: "./components/responses.yml#/500"
     patch:
@@ -797,6 +823,8 @@ paths:
           $ref: "./components/responses.yml#/400"
         404:
           $ref: "./components/responses.yml#/404"
+        422:
+          $ref: "./components/responses.yml#/422"
         500:
           $ref: "./components/responses.yml#/500"
     patch:
@@ -882,6 +910,8 @@ paths:
           $ref: "./components/responses.yml#/400"
         404:
           $ref: "./components/responses.yml#/404"
+        422:
+          $ref: "./components/responses.yml#/422"
         500:
           $ref: "./components/responses.yml#/500"
     patch:
@@ -937,6 +967,8 @@ paths:
             application/json:
               schema:
                 $ref: "./components/schemas.yml#/Team"
+        400:
+          $ref: "./components/responses.yml#/400"
         409:
           $ref: "./components/responses.yml#/409"
         422:
@@ -959,6 +991,8 @@ paths:
                 $ref: "./components/schemas.yml#/Teams"
         400:
           $ref: "./components/responses.yml#/400"
+        422:
+          $ref: "./components/responses.yml#/422"
         500:
           $ref: "./components/responses.yml#/500"
   /teams/{teamId}:
@@ -1032,6 +1066,8 @@ paths:
           $ref: "./components/responses.yml#/400"
         404:
           $ref: "./components/responses.yml#/404"
+        422:
+          $ref: "./components/responses.yml#/422"
         500:
           $ref: "./components/responses.yml#/500"
   /teams/{teamId}/drivers/{driverId}/seasons:
@@ -1054,6 +1090,8 @@ paths:
           $ref: "./components/responses.yml#/400"
         404:
           $ref: "./components/responses.yml#/404"
+        422:
+          $ref: "./components/responses.yml#/422"
         500:
           $ref: "./components/responses.yml#/500"
   /teams/{teamId}/engines:
@@ -1075,6 +1113,8 @@ paths:
           $ref: "./components/responses.yml#/400"
         404:
           $ref: "./components/responses.yml#/404"
+        422:
+          $ref: "./components/responses.yml#/422"
         500:
           $ref: "./components/responses.yml#/500"
   /teams/{teamId}/engines/{engineId}/seasons:
@@ -1097,6 +1137,8 @@ paths:
           $ref: "./components/responses.yml#/400"
         404:
           $ref: "./components/responses.yml#/404"
+        422:
+          $ref: "./components/responses.yml#/422"
         500:
           $ref: "./components/responses.yml#/500"
   /teams/{teamId}/seasons:
@@ -1118,6 +1160,8 @@ paths:
           $ref: "./components/responses.yml#/400"
         404:
           $ref: "./components/responses.yml#/404"
+        422:
+          $ref: "./components/responses.yml#/422"
         500:
           $ref: "./components/responses.yml#/500"
 
@@ -1142,6 +1186,8 @@ paths:
             application/json:
               schema:
                 $ref: "./components/schemas.yml#/Driver"
+        400:
+          $ref: "./components/responses.yml#/400"
         409:
           $ref: "./components/responses.yml#/409"
         422:
@@ -1160,6 +1206,8 @@ paths:
             application/json:
               schema:
                 $ref: "./components/schemas.yml#/Drivers"
+        422:
+          $ref: "./components/responses.yml#/422"
         500:
           $ref: "./components/responses.yml#/500"
   /drivers/{driverId}:
@@ -1233,6 +1281,8 @@ paths:
           $ref: "./components/responses.yml#/400"
         404:
           $ref: "./components/responses.yml#/404"
+        422:
+          $ref: "./components/responses.yml#/422"
         500:
           $ref: "./components/responses.yml#/500"
   /drivers/{driverId}/seasons:
@@ -1254,6 +1304,8 @@ paths:
           $ref: "./components/responses.yml#/400"
         404:
           $ref: "./components/responses.yml#/404"
+        422:
+          $ref: "./components/responses.yml#/422"
         500:
           $ref: "./components/responses.yml#/500"
 
@@ -1278,6 +1330,8 @@ paths:
             application/json:
               schema:
                 $ref: "./components/schemas.yml#/Engine"
+        400:
+          $ref: "./components/responses.yml#/400"
         409:
           $ref: "./components/responses.yml#/409"
         422:
@@ -1300,6 +1354,8 @@ paths:
                 $ref: "./components/schemas.yml#/Engines"
         400:
           $ref: "./components/responses.yml#/400"
+        422:
+          $ref: "./components/responses.yml#/422"
         500:
           $ref: "./components/responses.yml#/500"
   /engines/{engineId}:
@@ -1373,6 +1429,8 @@ paths:
           $ref: "./components/responses.yml#/400"
         404:
           $ref: "./components/responses.yml#/404"
+        422:
+          $ref: "./components/responses.yml#/422"
         500:
           $ref: "./components/responses.yml#/500"
   /engines/{engineId}/seasons:
@@ -1394,6 +1452,8 @@ paths:
           $ref: "./components/responses.yml#/400"
         404:
           $ref: "./components/responses.yml#/404"
+        422:
+          $ref: "./components/responses.yml#/422"
         500:
           $ref: "./components/responses.yml#/500"
 
@@ -1418,6 +1478,8 @@ paths:
             application/json:
               schema:
                 $ref: "./components/schemas.yml#/TeamsOfSeasons"
+        400:
+          $ref: "./components/responses.yml#/400"
         409:
           $ref: "./components/responses.yml#/409"
         422:
