@@ -9,6 +9,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -35,8 +36,10 @@ public class SeasonController {
 
     @GetMapping("/seasons")
     public ResponsePage<SeasonDTO> getSeasons(
-            Pageable pageable, @RequestParam(name = "seasonYear", required = false) Year seasonYear) {
-        return seasonApplicationService.getSeasons(pageable, seasonYear);
+            Pageable pageable,
+            @RequestParam(name = "seasonYear", required = false) Year seasonYear,
+            @RequestParam MultiValueMap<String, String> parameters) {
+        return seasonApplicationService.getSeasons(pageable, seasonYear, parameters);
     }
 
     @GetMapping("/seasons/{seasonId}")

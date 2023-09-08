@@ -1,6 +1,6 @@
 package f1api.season.application;
 
-import static f1api.sort.SortPropertiesHandler.handleSortProperties;
+import static f1api.queryparameter.QueryParameterHandler.handleQueryParameters;
 
 import f1api.exception.ApiInstanceAlreadyExistsException;
 import f1api.exception.ApiNotFoundException;
@@ -13,17 +13,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.MultiValueMap;
 
 @Service
 public class SeasonApplicationService {
     private final SeasonRepository seasonRepository;
     private final SeasonMapper seasonMapper;
 
-    private final SeasonSortPropertiesMapper seasonSortMapper;
+    private final SeasonSortPropertyMapper seasonSortMapper;
 
     @Autowired
     public SeasonApplicationService(
-            SeasonRepository seasonRepository, SeasonMapper seasonMapper, SeasonSortPropertiesMapper seasonSortMapper) {
+            SeasonRepository seasonRepository, SeasonMapper seasonMapper, SeasonSortPropertyMapper seasonSortMapper) {
         this.seasonRepository = seasonRepository;
         this.seasonMapper = seasonMapper;
         this.seasonSortMapper = seasonSortMapper;
@@ -31,20 +32,17 @@ public class SeasonApplicationService {
 
     public SeasonDTO createSeason(SeasonDTO seasonDTO) {
         if (seasonRepository.existsSeasonByYear(seasonDTO.getSeasonYear())) {
-            throw new ApiInstanceAlreadyExistsException(
-                    "Season with the seasonYear '" + seasonDTO.getSeasonYear() + "' already exists.");
+            throw ApiInstanceAlreadyExistsException.of(
+                    "Season", "seasonYear", seasonDTO.getSeasonYear().toString());
         }
         Season season = seasonMapper.toSeason(seasonDTO);
         seasonRepository.save(season);
         return seasonMapper.toSeasonDTO(season);
     }
 
-    /*private Page<Season> getSeasonByYear(Pageable pageable, Year year){
-        return seasonRepository.findSeasonByYear(pageable, year);
-    }*/
-
-    public ResponsePage<SeasonDTO> getSeasons(Pageable pageable, Year seasonYear) {
-        Pageable handledPageable = handleSortProperties(pageable, seasonSortMapper);
+    public ResponsePage<SeasonDTO> getSeasons(
+            Pageable pageable, Year seasonYear, MultiValueMap<String, String> parameters) {
+        Pageable handledPageable = handleQueryParameters(pageable, seasonSortMapper, parameters, SeasonDTO.class);
         Page<Season> seasons;
         if (seasonYear != null) {
             seasons = seasonRepository.findSeasonByYear(handledPageable, seasonYear);
@@ -58,7 +56,6 @@ public class SeasonApplicationService {
         return seasonRepository
                 .findById(seasonId)
                 .map(seasonMapper::toSeasonDTO)
-                .orElseThrow(
-                        () -> new ApiNotFoundException("Season with the seasonId '" + seasonId + "' does not exist."));
+                .orElseThrow(() -> ApiNotFoundException.of("Season", "seasonId", seasonId.toString()));
     }
 }
