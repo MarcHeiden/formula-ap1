@@ -26,7 +26,8 @@ public class ApiExceptionHandler {
     public ResponseEntity<ApiExceptionInfo> handleMethodArgumentNotValidException(
             MethodArgumentNotValidException methodArgumentNotValidException) {
         HttpStatus httpStatus = HttpStatus.UNPROCESSABLE_ENTITY;
-        ApiExceptionInfo apiExceptionInfo = new ApiExceptionInfo(httpStatus, "Invalid value for field");
+        String message = "Invalid value for field";
+        ApiExceptionInfo apiExceptionInfo = new ApiExceptionInfo(httpStatus, message);
         methodArgumentNotValidException
                 .getFieldErrors()
                 .forEach(fieldError ->
@@ -39,8 +40,8 @@ public class ApiExceptionHandler {
     public ResponseEntity<ApiExceptionInfo> handleHttpMessageNotReadableException(
             HttpMessageNotReadableException httpMessageNotReadableException) {
         HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
-        ApiExceptionInfo apiExceptionInfo =
-                new ApiExceptionInfo(httpStatus, httpMessageNotReadableException.getMessage());
+        String message = httpMessageNotReadableException.getMessage();
+        ApiExceptionInfo apiExceptionInfo = new ApiExceptionInfo(httpStatus, message);
         return ResponseEntity.status(httpStatus).body(apiExceptionInfo);
     }
 
@@ -49,8 +50,8 @@ public class ApiExceptionHandler {
     public ResponseEntity<ApiExceptionInfo> handleMethodArgumentTypeMismatchException(
             MethodArgumentTypeMismatchException methodArgumentTypeMismatchException) {
         HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
-        ApiExceptionInfo apiExceptionInfo = new ApiExceptionInfo(
-                httpStatus, "Invalid value for path parameter '" + methodArgumentTypeMismatchException.getName() + "'");
+        String message = "Invalid value for parameter '" + methodArgumentTypeMismatchException.getName() + "'";
+        ApiExceptionInfo apiExceptionInfo = new ApiExceptionInfo(httpStatus, message);
         return ResponseEntity.status(httpStatus).body(apiExceptionInfo);
     }
 
@@ -60,8 +61,8 @@ public class ApiExceptionHandler {
             HttpRequestMethodNotSupportedException httpRequestMethodNotSupportedException) {
         HttpStatus httpStatus = HttpStatus.valueOf(
                 httpRequestMethodNotSupportedException.getStatusCode().value());
-        ApiExceptionInfo apiExceptionInfo =
-                new ApiExceptionInfo(httpStatus, httpRequestMethodNotSupportedException.getMessage());
+        String message = httpRequestMethodNotSupportedException.getMessage();
+        ApiExceptionInfo apiExceptionInfo = new ApiExceptionInfo(httpStatus, message);
         return ResponseEntity.status(httpStatus).body(apiExceptionInfo);
     }
 
@@ -71,7 +72,8 @@ public class ApiExceptionHandler {
             NoHandlerFoundException noHandlerFoundException) {
         HttpStatus httpStatus =
                 HttpStatus.valueOf(noHandlerFoundException.getStatusCode().value());
-        ApiExceptionInfo apiExceptionInfo = new ApiExceptionInfo(httpStatus, noHandlerFoundException.getMessage());
+        String message = noHandlerFoundException.getMessage();
+        ApiExceptionInfo apiExceptionInfo = new ApiExceptionInfo(httpStatus, message);
         return ResponseEntity.status(httpStatus).body(apiExceptionInfo);
     }
 
@@ -80,8 +82,8 @@ public class ApiExceptionHandler {
     public ResponseEntity<ApiExceptionInfo> handlePropertyReferenceException(
             PropertyReferenceException propertyReferenceException) {
         HttpStatus httpStatus = HttpStatus.UNPROCESSABLE_ENTITY;
-        ApiExceptionInfo apiExceptionInfo = new ApiExceptionInfo(
-                httpStatus, "'" + propertyReferenceException.getPropertyName() + "' is not a valid sort parameter");
+        String message = "'" + propertyReferenceException.getPropertyName() + "' is not a valid sort parameter.";
+        ApiExceptionInfo apiExceptionInfo = new ApiExceptionInfo(httpStatus, message);
         return ResponseEntity.status(httpStatus).body(apiExceptionInfo);
     }
 
@@ -94,7 +96,8 @@ public class ApiExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiExceptionInfo> handleUncaughtException() {
         HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-        ApiExceptionInfo apiExceptionInfo = new ApiExceptionInfo(httpStatus, "Something went wrong");
+        String message = "Something went wrong";
+        ApiExceptionInfo apiExceptionInfo = new ApiExceptionInfo(httpStatus, message);
         return ResponseEntity.status(httpStatus).body(apiExceptionInfo);
     }
 }
