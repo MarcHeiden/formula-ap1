@@ -20,14 +20,16 @@ public class SeasonApplicationService {
     private final SeasonRepository seasonRepository;
     private final SeasonMapper seasonMapper;
 
-    private final SeasonSortPropertyMapper seasonSortMapper;
+    private final SeasonSortPropertyMapper seasonSortPropertyMapper;
 
     @Autowired
     public SeasonApplicationService(
-            SeasonRepository seasonRepository, SeasonMapper seasonMapper, SeasonSortPropertyMapper seasonSortMapper) {
+            SeasonRepository seasonRepository,
+            SeasonMapper seasonMapper,
+            SeasonSortPropertyMapper seasonSortPropertyMapper) {
         this.seasonRepository = seasonRepository;
         this.seasonMapper = seasonMapper;
-        this.seasonSortMapper = seasonSortMapper;
+        this.seasonSortPropertyMapper = seasonSortPropertyMapper;
     }
 
     public SeasonDTO createSeason(SeasonDTO seasonDTO) {
@@ -42,7 +44,8 @@ public class SeasonApplicationService {
 
     public ResponsePage<SeasonDTO> getSeasons(
             Pageable pageable, Year seasonYear, MultiValueMap<String, String> parameters) {
-        Pageable handledPageable = handleQueryParameters(pageable, seasonSortMapper, parameters, SeasonDTO.class);
+        Pageable handledPageable =
+                handleQueryParameters(pageable, seasonSortPropertyMapper, parameters, SeasonDTO.class);
         Page<Season> seasons;
         if (seasonYear != null) {
             seasons = seasonRepository.findSeasonByYear(handledPageable, seasonYear);
