@@ -53,7 +53,7 @@ public class EngineApplicationService {
     private Engine getEngineById(UUID id) {
         return engineRepository
                 .findById(id)
-                .orElseThrow(() -> new ApiNotFoundException("Engine with the engineId '" + id + "' does not exist."));
+                .orElseThrow(() -> ApiNotFoundException.of("Engine", "engineId", id.toString()));
     }
 
     public EngineDTO getEngine(UUID engineId) {
