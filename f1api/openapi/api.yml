@@ -220,13 +220,12 @@ paths:
           $ref: "./components/responses.yml#/500"
   /seasons/{seasonId}/drivers:
     get:
-      summary: Get drivers of a season / Get driver of a season by driverCode
+      summary: Get drivers of a season
       tags:
         - "Drivers"
         - "SeasonController"
       parameters:
         - $ref: "./components/parameters.yml#/seasonId"
-        - $ref: "./components/parameters.yml#/driverCode"
       responses:
         200:
           description: OK
@@ -426,14 +425,13 @@ paths:
         500:
           $ref: "./components/responses.yml#/500"
     get:
-      summary: Get qualifying of a race / Get qualifying of a driver of a race by driverId/driverCode
+      summary: Get qualifying of a race / Get qualifying of a driver of a race by driverId
       tags:
         - "Qualifyings"
         - "RaceController"
       parameters:
         - $ref: "./components/parameters.yml#/raceId"
         - $ref: "./components/parameters.yml#/driverIdQuery"
-        - $ref: "./components/parameters.yml#/driverCode"
       responses:
         200:
           description: OK
@@ -538,14 +536,13 @@ paths:
         500:
           $ref: "./components/responses.yml#/500"
     get:
-      summary: Get race result of a race / Get race result of a driver of a race by driverId/driverCode
+      summary: Get race result of a race / Get race result of a driver of a race by driverId
       tags:
         - "Results"
         - "RaceController"
       parameters:
         - $ref: "./components/parameters.yml#/raceId"
         - $ref: "./components/parameters.yml#/driverIdQuery"
-        - $ref: "./components/parameters.yml#/driverCode"
       responses:
         200:
           description: OK
@@ -628,14 +625,13 @@ paths:
         500:
           $ref: "./components/responses.yml#/500"
     get:
-      summary: Get fastestLaps of a race / Get fastestLap of a driver of a race by driverId/driverCode
+      summary: Get fastestLaps of a race / Get fastestLap of a driver of a race by driverId
       tags:
         - "FastestLaps"
         - "RaceController"
       parameters:
         - $ref: "./components/parameters.yml#/raceId"
         - $ref: "./components/parameters.yml#/driverIdQuery"
-        - $ref: "./components/parameters.yml#/driverCode"
       responses:
         200:
           description: OK
@@ -716,14 +712,13 @@ paths:
         500:
           $ref: "./components/responses.yml#/500"
     get:
-      summary: Get topSpeeds of a race / Get topSpeed of a driver of a race by driverId/driverCode
+      summary: Get topSpeeds of a race / Get topSpeed of a driver of a race by driverId
       tags:
         - "TopSpeeds"
         - "RaceController"
       parameters:
         - $ref: "./components/parameters.yml#/raceId"
         - $ref: "./components/parameters.yml#/driverIdQuery"
-        - $ref: "./components/parameters.yml#/driverCode"
       responses:
         200:
           description: OK
@@ -804,14 +799,13 @@ paths:
         500:
           $ref: "./components/responses.yml#/500"
     get:
-      summary: Get leadingLaps of a race / Get leadingLaps of a driver of a race by driverId/driverCode
+      summary: Get leadingLaps of a race / Get leadingLaps of a driver of a race by driverId
       tags:
         - "LeadingLaps"
         - "RaceController"
       parameters:
         - $ref: "./components/parameters.yml#/raceId"
         - $ref: "./components/parameters.yml#/driverIdQuery"
-        - $ref: "./components/parameters.yml#/driverCode"
       responses:
         200:
           description: OK
@@ -1195,10 +1189,13 @@ paths:
         500:
           $ref: "./components/responses.yml#/500"
     get:
-      summary: Get drivers
+      summary: Get drivers / Get driver by firstName and lastName
       tags:
         - "Drivers"
         - "DriverController"
+      parameters:
+        - $ref: "./components/parameters.yml#/firstName"
+        - $ref: "./components/parameters.yml#/lastName"
       responses:
         200:
           description: OK
@@ -1206,6 +1203,8 @@ paths:
             application/json:
               schema:
                 $ref: "./components/schemas.yml#/Drivers"
+        400:
+          $ref: "./components/responses.yml#/400"
         422:
           $ref: "./components/responses.yml#/422"
         500:

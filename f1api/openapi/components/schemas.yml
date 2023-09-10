@@ -329,22 +329,21 @@ driverIds:
   minItems: 2
   uniqueItems: true
   example: ["28f76df1-e54f-4d1b-891e-599a5df98209", "95878f98-df83-4e45-a82e-745a0b8fdbb8"]
-driverCode:
+firstName:
   type: string
-  example: LEC
+  example: Charles
+lastName:
+  type: string
+  example: Leclerc
 Driver:
   type: object
   properties:
     driverId:
       $ref: "#/driverId"
     firstName:
-      type: string
-      example: Charles
+      $ref: "#/firstName"
     lastName:
-      type: string
-      example: Leclerc
-    driverCode:
-      $ref: "#/driverCode"
+      $ref: "#/lastName"
 Drivers:
   type: array
   items:
