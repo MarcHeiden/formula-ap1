@@ -33,4 +33,11 @@ public class ApiExceptionInfo {
     public void addValidationError(String fieldName, String message) {
         this.validationErrors.add(new ValidationError(fieldName, message));
     }
+
+    /*@Default
+    public ApiExceptionInfo(HttpStatus httpStatus, String message, List<ValidationError> validationErrors) {
+        this.httpStatus = httpStatus;
+        this.message = message;
+        this.validationErrors = validationErrors;
+    }*/
 }
