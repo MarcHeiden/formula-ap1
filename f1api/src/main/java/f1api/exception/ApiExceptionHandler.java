@@ -1,5 +1,6 @@
 package f1api.exception;
 
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.http.HttpStatus;
@@ -32,6 +33,21 @@ public class ApiExceptionHandler {
                 .getFieldErrors()
                 .forEach(fieldError ->
                         apiExceptionInfo.addValidationError(fieldError.getField(), fieldError.getDefaultMessage()));
+        return ResponseEntity.status(httpStatus).body(apiExceptionInfo);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ApiExceptionInfo> handleConstraintValidationException(
+            ConstraintViolationException constraintViolationException) {
+        HttpStatus httpStatus = HttpStatus.UNPROCESSABLE_ENTITY;
+        String message = "Invalid value for field";
+        ApiExceptionInfo apiExceptionInfo = new ApiExceptionInfo(httpStatus, message);
+        constraintViolationException.getConstraintViolations().forEach(constraintViolation -> {
+            String[] splitPropertyPath =
+                    constraintViolation.getPropertyPath().toString().split("\\.");
+            apiExceptionInfo.addValidationError(
+                    splitPropertyPath[splitPropertyPath.length - 1], constraintViolation.getMessage());
+        });
         return ResponseEntity.status(httpStatus).body(apiExceptionInfo);
     }
 
