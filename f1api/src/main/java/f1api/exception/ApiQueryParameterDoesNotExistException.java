@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 public class ApiQueryParameterDoesNotExistException extends ApiException {
 
     public ApiQueryParameterDoesNotExistException(String message) {
-        super(message, HttpStatus.UNPROCESSABLE_ENTITY);
+        super(message, HttpStatus.BAD_REQUEST);
     }
 
     public static ApiQueryParameterDoesNotExistException of(String parameter) {

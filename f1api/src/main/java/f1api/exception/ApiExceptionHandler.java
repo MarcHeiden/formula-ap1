@@ -97,7 +97,7 @@ public class ApiExceptionHandler {
     @ExceptionHandler(PropertyReferenceException.class)
     public ResponseEntity<ApiExceptionInfo> handlePropertyReferenceException(
             PropertyReferenceException propertyReferenceException) {
-        HttpStatus httpStatus = HttpStatus.UNPROCESSABLE_ENTITY;
+        HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
         String message = "'" + propertyReferenceException.getPropertyName() + "' is not a valid sort parameter.";
         ApiExceptionInfo apiExceptionInfo = new ApiExceptionInfo(httpStatus, message);
         return ResponseEntity.status(httpStatus).body(apiExceptionInfo);
