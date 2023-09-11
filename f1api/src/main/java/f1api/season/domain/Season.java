@@ -1,9 +1,9 @@
 package f1api.season.domain;
 
+import f1api.baseentity.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import java.time.Year;
-import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,13 +12,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @Table(name = "Season", schema = "public")
-public class Season {
-    @NotNull
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id", unique = true, nullable = false)
-    private UUID id;
-
+public class Season extends BaseEntity {
     @NotNull
     @Column(name = "year", unique = true, nullable = false)
     private Year year;

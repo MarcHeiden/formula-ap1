@@ -1,8 +1,8 @@
 package f1api.engine.domain;
 
+import f1api.baseentity.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,13 +12,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Table(name = "Engine", schema = "public")
-public class Engine {
-    @NotNull
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id", unique = true, nullable = false)
-    private UUID id;
-
+public class Engine extends BaseEntity {
     @Setter
     @NotNull
     @Column(name = "manufacturer", unique = true, nullable = false)

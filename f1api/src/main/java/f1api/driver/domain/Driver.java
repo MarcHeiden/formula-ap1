@@ -1,8 +1,8 @@
 package f1api.driver.domain;
 
+import f1api.baseentity.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,13 +19,7 @@ import lombok.Setter;
                     name = "uniqueName",
                     columnNames = {"firstName", "lastName"})
         })
-public class Driver {
-    @NotNull
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id", unique = true, nullable = false)
-    private UUID id;
-
+public class Driver extends BaseEntity {
     @Setter
     @NotNull
     @Column(name = "firstName", nullable = false)
