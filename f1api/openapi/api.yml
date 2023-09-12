@@ -1415,14 +1415,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "./components/schemas.yml#/TeamsOfSeasons"
+              $ref: "./components/schemas.yml#/TeamOfSeason"
       responses:
         201:
           description: Created
           content:
             application/json:
               schema:
-                $ref: "./components/schemas.yml#/TeamsOfSeasons"
+                $ref: "./components/schemas.yml#/TeamOfSeason"
         400:
           $ref: "./components/responses.yml#/400"
         409:
