@@ -9,7 +9,6 @@ import f1api.exception.ApiInstanceAlreadyExistsException;
 import f1api.exception.ApiNotFoundException;
 import f1api.exception.ApiPropertyIsNullException;
 import f1api.responsepage.ResponsePage;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +21,14 @@ import org.springframework.util.MultiValueMap;
 public class DriverApplicationService {
     private final DriverRepository driverRepository;
     private final DriverMapper driverMapper;
+    private final DriverQueryParameter driverQueryParameter;
 
     @Autowired
-    public DriverApplicationService(DriverRepository driverRepository, DriverMapper driverMapper) {
+    public DriverApplicationService(
+            DriverRepository driverRepository, DriverMapper driverMapper, DriverQueryParameter driverQueryParameter) {
         this.driverRepository = driverRepository;
         this.driverMapper = driverMapper;
+        this.driverQueryParameter = driverQueryParameter;
     }
 
     private void checkIfDriverAlreadyExists(String firstName, String lastName) {
@@ -45,7 +47,7 @@ public class DriverApplicationService {
 
     public ResponsePage<DriverDTO> getDrivers(
             Pageable pageable, String firstName, String lastName, MultiValueMap<String, String> parameters) {
-        handleQueryParameters(parameters, DriverDTO.class);
+        handleQueryParameters(parameters, driverQueryParameter);
         Page<Driver> drivers;
         if (firstName != null && lastName != null) {
             drivers = driverRepository.findDriverByFirstNameAndLastName(pageable, firstName, lastName);
@@ -59,7 +61,7 @@ public class DriverApplicationService {
         return ResponsePage.of(drivers.map(driverMapper::toDriverDTO));
     }
 
-    private Driver getDriverById(UUID id) {
+    public Driver getDriverById(UUID id) {
         return driverRepository
                 .findById(id)
                 .orElseThrow(() -> ApiNotFoundException.of("Driver", "driverId", id.toString()));
@@ -71,16 +73,17 @@ public class DriverApplicationService {
 
     public DriverDTO updateDriver(UUID driverId, DriverDTO driverDTO) {
         Driver driver = getDriverById(driverId);
+        if (driverDTO.isEmpty()) {
+            throw ApiPropertyIsNullException.of(DriverDTO.getNotNullProperties());
+        }
         if (driverDTO.getFirstName() != null && driverDTO.getLastName() != null) {
             checkIfDriverAlreadyExists(driverDTO.getFirstName(), driverDTO.getLastName());
+        }
+        if (driverDTO.getFirstName() != null) {
             driver.setFirstName(driverDTO.getFirstName());
+        }
+        if (driverDTO.getLastName() != null) {
             driver.setLastName(driverDTO.getLastName());
-        } else if (driverDTO.getFirstName() != null) {
-            driver.setFirstName(driverDTO.getFirstName());
-        } else if (driverDTO.getLastName() != null) {
-            driver.setLastName(driverDTO.getLastName());
-        } else {
-            throw ApiPropertyIsNullException.of(List.of("firstName", "lastName"));
         }
         driverRepository.save(driver);
         return driverMapper.toDriverDTO(driver);

@@ -22,14 +22,18 @@ public class SeasonApplicationService {
 
     private final SeasonSortPropertyMapper seasonSortPropertyMapper;
 
+    private final SeasonQueryParameter seasonQueryParameter;
+
     @Autowired
     public SeasonApplicationService(
             SeasonRepository seasonRepository,
             SeasonMapper seasonMapper,
-            SeasonSortPropertyMapper seasonSortPropertyMapper) {
+            SeasonSortPropertyMapper seasonSortPropertyMapper,
+            SeasonQueryParameter seasonQueryParameter) {
         this.seasonRepository = seasonRepository;
         this.seasonMapper = seasonMapper;
         this.seasonSortPropertyMapper = seasonSortPropertyMapper;
+        this.seasonQueryParameter = seasonQueryParameter;
     }
 
     public SeasonDTO createSeason(SeasonDTO seasonDTO) {
@@ -44,8 +48,8 @@ public class SeasonApplicationService {
 
     public ResponsePage<SeasonDTO> getSeasons(
             Pageable pageable, Year seasonYear, MultiValueMap<String, String> parameters) {
-        Pageable handledPageable =
-                handleQueryParameters(pageable, seasonSortPropertyMapper, parameters, SeasonDTO.class);
+        Pageable handledPageable = handleQueryParameters(
+                parameters, seasonQueryParameter, pageable, seasonSortPropertyMapper, SeasonDTO.class);
         Page<Season> seasons;
         if (seasonYear != null) {
             seasons = seasonRepository.findSeasonByYear(handledPageable, seasonYear);
@@ -55,10 +59,13 @@ public class SeasonApplicationService {
         return ResponsePage.of(seasons.map(seasonMapper::toSeasonDTO));
     }
 
-    public SeasonDTO getSeason(UUID seasonId) {
+    public Season getSeasonById(UUID id) {
         return seasonRepository
-                .findById(seasonId)
-                .map(seasonMapper::toSeasonDTO)
-                .orElseThrow(() -> ApiNotFoundException.of("Season", "seasonId", seasonId.toString()));
+                .findById(id)
+                .orElseThrow(() -> ApiNotFoundException.of("Season", "seasonId", id.toString()));
+    }
+
+    public SeasonDTO getSeason(UUID seasonId) {
+        return seasonMapper.toSeasonDTO(getSeasonById(seasonId));
     }
 }

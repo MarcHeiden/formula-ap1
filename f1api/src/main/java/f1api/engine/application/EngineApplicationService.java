@@ -18,11 +18,14 @@ import org.springframework.util.MultiValueMap;
 public class EngineApplicationService {
     private final EngineRepository engineRepository;
     private final EngineMapper engineMapper;
+    private final EngineQueryParameter engineQueryParameter;
 
     @Autowired
-    public EngineApplicationService(EngineRepository engineRepository, EngineMapper engineMapper) {
+    public EngineApplicationService(
+            EngineRepository engineRepository, EngineMapper engineMapper, EngineQueryParameter engineQueryParameter) {
         this.engineRepository = engineRepository;
         this.engineMapper = engineMapper;
+        this.engineQueryParameter = engineQueryParameter;
     }
 
     private void checkIfEngineAlreadyExists(String manufacturer) {
@@ -40,7 +43,7 @@ public class EngineApplicationService {
 
     public ResponsePage<EngineDTO> getEngines(
             Pageable pageable, String manufacturer, MultiValueMap<String, String> parameters) {
-        handleQueryParameters(parameters, EngineDTO.class);
+        handleQueryParameters(parameters, engineQueryParameter);
         Page<Engine> engines;
         if (manufacturer != null) {
             engines = engineRepository.findEngineByManufacturer(pageable, manufacturer);
@@ -50,7 +53,7 @@ public class EngineApplicationService {
         return ResponsePage.of(engines.map(engineMapper::toEngineDTO));
     }
 
-    private Engine getEngineById(UUID id) {
+    public Engine getEngineById(UUID id) {
         return engineRepository
                 .findById(id)
                 .orElseThrow(() -> ApiNotFoundException.of("Engine", "engineId", id.toString()));

@@ -20,12 +20,18 @@ public class TeamApplicationService {
     private final TeamMapper teamMapper;
     private final TeamSortPropertyMapper teamSortPropertyMapper;
 
+    private final TeamQueryParameter teamQueryParameter;
+
     @Autowired
     public TeamApplicationService(
-            TeamRepository teamRepository, TeamMapper teamMapper, TeamSortPropertyMapper teamSortPropertyMapper) {
+            TeamRepository teamRepository,
+            TeamMapper teamMapper,
+            TeamSortPropertyMapper teamSortPropertyMapper,
+            TeamQueryParameter teamQueryParameter) {
         this.teamRepository = teamRepository;
         this.teamMapper = teamMapper;
         this.teamSortPropertyMapper = teamSortPropertyMapper;
+        this.teamQueryParameter = teamQueryParameter;
     }
 
     private void checkIfTeamAlreadyExists(String name) {
@@ -43,7 +49,8 @@ public class TeamApplicationService {
 
     public ResponsePage<TeamDTO> getTeams(
             Pageable pageable, String teamName, MultiValueMap<String, String> parameters) {
-        Pageable handledPageable = handleQueryParameters(pageable, teamSortPropertyMapper, parameters, TeamDTO.class);
+        Pageable handledPageable =
+                handleQueryParameters(parameters, teamQueryParameter, pageable, teamSortPropertyMapper, TeamDTO.class);
         Page<Team> teams;
         if (teamName != null) {
             teams = teamRepository.findTeamByName(handledPageable, teamName);
@@ -53,7 +60,7 @@ public class TeamApplicationService {
         return ResponsePage.of(teams.map(teamMapper::toTeamDTO));
     }
 
-    private Team getTeamById(UUID id) {
+    public Team getTeamById(UUID id) {
         return teamRepository.findById(id).orElseThrow(() -> ApiNotFoundException.of("Team", "teamId", id.toString()));
     }
 
