@@ -3,11 +3,9 @@ package f1api.driver.domain;
 import f1api.baseentity.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Getter
@@ -29,9 +27,4 @@ public class Driver extends BaseEntity {
     @NotNull
     @Column(name = "lastName", nullable = false)
     private String lastName;
-
-    public Driver(String firstName, String lastName) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-    }
 }

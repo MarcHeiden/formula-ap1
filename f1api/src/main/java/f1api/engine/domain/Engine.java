@@ -3,11 +3,9 @@ package f1api.engine.domain;
 import f1api.baseentity.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Getter
@@ -17,8 +15,4 @@ public class Engine extends BaseEntity {
     @NotNull
     @Column(name = "manufacturer", unique = true, nullable = false)
     private String manufacturer;
-
-    public Engine(String manufacturer) {
-        this.manufacturer = manufacturer;
-    }
 }

@@ -3,11 +3,9 @@ package f1api.team.domain;
 import f1api.baseentity.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Getter
@@ -17,8 +15,4 @@ public class Team extends BaseEntity {
     @NotNull
     @Column(name = "name", unique = true, nullable = false)
     private String name;
-
-    public Team(String name) {
-        this.name = name;
-    }
 }
