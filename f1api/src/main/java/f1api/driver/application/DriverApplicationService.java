@@ -31,11 +31,23 @@ public class DriverApplicationService {
         this.driverQueryParameter = driverQueryParameter;
     }
 
+    private void throwApiInstanceAlreadyExistsException(String firstName, String lastName) {
+        throw ApiInstanceAlreadyExistsException.of(
+                "Driver", Map.ofEntries(entry("firstName", firstName), entry("lastName", lastName)));
+    }
+
     private void checkIfDriverAlreadyExists(String firstName, String lastName) {
         if (driverRepository.existsDriverByFirstNameAndLastName(firstName, lastName)) {
-            throw ApiInstanceAlreadyExistsException.of(
-                    "Driver", Map.ofEntries(entry("firstName", firstName), entry("lastName", lastName)));
+            throwApiInstanceAlreadyExistsException(firstName, lastName);
         }
+    }
+
+    private void checkIfDifferentDriverAlreadyExists(Driver driver, String firstName, String lastName) {
+        driverRepository.findDriverByFirstNameAndLastName(firstName, lastName).ifPresent(foundDriver -> {
+            if (!driver.getId().equals(foundDriver.getId())) {
+                throwApiInstanceAlreadyExistsException(firstName, lastName);
+            }
+        });
     }
 
     public DriverDTO createDriver(DriverDTO driverDTO) {
@@ -77,7 +89,7 @@ public class DriverApplicationService {
             throw ApiPropertyIsNullException.of(DriverDTO.getNotNullProperties());
         }
         if (driverDTO.getFirstName() != null && driverDTO.getLastName() != null) {
-            checkIfDriverAlreadyExists(driverDTO.getFirstName(), driverDTO.getLastName());
+            checkIfDifferentDriverAlreadyExists(driver, driverDTO.getFirstName(), driverDTO.getLastName());
         }
         if (driverDTO.getFirstName() != null) {
             driver.setFirstName(driverDTO.getFirstName());

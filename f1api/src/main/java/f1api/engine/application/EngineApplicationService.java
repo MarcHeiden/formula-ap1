@@ -28,10 +28,22 @@ public class EngineApplicationService {
         this.engineQueryParameter = engineQueryParameter;
     }
 
+    private void throwApiInstanceAlreadyExistsException(String manufacturer) {
+        throw ApiInstanceAlreadyExistsException.of("Engine", "manufacturer", manufacturer);
+    }
+
     private void checkIfEngineAlreadyExists(String manufacturer) {
         if (engineRepository.existsEngineByManufacturer(manufacturer)) {
-            throw ApiInstanceAlreadyExistsException.of("Engine", "manufacturer", manufacturer);
+            throwApiInstanceAlreadyExistsException(manufacturer);
         }
+    }
+
+    private void checkIfDifferentEngineAlreadyExists(Engine engine, String manufacturer) {
+        engineRepository.findEngineByManufacturer(manufacturer).ifPresent(foundEngine -> {
+            if (!engine.getId().equals(foundEngine.getId())) {
+                throwApiInstanceAlreadyExistsException(manufacturer);
+            }
+        });
     }
 
     public EngineDTO createEngine(EngineDTO engineDTO) {
@@ -65,7 +77,7 @@ public class EngineApplicationService {
 
     public EngineDTO updateEngine(UUID engineId, EngineDTO engineDTO) {
         Engine engine = getEngineById(engineId);
-        checkIfEngineAlreadyExists(engineDTO.getManufacturer());
+        checkIfDifferentEngineAlreadyExists(engine, engineDTO.getManufacturer());
         engine.setManufacturer(engineDTO.getManufacturer());
         engineRepository.save(engine);
         return engineMapper.toEngineDTO(engine);

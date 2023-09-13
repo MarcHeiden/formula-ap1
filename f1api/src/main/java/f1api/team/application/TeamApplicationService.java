@@ -34,10 +34,22 @@ public class TeamApplicationService {
         this.teamQueryParameter = teamQueryParameter;
     }
 
+    private void throwApiInstanceAlreadyExistsException(String name) {
+        throw ApiInstanceAlreadyExistsException.of("Team", "teamName", name);
+    }
+
     private void checkIfTeamAlreadyExists(String name) {
         if (teamRepository.existsTeamByName(name)) {
-            throw ApiInstanceAlreadyExistsException.of("Team", "teamName", name);
+            throwApiInstanceAlreadyExistsException(name);
         }
+    }
+
+    private void checkIfDifferentTeamAlreadyExists(Team team, String name) {
+        teamRepository.findTeamByName(name).ifPresent(foundTeam -> {
+            if (!team.getId().equals(foundTeam.getId())) {
+                throwApiInstanceAlreadyExistsException(name);
+            }
+        });
     }
 
     public TeamDTO createTeam(TeamDTO teamDTO) {
@@ -70,7 +82,7 @@ public class TeamApplicationService {
 
     public TeamDTO updateTeam(UUID teamId, TeamDTO teamDTO) {
         Team team = getTeamById(teamId);
-        checkIfTeamAlreadyExists(teamDTO.getTeamName());
+        checkIfDifferentTeamAlreadyExists(team, teamDTO.getTeamName());
         team.setName(teamDTO.getTeamName());
         teamRepository.save(team);
         return teamMapper.toTeamDTO(team);
