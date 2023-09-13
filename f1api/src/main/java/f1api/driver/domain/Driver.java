@@ -9,6 +9,7 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Getter
+@Setter
 @Table(
         name = "Driver",
         schema = "public",
@@ -18,12 +19,10 @@ import lombok.*;
                     columnNames = {"firstName", "lastName"})
         })
 public class Driver extends BaseEntity {
-    @Setter
     @NotNull
     @Column(name = "firstName", nullable = false)
     private String firstName;
 
-    @Setter
     @NotNull
     @Column(name = "lastName", nullable = false)
     private String lastName;

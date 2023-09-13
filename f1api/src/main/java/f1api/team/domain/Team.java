@@ -9,9 +9,9 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Getter
+@Setter
 @Table(name = "Team", schema = "public")
 public class Team extends BaseEntity {
-    @Setter
     @NotNull
     @Column(name = "name", unique = true, nullable = false)
     private String name;
