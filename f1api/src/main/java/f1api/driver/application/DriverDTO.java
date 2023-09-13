@@ -3,7 +3,7 @@ package f1api.driver.application;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import f1api.validation.OnCreate;
 import jakarta.validation.constraints.NotNull;
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,5 +29,5 @@ public class DriverDTO {
 
     @Getter
     @JsonIgnore
-    private static final List<String> notNullProperties = List.of("firstName", "lastName");
+    private static final Set<String> notNullProperties = Set.of("firstName", "lastName");
 }
