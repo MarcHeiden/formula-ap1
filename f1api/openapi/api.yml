@@ -92,6 +92,37 @@ paths:
           $ref: "./components/responses.yml#/404"
         500:
           $ref: "./components/responses.yml#/500"
+    patch:
+      x-internal: true
+      summary: Update season
+      tags:
+        - "Seasons"
+        - "SeasonController"
+      parameters:
+        - $ref: "./components/parameters.yml#/seasonId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./components/schemas.yml#/Season"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas.yml#/Season"
+        400:
+          $ref: "./components/responses.yml#/400"
+        404:
+          $ref: "./components/responses.yml#/404"
+        409:
+          $ref: "./components/responses.yml#/409"
+        422:
+          $ref: "./components/responses.yml#/422"
+        500:
+          $ref: "./components/responses.yml#/500"
   /seasons/{seasonId}/races:
     post:
       x-internal: true
@@ -1453,7 +1484,7 @@ paths:
   /teamsOfSeasons/{teamOfSeasonId}:
     x-internal: true
     patch:
-      summary: Update teamOfSeason
+      summary: Add driver/drivers to teamOfSeason
       tags:
         - "TeamsOfSeasons"
         - "TeamOfSeasonController"
@@ -1464,7 +1495,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "./components/schemas.yml#/TeamOfSeason"
+              $ref: "./components/schemas.yml#/TeamOfSeasonPatch"
       responses:
         200:
           description: OK
@@ -1476,8 +1507,6 @@ paths:
           $ref: "./components/responses.yml#/400"
         404:
           $ref: "./components/responses.yml#/404"
-        409:
-          $ref: "./components/responses.yml#/409"
         422:
           $ref: "./components/responses.yml#/422"
         500:

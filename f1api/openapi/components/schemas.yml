@@ -395,6 +395,14 @@ TeamOfSeason:
         - $ref: "#/engineId"
     driverIds:
       $ref: "#/driverIds"
+TeamOfSeasonPatch:
+  type: object
+  properties:
+    driverIds:
+      minItems: 1
+      uniqueItems: true
+      allOf:
+        - $ref: "#/driverIds"
 TeamsOfSeasons:
   type: array
   items:
