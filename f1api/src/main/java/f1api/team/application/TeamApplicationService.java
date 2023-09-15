@@ -61,8 +61,8 @@ public class TeamApplicationService {
 
     public ResponsePage<TeamDTO> getTeams(
             Pageable pageable, String teamName, MultiValueMap<String, String> parameters) {
-        Pageable handledPageable =
-                handleQueryParameters(parameters, teamQueryParameter, pageable, teamSortPropertyMapper, TeamDTO.class);
+        Pageable handledPageable = handleQueryParameters(
+                parameters, teamQueryParameter, pageable, teamSortPropertyMapper, TeamDTO.getProperties());
         Page<Team> teams;
         if (teamName != null) {
             teams = teamRepository.findTeamByName(handledPageable, teamName);

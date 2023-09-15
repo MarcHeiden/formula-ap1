@@ -8,6 +8,7 @@ import f1api.driver.domain.DriverRepository;
 import f1api.exception.ApiInstanceAlreadyExistsException;
 import f1api.exception.ApiNotFoundException;
 import f1api.exception.ApiPropertyIsNullException;
+import f1api.queryparameter.sort.DefaultSortPropertyMapper;
 import f1api.responsepage.ResponsePage;
 import java.util.Map;
 import java.util.UUID;
@@ -22,13 +23,18 @@ public class DriverApplicationService {
     private final DriverRepository driverRepository;
     private final DriverMapper driverMapper;
     private final DriverQueryParameter driverQueryParameter;
+    private final DefaultSortPropertyMapper defaultSortPropertyMapper;
 
     @Autowired
     public DriverApplicationService(
-            DriverRepository driverRepository, DriverMapper driverMapper, DriverQueryParameter driverQueryParameter) {
+            DriverRepository driverRepository,
+            DriverMapper driverMapper,
+            DriverQueryParameter driverQueryParameter,
+            DefaultSortPropertyMapper defaultSortPropertyMapper) {
         this.driverRepository = driverRepository;
         this.driverMapper = driverMapper;
         this.driverQueryParameter = driverQueryParameter;
+        this.defaultSortPropertyMapper = defaultSortPropertyMapper;
     }
 
     private void throwApiInstanceAlreadyExistsException(String firstName, String lastName) {
@@ -59,16 +65,17 @@ public class DriverApplicationService {
 
     public ResponsePage<DriverDTO> getDrivers(
             Pageable pageable, String firstName, String lastName, MultiValueMap<String, String> parameters) {
-        handleQueryParameters(parameters, driverQueryParameter);
+        Pageable handledPageable = handleQueryParameters(
+                parameters, driverQueryParameter, pageable, defaultSortPropertyMapper, DriverDTO.getProperties());
         Page<Driver> drivers;
         if (firstName != null && lastName != null) {
-            drivers = driverRepository.findDriverByFirstNameAndLastName(pageable, firstName, lastName);
+            drivers = driverRepository.findDriverByFirstNameAndLastName(handledPageable, firstName, lastName);
         } else if (firstName != null) {
-            drivers = driverRepository.findDriversByFirstName(pageable, firstName);
+            drivers = driverRepository.findDriversByFirstName(handledPageable, firstName);
         } else if (lastName != null) {
-            drivers = driverRepository.findDriversByLastName(pageable, lastName);
+            drivers = driverRepository.findDriversByLastName(handledPageable, lastName);
         } else {
-            drivers = driverRepository.findAll(pageable);
+            drivers = driverRepository.findAll(handledPageable);
         }
         return ResponsePage.of(drivers.map(driverMapper::toDriverDTO));
     }

@@ -6,6 +6,7 @@ import f1api.engine.domain.Engine;
 import f1api.engine.domain.EngineRepository;
 import f1api.exception.ApiInstanceAlreadyExistsException;
 import f1api.exception.ApiNotFoundException;
+import f1api.queryparameter.sort.DefaultSortPropertyMapper;
 import f1api.responsepage.ResponsePage;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,13 +20,18 @@ public class EngineApplicationService {
     private final EngineRepository engineRepository;
     private final EngineMapper engineMapper;
     private final EngineQueryParameter engineQueryParameter;
+    private final DefaultSortPropertyMapper defaultSortPropertyMapper;
 
     @Autowired
     public EngineApplicationService(
-            EngineRepository engineRepository, EngineMapper engineMapper, EngineQueryParameter engineQueryParameter) {
+            EngineRepository engineRepository,
+            EngineMapper engineMapper,
+            EngineQueryParameter engineQueryParameter,
+            DefaultSortPropertyMapper defaultSortPropertyMapper) {
         this.engineRepository = engineRepository;
         this.engineMapper = engineMapper;
         this.engineQueryParameter = engineQueryParameter;
+        this.defaultSortPropertyMapper = defaultSortPropertyMapper;
     }
 
     private void throwApiInstanceAlreadyExistsException(String manufacturer) {
@@ -55,12 +61,13 @@ public class EngineApplicationService {
 
     public ResponsePage<EngineDTO> getEngines(
             Pageable pageable, String manufacturer, MultiValueMap<String, String> parameters) {
-        handleQueryParameters(parameters, engineQueryParameter);
+        Pageable handledPageable = handleQueryParameters(
+                parameters, engineQueryParameter, pageable, defaultSortPropertyMapper, EngineDTO.getProperties());
         Page<Engine> engines;
         if (manufacturer != null) {
-            engines = engineRepository.findEngineByManufacturer(pageable, manufacturer);
+            engines = engineRepository.findEngineByManufacturer(handledPageable, manufacturer);
         } else {
-            engines = engineRepository.findAll(pageable);
+            engines = engineRepository.findAll(handledPageable);
         }
         return ResponsePage.of(engines.map(engineMapper::toEngineDTO));
     }

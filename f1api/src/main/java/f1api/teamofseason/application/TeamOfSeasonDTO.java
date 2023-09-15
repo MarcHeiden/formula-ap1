@@ -3,8 +3,12 @@ package f1api.teamofseason.application;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import f1api.validation.OnCreate;
 import f1api.validation.OnUpdate;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -27,18 +31,14 @@ public class TeamOfSeasonDTO {
     @NotNull(groups = OnCreate.class)
     private UUID engineId;
 
-    @Size(
-            min = 2,
-            groups = {OnCreate.class, OnUpdate.class})
-    @NotNull(groups = OnCreate.class)
+    @NotEmpty(groups = OnUpdate.class)
+    @Size(min = 2, groups = OnCreate.class)
+    @NotNull(groups = {OnCreate.class, OnUpdate.class})
     private Set<UUID> driverIds;
-
-    @JsonIgnore
-    public Boolean isEmpty() {
-        return seasonId == null && teamId == null && engineId == null && driverIds == null;
-    }
 
     @Getter
     @JsonIgnore
-    private static final Set<String> notNullProperties = Set.of("seasonId", "teamId", "engineId", "driverIds");
+    private static final List<String> properties = Arrays.stream(TeamOfSeasonDTO.class.getDeclaredFields())
+            .map(Field::getName)
+            .toList();
 }
