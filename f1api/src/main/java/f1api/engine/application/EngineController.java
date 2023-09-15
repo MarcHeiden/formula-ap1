@@ -1,6 +1,9 @@
 package f1api.engine.application;
 
 import f1api.responsepage.ResponsePage;
+import f1api.season.application.SeasonDTO;
+import f1api.team.application.TeamDTO;
+import f1api.teamofseason.application.TeamOfSeasonApplicationService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.net.URI;
@@ -17,10 +20,14 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RestController
 public class EngineController {
     private final EngineApplicationService engineApplicationService;
+    private final TeamOfSeasonApplicationService teamOfSeasonApplicationService;
 
     @Autowired
-    public EngineController(EngineApplicationService engineApplicationService) {
+    public EngineController(
+            EngineApplicationService engineApplicationService,
+            TeamOfSeasonApplicationService teamOfSeasonApplicationService) {
         this.engineApplicationService = engineApplicationService;
+        this.teamOfSeasonApplicationService = teamOfSeasonApplicationService;
     }
 
     @PostMapping("/engines")
@@ -50,5 +57,21 @@ public class EngineController {
     public EngineDTO updateEngine(
             @PathVariable @NotNull UUID engineId, @RequestBody @NotNull @Valid EngineDTO engineDTO) {
         return engineApplicationService.updateEngine(engineId, engineDTO);
+    }
+
+    @GetMapping("/engines/{engineId}/teams")
+    public ResponsePage<TeamDTO> getTeamsOfEngine(
+            @PathVariable @NotNull UUID engineId,
+            Pageable pageable,
+            @RequestParam MultiValueMap<String, String> parameters) {
+        return teamOfSeasonApplicationService.getTeamsOfEngine(pageable, engineId, parameters);
+    }
+
+    @GetMapping("/engines/{engineId}/seasons")
+    public ResponsePage<SeasonDTO> getSeasonsOfEngine(
+            @PathVariable @NotNull UUID engineId,
+            Pageable pageable,
+            @RequestParam MultiValueMap<String, String> parameters) {
+        return teamOfSeasonApplicationService.getSeasonsOfEngine(pageable, engineId, parameters);
     }
 }

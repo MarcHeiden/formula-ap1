@@ -53,8 +53,8 @@ public class TeamOfSeasonController {
 
     @Validated(OnUpdate.class)
     @PatchMapping("/teamsOfSeasons/{teamOfSeasonId}")
-    public TeamOfSeasonDTO updateTeamOfSeason(
+    public TeamOfSeasonDTO addDriversToTeamOfSeason(
             @PathVariable @NotNull UUID teamOfSeasonId, @RequestBody @NotNull @Valid TeamOfSeasonDTO teamOfSeasonDTO) {
-        return teamOfSeasonApplicationService.updateTeamOfSeason(teamOfSeasonId, teamOfSeasonDTO);
+        return teamOfSeasonApplicationService.addDriversToTeamOfSeason(teamOfSeasonId, teamOfSeasonDTO);
     }
 }

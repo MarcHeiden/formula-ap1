@@ -15,7 +15,6 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Getter
-@Setter
 @Table(
         name = "TeamOfSeason",
         schema = "public",
@@ -46,4 +45,8 @@ public class TeamOfSeason extends BaseEntity {
     @ManyToOne(optional = false)
     @JoinColumn(name = "engineId", referencedColumnName = "id", nullable = false)
     private Engine engine;
+
+    public void addDrivers(Set<Driver> drivers) {
+        this.drivers.addAll(drivers);
+    }
 }
