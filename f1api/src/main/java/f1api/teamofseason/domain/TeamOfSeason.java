@@ -20,7 +20,7 @@ import lombok.*;
         schema = "public",
         uniqueConstraints = {
             @UniqueConstraint(
-                    name = "UniqueTeamOfSeason",
+                    name = "uniqueTeamOfSeason",
                     columnNames = {"seasonId", "teamId"})
         })
 public class TeamOfSeason extends BaseEntity {
