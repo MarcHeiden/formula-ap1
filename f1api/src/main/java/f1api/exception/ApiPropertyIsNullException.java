@@ -1,11 +1,10 @@
 package f1api.exception;
 
 import java.util.Set;
-import org.springframework.http.HttpStatus;
 
-public class ApiPropertyIsNullException extends ApiException {
+public class ApiPropertyIsNullException extends ApiInvalidPropertyException {
     public ApiPropertyIsNullException(String message) {
-        super(message, HttpStatus.UNPROCESSABLE_ENTITY);
+        super(message);
     }
 
     public static ApiPropertyIsNullException of(Set<String> properties) {
