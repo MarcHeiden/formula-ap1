@@ -156,13 +156,14 @@ paths:
         500:
           $ref: "./components/responses.yml#/500"
     get:
-      summary: Get races of a season / Get race of a season by raceName
+      summary: Get races of a season / Get race of a season by raceName/date
       tags:
         - "Races"
         - "SeasonController"
       parameters:
         - $ref: "./components/parameters.yml#/seasonId"
         - $ref: "./components/parameters.yml#/raceName"
+        - $ref: "./components/parameters.yml#/date"
       responses:
         200:
           description: OK
