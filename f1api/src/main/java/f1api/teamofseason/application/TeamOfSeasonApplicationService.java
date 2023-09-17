@@ -157,7 +157,7 @@ public class TeamOfSeasonApplicationService {
 
     public ResponsePage<TeamOfSeasonDTO> getTeamsOfSeasons(
             Pageable pageable, UUID seasonId, UUID teamId, MultiValueMap<String, String> parameters) {
-        handleQueryParameters(
+        Pageable handledPageable = handleQueryParameters(
                 parameters,
                 teamOfSeasonQueryParameter,
                 pageable,
@@ -165,13 +165,14 @@ public class TeamOfSeasonApplicationService {
                 TeamOfSeasonDTO.getProperties());
         Page<TeamOfSeason> teamsOfSeasons;
         if (seasonId != null && teamId != null) {
-            teamsOfSeasons = teamOfSeasonRepository.findTeamOfSeasonBySeasonIdAndTeamId(pageable, seasonId, teamId);
+            teamsOfSeasons =
+                    teamOfSeasonRepository.findTeamOfSeasonBySeasonIdAndTeamId(handledPageable, seasonId, teamId);
         } else if (seasonId != null) {
-            teamsOfSeasons = teamOfSeasonRepository.findTeamOfSeasonsBySeasonId(pageable, seasonId);
+            teamsOfSeasons = teamOfSeasonRepository.findTeamOfSeasonsBySeasonId(handledPageable, seasonId);
         } else if (teamId != null) {
-            teamsOfSeasons = teamOfSeasonRepository.findTeamOfSeasonsByTeamId(pageable, teamId);
+            teamsOfSeasons = teamOfSeasonRepository.findTeamOfSeasonsByTeamId(handledPageable, teamId);
         } else {
-            teamsOfSeasons = teamOfSeasonRepository.findAll(pageable);
+            teamsOfSeasons = teamOfSeasonRepository.findAll(handledPageable);
         }
         return ResponsePage.of(teamsOfSeasons.map(teamOfSeasonMapper::toTeamOfSeasonDTO));
     }
@@ -194,7 +195,7 @@ public class TeamOfSeasonApplicationService {
     }
 
     public ResponsePage<TeamDTO> getTeamsOfSeason(
-            Pageable pageable, UUID seasonId, MultiValueMap<String, String> parameters) {
+            UUID seasonId, Pageable pageable, MultiValueMap<String, String> parameters) {
         Season season = seasonApplicationService.getSeasonById(seasonId);
         Pageable handledPageable = handleTeamQueryParameters(parameters, pageable);
         return ResponsePage.of(teamOfSeasonRepository
@@ -203,7 +204,7 @@ public class TeamOfSeasonApplicationService {
     }
 
     public ResponsePage<DriverDTO> getDriversOfTeamOfSeason(
-            Pageable pageable, UUID seasonId, UUID teamId, MultiValueMap<String, String> parameters) {
+            UUID seasonId, UUID teamId, Pageable pageable, MultiValueMap<String, String> parameters) {
         Season season = seasonApplicationService.getSeasonById(seasonId);
         Team team = teamApplicationService.getTeamById(teamId);
         Pageable handledPageable = handleDriverQueryParameters(parameters, pageable);
@@ -225,7 +226,7 @@ public class TeamOfSeasonApplicationService {
     }
 
     public ResponsePage<DriverDTO> getDriversOfSeason(
-            Pageable pageable, UUID seasonId, MultiValueMap<String, String> parameters) {
+            UUID seasonId, Pageable pageable, MultiValueMap<String, String> parameters) {
         Season season = seasonApplicationService.getSeasonById(seasonId);
         Pageable handledPageable = handleDriverQueryParameters(parameters, pageable);
         return ResponsePage.of(teamOfSeasonRepository
@@ -234,7 +235,7 @@ public class TeamOfSeasonApplicationService {
     }
 
     public ResponsePage<TeamDTO> getTeamsOfDriverOfSeason(
-            Pageable pageable, UUID seasonId, UUID driverId, MultiValueMap<String, String> parameters) {
+            UUID seasonId, UUID driverId, Pageable pageable, MultiValueMap<String, String> parameters) {
         Season season = seasonApplicationService.getSeasonById(seasonId);
         Driver driver = driverApplicationService.getDriverById(driverId);
         Pageable handledPageable = handleTeamQueryParameters(parameters, pageable);
@@ -247,7 +248,7 @@ public class TeamOfSeasonApplicationService {
     }
 
     public ResponsePage<EngineDTO> getEnginesOfSeason(
-            Pageable pageable, UUID seasonId, MultiValueMap<String, String> parameters) {
+            UUID seasonId, Pageable pageable, MultiValueMap<String, String> parameters) {
         Season season = seasonApplicationService.getSeasonById(seasonId);
         Pageable handledPageable = handleEngineQueryParameters(parameters, pageable);
         return ResponsePage.of(teamOfSeasonRepository
@@ -256,7 +257,7 @@ public class TeamOfSeasonApplicationService {
     }
 
     public ResponsePage<TeamDTO> getTeamsOfEngineOfSeason(
-            Pageable pageable, UUID seasonId, UUID engineId, MultiValueMap<String, String> parameters) {
+            UUID seasonId, UUID engineId, Pageable pageable, MultiValueMap<String, String> parameters) {
         Season season = seasonApplicationService.getSeasonById(seasonId);
         Engine engine = engineApplicationService.getEngineById(engineId);
         Pageable handledPageable = handleTeamQueryParameters(parameters, pageable);
@@ -269,7 +270,7 @@ public class TeamOfSeasonApplicationService {
     }
 
     public ResponsePage<DriverDTO> getDriversOfTeam(
-            Pageable pageable, UUID teamId, MultiValueMap<String, String> parameters) {
+            UUID teamId, Pageable pageable, MultiValueMap<String, String> parameters) {
         Team team = teamApplicationService.getTeamById(teamId);
         Pageable handledPageable = handleDriverQueryParameters(parameters, pageable);
         return ResponsePage.of(
@@ -277,7 +278,7 @@ public class TeamOfSeasonApplicationService {
     }
 
     public ResponsePage<SeasonDTO> getSeasonsOfDriverOfTeam(
-            Pageable pageable, UUID teamId, UUID driverId, MultiValueMap<String, String> parameters) {
+            UUID teamId, UUID driverId, Pageable pageable, MultiValueMap<String, String> parameters) {
         Team team = teamApplicationService.getTeamById(teamId);
         Driver driver = driverApplicationService.getDriverById(driverId);
         Pageable handledPageable = handleSeasonQueryParameters(parameters, pageable);
@@ -290,7 +291,7 @@ public class TeamOfSeasonApplicationService {
     }
 
     public ResponsePage<EngineDTO> getEnginesOfTeam(
-            Pageable pageable, UUID teamId, MultiValueMap<String, String> parameters) {
+            UUID teamId, Pageable pageable, MultiValueMap<String, String> parameters) {
         Team team = teamApplicationService.getTeamById(teamId);
         Pageable handledPageable = handleEngineQueryParameters(parameters, pageable);
         return ResponsePage.of(
@@ -298,7 +299,7 @@ public class TeamOfSeasonApplicationService {
     }
 
     public ResponsePage<SeasonDTO> getSeasonsOfEngineOfTeam(
-            Pageable pageable, UUID teamId, UUID engineId, MultiValueMap<String, String> parameters) {
+            UUID teamId, UUID engineId, Pageable pageable, MultiValueMap<String, String> parameters) {
         Team team = teamApplicationService.getTeamById(teamId);
         Engine engine = engineApplicationService.getEngineById(engineId);
         Pageable handledPageable = handleSeasonQueryParameters(parameters, pageable);
@@ -311,7 +312,7 @@ public class TeamOfSeasonApplicationService {
     }
 
     public ResponsePage<SeasonDTO> getSeasonsOfTeam(
-            Pageable pageable, UUID teamId, MultiValueMap<String, String> parameters) {
+            UUID teamId, Pageable pageable, MultiValueMap<String, String> parameters) {
         Team team = teamApplicationService.getTeamById(teamId);
         Pageable handledPageable = handleSeasonQueryParameters(parameters, pageable);
         return ResponsePage.of(
@@ -319,7 +320,7 @@ public class TeamOfSeasonApplicationService {
     }
 
     public ResponsePage<TeamDTO> getTeamsOfDriver(
-            Pageable pageable, UUID driverId, MultiValueMap<String, String> parameters) {
+            UUID driverId, Pageable pageable, MultiValueMap<String, String> parameters) {
         Driver driver = driverApplicationService.getDriverById(driverId);
         Pageable handledPageable = handleTeamQueryParameters(parameters, pageable);
         return ResponsePage.of(teamOfSeasonRepository
@@ -328,7 +329,7 @@ public class TeamOfSeasonApplicationService {
     }
 
     public ResponsePage<SeasonDTO> getSeasonsOfDriver(
-            Pageable pageable, UUID driverId, MultiValueMap<String, String> parameters) {
+            UUID driverId, Pageable pageable, MultiValueMap<String, String> parameters) {
         Driver driver = driverApplicationService.getDriverById(driverId);
         Pageable handledPageable = handleSeasonQueryParameters(parameters, pageable);
         return ResponsePage.of(teamOfSeasonRepository
@@ -337,7 +338,7 @@ public class TeamOfSeasonApplicationService {
     }
 
     public ResponsePage<TeamDTO> getTeamsOfEngine(
-            Pageable pageable, UUID engineId, MultiValueMap<String, String> parameters) {
+            UUID engineId, Pageable pageable, MultiValueMap<String, String> parameters) {
         Engine engine = engineApplicationService.getEngineById(engineId);
         Pageable handledPageable = handleTeamQueryParameters(parameters, pageable);
         return ResponsePage.of(teamOfSeasonRepository
@@ -346,7 +347,7 @@ public class TeamOfSeasonApplicationService {
     }
 
     public ResponsePage<SeasonDTO> getSeasonsOfEngine(
-            Pageable pageable, UUID engineId, MultiValueMap<String, String> parameters) {
+            UUID engineId, Pageable pageable, MultiValueMap<String, String> parameters) {
         Engine engine = engineApplicationService.getEngineById(engineId);
         Pageable handledPageable = handleSeasonQueryParameters(parameters, pageable);
         return ResponsePage.of(teamOfSeasonRepository

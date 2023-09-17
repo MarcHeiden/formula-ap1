@@ -66,7 +66,7 @@ public class DriverController {
             @PathVariable @NotNull UUID driverId,
             Pageable pageable,
             @RequestParam MultiValueMap<String, String> parameters) {
-        return teamOfSeasonApplicationService.getTeamsOfDriver(pageable, driverId, parameters);
+        return teamOfSeasonApplicationService.getTeamsOfDriver(driverId, pageable, parameters);
     }
 
     @GetMapping("/drivers/{driverId}/seasons")
@@ -74,6 +74,6 @@ public class DriverController {
             @PathVariable @NotNull UUID driverId,
             Pageable pageable,
             @RequestParam MultiValueMap<String, String> parameters) {
-        return teamOfSeasonApplicationService.getSeasonsOfDriver(pageable, driverId, parameters);
+        return teamOfSeasonApplicationService.getSeasonsOfDriver(driverId, pageable, parameters);
     }
 }

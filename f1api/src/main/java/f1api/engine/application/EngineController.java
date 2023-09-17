@@ -64,7 +64,7 @@ public class EngineController {
             @PathVariable @NotNull UUID engineId,
             Pageable pageable,
             @RequestParam MultiValueMap<String, String> parameters) {
-        return teamOfSeasonApplicationService.getTeamsOfEngine(pageable, engineId, parameters);
+        return teamOfSeasonApplicationService.getTeamsOfEngine(engineId, pageable, parameters);
     }
 
     @GetMapping("/engines/{engineId}/seasons")
@@ -72,6 +72,6 @@ public class EngineController {
             @PathVariable @NotNull UUID engineId,
             Pageable pageable,
             @RequestParam MultiValueMap<String, String> parameters) {
-        return teamOfSeasonApplicationService.getSeasonsOfEngine(pageable, engineId, parameters);
+        return teamOfSeasonApplicationService.getSeasonsOfEngine(engineId, pageable, parameters);
     }
 }

@@ -64,7 +64,7 @@ public class TeamController {
             @PathVariable @NotNull UUID teamId,
             Pageable pageable,
             @RequestParam MultiValueMap<String, String> parameters) {
-        return teamOfSeasonApplicationService.getDriversOfTeam(pageable, teamId, parameters);
+        return teamOfSeasonApplicationService.getDriversOfTeam(teamId, pageable, parameters);
     }
 
     @GetMapping("/teams/{teamId}/drivers/{driverId}/seasons")
@@ -73,7 +73,7 @@ public class TeamController {
             @PathVariable @NotNull UUID driverId,
             Pageable pageable,
             @RequestParam MultiValueMap<String, String> parameters) {
-        return teamOfSeasonApplicationService.getSeasonsOfDriverOfTeam(pageable, teamId, driverId, parameters);
+        return teamOfSeasonApplicationService.getSeasonsOfDriverOfTeam(teamId, driverId, pageable, parameters);
     }
 
     @GetMapping("/teams/{teamId}/engines")
@@ -81,7 +81,7 @@ public class TeamController {
             @PathVariable @NotNull UUID teamId,
             Pageable pageable,
             @RequestParam MultiValueMap<String, String> parameters) {
-        return teamOfSeasonApplicationService.getEnginesOfTeam(pageable, teamId, parameters);
+        return teamOfSeasonApplicationService.getEnginesOfTeam(teamId, pageable, parameters);
     }
 
     @GetMapping("/teams/{teamId}/engines/{engineId}/seasons")
@@ -90,7 +90,7 @@ public class TeamController {
             @PathVariable @NotNull UUID engineId,
             Pageable pageable,
             @RequestParam MultiValueMap<String, String> parameters) {
-        return teamOfSeasonApplicationService.getSeasonsOfEngineOfTeam(pageable, teamId, engineId, parameters);
+        return teamOfSeasonApplicationService.getSeasonsOfEngineOfTeam(teamId, engineId, pageable, parameters);
     }
 
     @GetMapping("/teams/{teamId}/seasons")
@@ -98,6 +98,6 @@ public class TeamController {
             @PathVariable @NotNull UUID teamId,
             Pageable pageable,
             @RequestParam MultiValueMap<String, String> parameters) {
-        return teamOfSeasonApplicationService.getSeasonsOfTeam(pageable, teamId, parameters);
+        return teamOfSeasonApplicationService.getSeasonsOfTeam(teamId, pageable, parameters);
     }
 }
