@@ -2,12 +2,16 @@ package f1api.season.application;
 
 import f1api.driver.application.DriverDTO;
 import f1api.engine.application.EngineDTO;
+import f1api.race.application.RaceApplicationService;
+import f1api.race.application.RaceDTO;
 import f1api.responsepage.ResponsePage;
 import f1api.team.application.TeamDTO;
 import f1api.teamofseason.application.TeamOfSeasonApplicationService;
+import f1api.validation.OnCreate;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.net.URI;
+import java.time.LocalDate;
 import java.time.Year;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +27,16 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 public class SeasonController {
     private final SeasonApplicationService seasonApplicationService;
     private final TeamOfSeasonApplicationService teamOfSeasonApplicationService;
+    private final RaceApplicationService raceApplicationService;
 
     @Autowired
     public SeasonController(
             SeasonApplicationService seasonApplicationService,
-            TeamOfSeasonApplicationService teamOfSeasonApplicationService) {
+            TeamOfSeasonApplicationService teamOfSeasonApplicationService,
+            RaceApplicationService raceApplicationService) {
         this.seasonApplicationService = seasonApplicationService;
         this.teamOfSeasonApplicationService = teamOfSeasonApplicationService;
+        this.raceApplicationService = raceApplicationService;
     }
 
     @PostMapping("/seasons")
@@ -61,12 +68,34 @@ public class SeasonController {
         return seasonApplicationService.updateSeason(seasonId, seasonDTO);
     }
 
+    @Validated(OnCreate.class)
+    @PostMapping("/seasons/{seasonId}/races")
+    public ResponseEntity<RaceDTO> createRaceOfSeason(
+            @PathVariable @NotNull UUID seasonId, @RequestBody @NotNull @Valid RaceDTO raceDTO) {
+        RaceDTO newRaceDTO = raceApplicationService.createRaceOfSeason(seasonId, raceDTO);
+        URI returnURI = ServletUriComponentsBuilder.fromCurrentRequest()
+                .replacePath("/races/{raceId}")
+                .buildAndExpand(newRaceDTO.getRaceId())
+                .toUri();
+        return ResponseEntity.created(returnURI).body(newRaceDTO);
+    }
+
+    @GetMapping("/seasons/{seasonId}/races")
+    public ResponsePage<RaceDTO> getRacesOfSeason(
+            @PathVariable @NotNull UUID seasonId,
+            Pageable pageable,
+            @RequestParam(name = "raceName", required = false) String raceName,
+            @RequestParam(name = "date", required = false) LocalDate date,
+            @RequestParam MultiValueMap<String, String> parameters) {
+        return raceApplicationService.getRacesOfSeason(seasonId, pageable, raceName, date, parameters);
+    }
+
     @GetMapping("/seasons/{seasonId}/teams")
     public ResponsePage<TeamDTO> getTeamsOfSeason(
             @PathVariable @NotNull UUID seasonId,
             Pageable pageable,
             @RequestParam MultiValueMap<String, String> parameters) {
-        return teamOfSeasonApplicationService.getTeamsOfSeason(pageable, seasonId, parameters);
+        return teamOfSeasonApplicationService.getTeamsOfSeason(seasonId, pageable, parameters);
     }
 
     @GetMapping("/seasons/{seasonId}/teams/{teamId}/drivers")
@@ -75,7 +104,7 @@ public class SeasonController {
             @PathVariable @NotNull UUID teamId,
             Pageable pageable,
             @RequestParam MultiValueMap<String, String> parameters) {
-        return teamOfSeasonApplicationService.getDriversOfTeamOfSeason(pageable, seasonId, teamId, parameters);
+        return teamOfSeasonApplicationService.getDriversOfTeamOfSeason(seasonId, teamId, pageable, parameters);
     }
 
     @GetMapping("/seasons/{seasonId}/teams/{teamId}/engine")
@@ -88,7 +117,7 @@ public class SeasonController {
             @PathVariable @NotNull UUID seasonId,
             Pageable pageable,
             @RequestParam MultiValueMap<String, String> parameters) {
-        return teamOfSeasonApplicationService.getDriversOfSeason(pageable, seasonId, parameters);
+        return teamOfSeasonApplicationService.getDriversOfSeason(seasonId, pageable, parameters);
     }
 
     @GetMapping("/seasons/{seasonId}/drivers/{driverId}/teams")
@@ -97,7 +126,7 @@ public class SeasonController {
             @PathVariable @NotNull UUID driverId,
             Pageable pageable,
             @RequestParam MultiValueMap<String, String> parameters) {
-        return teamOfSeasonApplicationService.getTeamsOfDriverOfSeason(pageable, seasonId, driverId, parameters);
+        return teamOfSeasonApplicationService.getTeamsOfDriverOfSeason(seasonId, driverId, pageable, parameters);
     }
 
     @GetMapping("/seasons/{seasonId}/engines")
@@ -105,7 +134,7 @@ public class SeasonController {
             @PathVariable @NotNull UUID seasonId,
             Pageable pageable,
             @RequestParam MultiValueMap<String, String> parameters) {
-        return teamOfSeasonApplicationService.getEnginesOfSeason(pageable, seasonId, parameters);
+        return teamOfSeasonApplicationService.getEnginesOfSeason(seasonId, pageable, parameters);
     }
 
     @GetMapping("/seasons/{seasonId}/engines/{engineId}/teams")
@@ -114,6 +143,6 @@ public class SeasonController {
             @PathVariable @NotNull UUID engineId,
             Pageable pageable,
             @RequestParam MultiValueMap<String, String> parameters) {
-        return teamOfSeasonApplicationService.getTeamsOfEngineOfSeason(pageable, seasonId, engineId, parameters);
+        return teamOfSeasonApplicationService.getTeamsOfEngineOfSeason(seasonId, engineId, pageable, parameters);
     }
 }
