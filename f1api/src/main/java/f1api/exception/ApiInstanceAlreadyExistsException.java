@@ -22,4 +22,17 @@ public class ApiInstanceAlreadyExistsException extends ApiException {
         message.deleteCharAt(message.lastIndexOf(",")).append("already exists.");
         return new ApiInstanceAlreadyExistsException(message.toString());
     }
+
+    public static ApiInstanceAlreadyExistsException of(
+            String memberInstance,
+            String memberInstanceProperty,
+            String memberInstancePropertyValue,
+            String instance,
+            String instanceProperty,
+            String instancePropertyValue) {
+        String message = memberInstance + " with the " + memberInstanceProperty + " '" + memberInstancePropertyValue
+                + "' already exists for the " + instance + " with the " + instanceProperty + " '"
+                + instancePropertyValue + "'.";
+        return new ApiInstanceAlreadyExistsException(message);
+    }
 }
