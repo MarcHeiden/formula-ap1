@@ -92,8 +92,8 @@ public class DriverApplicationService {
 
     public DriverDTO updateDriver(UUID driverId, DriverDTO driverDTO) {
         Driver driver = getDriverById(driverId);
-        if (driverDTO.isEmpty()) {
-            throw ApiPropertyIsNullException.of(DriverDTO.getNotNullProperties());
+        if (driverDTO.isEmptyOnUpdate()) {
+            throw ApiPropertyIsNullException.of(DriverDTO.getNotNullPropertiesOnUpdate());
         }
         if (driverDTO.getFirstName() != null && driverDTO.getLastName() != null) {
             checkIfDifferentDriverAlreadyExists(driver, driverDTO.getFirstName(), driverDTO.getLastName());

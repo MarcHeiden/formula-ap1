@@ -23,13 +23,13 @@ public class DriverDTO {
     private String lastName;
 
     @JsonIgnore
-    public Boolean isEmpty() {
+    public Boolean isEmptyOnUpdate() {
         return firstName == null && lastName == null;
     }
 
     @Getter
     @JsonIgnore
-    private static final Set<String> notNullProperties = Set.of("firstName", "lastName");
+    private static final Set<String> notNullPropertiesOnUpdate = Set.of("firstName", "lastName");
 
     @Getter
     @JsonIgnore
