@@ -1,11 +1,9 @@
 package f1api.exception;
 
-import org.springframework.http.HttpStatus;
-
-public class ApiInvalidQueryParameterException extends ApiException {
+public class ApiInvalidQueryParameterException extends ApiInvalidParameterException {
 
     public ApiInvalidQueryParameterException(String message) {
-        super(message, HttpStatus.BAD_REQUEST);
+        super(message);
     }
 
     public static ApiInvalidQueryParameterException of(String parameter) {

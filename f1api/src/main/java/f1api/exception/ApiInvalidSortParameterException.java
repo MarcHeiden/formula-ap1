@@ -1,11 +1,9 @@
 package f1api.exception;
 
-import org.springframework.http.HttpStatus;
-
-public class ApiInvalidSortParameterException extends ApiException {
+public class ApiInvalidSortParameterException extends ApiInvalidParameterException {
 
     public ApiInvalidSortParameterException(String message) {
-        super(message, HttpStatus.BAD_REQUEST);
+        super(message);
     }
 
     public static ApiInvalidSortParameterException of(String property) {
