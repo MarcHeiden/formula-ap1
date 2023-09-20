@@ -1,6 +1,6 @@
 package f1api.queryparameter.sort;
 
-import f1api.exception.ApiInvalidSortParameterException;
+import f1api.exception.ApiInvalidSortPropertyException;
 import java.util.List;
 import java.util.Map;
 import org.springframework.data.domain.Sort;
@@ -16,7 +16,7 @@ public interface SortPropertyMapper {
                         // Check if sort property is property in DTO and is not an id
                         if (order.getProperty().toLowerCase().matches("^.*id$")
                                 || !dtoProperties.contains(order.getProperty())) {
-                            throw ApiInvalidSortParameterException.of(order.getProperty());
+                            throw ApiInvalidSortPropertyException.of(order.getProperty());
                         } else {
                             property = order.getProperty();
                         }

@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -93,12 +94,23 @@ public class ApiExceptionHandler {
         return ResponseEntity.status(httpStatus).body(apiExceptionInfo);
     }
 
-    // Invalid sort parameter
+    // Invalid sort property
     @ExceptionHandler(PropertyReferenceException.class)
     public ResponseEntity<ApiExceptionInfo> handlePropertyReferenceException(
             PropertyReferenceException propertyReferenceException) {
         HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
-        String message = "'" + propertyReferenceException.getPropertyName() + "' is not a valid sort parameter.";
+        String message = "'" + propertyReferenceException.getPropertyName() + "' is not a valid sort property.";
+        ApiExceptionInfo apiExceptionInfo = new ApiExceptionInfo(httpStatus, message);
+        return ResponseEntity.status(httpStatus).body(apiExceptionInfo);
+    }
+
+    // Missing required query parameter
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<ApiExceptionInfo> handleMissingServletRequestParameterException(
+            MissingServletRequestParameterException missingServletRequestParameterException) {
+        HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+        String message = "Query parameter '" + missingServletRequestParameterException.getParameterName()
+                + "' must not be null.";
         ApiExceptionInfo apiExceptionInfo = new ApiExceptionInfo(httpStatus, message);
         return ResponseEntity.status(httpStatus).body(apiExceptionInfo);
     }
