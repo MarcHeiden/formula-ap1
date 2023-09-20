@@ -79,11 +79,18 @@ driverIdQueryRequired:
   required: true
   schema:
     $ref: "./schemas.yml#/driverId"
-driverCode:
-  name: driverCode
+firstName:
+  name: firstName
   in: query
+  required: false
   schema:
-    $ref: "./schemas.yml#/driverCode"
+    $ref: "./schemas.yml#/firstName"
+lastName:
+  name: lastName
+  in: query
+  required: false
+  schema:
+    $ref: "./schemas.yml#/lastName"
 
 # Engine
 engineId:

@@ -1,16 +1,16 @@
 204:
   description: No Content / Successfully deleted entity
 400:
-  description: Bad Request / Syntax Error / Invalid Parameter
+  description: Bad Request
   content:
     application/json:
       schema:
         $ref: "./schemas.yml#/Error"
       example:
         httpStatusCode: 400
-        message: "Invalid value for parameter"
+        message: "Invalid value for parameter/field"
 404:
-  description: Not found
+  description: Not Found
   content:
     application/json:
       schema:
@@ -28,7 +28,7 @@
         httpStatusCode: 409
         message: "Conflict"
 422:
-  description: Unprocessable Entity / Invalid Request Body
+  description: Unprocessable Entity
   content:
     application/json:
       schema:
@@ -37,7 +37,7 @@
         httpStatusCode: 422
         message: "Invalid value for field"
 500:
-  description: Unexpected error
+  description: Unexpected Error
   content:
     application/json:
       schema:
