@@ -15,7 +15,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TeamOfSeasonRepository extends JpaRepository<TeamOfSeason, UUID> {
-    Boolean existsTeamOfSeasonBySeasonIdAndTeamId(UUID seasonId, UUID teamId);
+    Boolean existsTeamOfSeasonBySeasonAndTeam(Season season, Team team);
+
+    Boolean existsTeamOfSeasonBySeasonAndTeamAndDriversContaining(Season season, Team team, Driver driver);
 
     Page<TeamOfSeason> findTeamOfSeasonBySeasonIdAndTeamId(Pageable pageable, UUID seasonId, UUID teamId);
 

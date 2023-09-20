@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import f1api.season.application.SeasonDTO;
 import f1api.validation.OnCreate;
-import f1api.validation.OnUpdate;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import java.lang.reflect.Field;
@@ -27,9 +26,7 @@ public class RaceDTO {
     @NotNull(groups = OnCreate.class)
     private LocalDate date;
 
-    @Pattern(
-            regexp = "^([0-1][0-9]|2[0-3])(:[0-5][0-9]){2}Z?$",
-            groups = {OnCreate.class, OnUpdate.class})
+    @Pattern(regexp = "^([0-1][0-9]|2[0-3])(:[0-5][0-9]){2}Z?$")
     @NotNull(groups = OnCreate.class)
     private String time;
 

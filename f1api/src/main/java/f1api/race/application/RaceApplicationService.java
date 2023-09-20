@@ -145,7 +145,7 @@ public class RaceApplicationService {
         return ResponsePage.of(races.map(raceMapper::toRaceDTO));
     }
 
-    private Race getRaceById(UUID id) {
+    public Race getRaceById(UUID id) {
         return raceRepository.findById(id).orElseThrow(() -> ApiNotFoundException.of("Race", "raceId", id.toString()));
     }
 

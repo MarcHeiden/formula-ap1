@@ -33,7 +33,7 @@ public class TeamOfSeasonDTO {
 
     @NotEmpty(groups = OnUpdate.class)
     @Size(min = 2, groups = OnCreate.class)
-    @NotNull(groups = {OnCreate.class, OnUpdate.class})
+    @NotNull
     private Set<UUID> driverIds;
 
     @Getter

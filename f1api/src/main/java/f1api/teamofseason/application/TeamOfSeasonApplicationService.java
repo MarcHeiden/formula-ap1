@@ -12,6 +12,7 @@ import f1api.engine.application.EngineDTO;
 import f1api.engine.application.EngineMapper;
 import f1api.engine.domain.Engine;
 import f1api.exception.ApiInstanceAlreadyExistsException;
+import f1api.exception.ApiInvalidPropertyException;
 import f1api.exception.ApiNotFoundException;
 import f1api.queryparameter.DefaultQueryParameter;
 import f1api.queryparameter.sort.DefaultSortPropertyMapper;
@@ -91,18 +92,28 @@ public class TeamOfSeasonApplicationService {
         this.seasonMapper = seasonMapper;
     }
 
-    private void checkIfTeamOfSeasonAlreadyExists(UUID seasonId, UUID teamId) {
-        if (teamOfSeasonRepository.existsTeamOfSeasonBySeasonIdAndTeamId(seasonId, teamId)) {
+    private void checkIfTeamOfSeasonAlreadyExists(Season season, Team team) {
+        if (teamOfSeasonRepository.existsTeamOfSeasonBySeasonAndTeam(season, team)) {
             throw ApiInstanceAlreadyExistsException.of(
                     "TeamOfSeason",
-                    Map.ofEntries(entry("seasonId", seasonId.toString()), entry("teamId", teamId.toString())));
+                    Map.ofEntries(
+                            entry("seasonId", season.getId().toString()),
+                            entry("teamId", team.getId().toString())));
         }
     }
 
+    public Boolean checkIfDriverIsInTeamOfSeason(Driver driver, Team team, Season season) {
+        return teamOfSeasonRepository.existsTeamOfSeasonBySeasonAndTeamAndDriversContaining(season, team, driver);
+    }
+
     private Set<Driver> getDrivers(TeamOfSeasonDTO teamOfSeasonDTO) {
-        return teamOfSeasonDTO.getDriverIds().stream()
-                .map(driverApplicationService::getDriverById)
-                .collect(Collectors.toSet());
+        try {
+            return teamOfSeasonDTO.getDriverIds().stream()
+                    .map(driverApplicationService::getDriverById)
+                    .collect(Collectors.toSet());
+        } catch (ApiNotFoundException apiNotFoundException) {
+            throw new ApiInvalidPropertyException(apiNotFoundException.getMessage());
+        }
     }
 
     private Pageable handleDriverQueryParameters(MultiValueMap<String, String> parameters, Pageable pageable) {
@@ -145,11 +156,18 @@ public class TeamOfSeasonApplicationService {
     }
 
     public TeamOfSeasonDTO createTeamOfSeason(TeamOfSeasonDTO teamOfSeasonDTO) {
-        checkIfTeamOfSeasonAlreadyExists(teamOfSeasonDTO.getSeasonId(), teamOfSeasonDTO.getTeamId());
-        Season season = seasonApplicationService.getSeasonById(teamOfSeasonDTO.getSeasonId());
-        Team team = teamApplicationService.getTeamById(teamOfSeasonDTO.getTeamId());
+        Season season;
+        Team team;
+        Engine engine;
+        try {
+            season = seasonApplicationService.getSeasonById(teamOfSeasonDTO.getSeasonId());
+            team = teamApplicationService.getTeamById(teamOfSeasonDTO.getTeamId());
+            engine = engineApplicationService.getEngineById(teamOfSeasonDTO.getEngineId());
+        } catch (ApiNotFoundException apiNotFoundException) {
+            throw new ApiInvalidPropertyException(apiNotFoundException.getMessage());
+        }
         Set<Driver> drivers = getDrivers(teamOfSeasonDTO);
-        Engine engine = engineApplicationService.getEngineById(teamOfSeasonDTO.getEngineId());
+        checkIfTeamOfSeasonAlreadyExists(season, team);
         TeamOfSeason teamOfSeason = new TeamOfSeason(season, team, drivers, engine);
         teamOfSeasonRepository.save(teamOfSeason);
         return teamOfSeasonMapper.toTeamOfSeasonDTO(teamOfSeason);
@@ -215,14 +233,18 @@ public class TeamOfSeasonApplicationService {
         return ResponsePage.of(drivers.map(driverMapper::toDriverDTO));
     }
 
+    public Engine getEngineOfTeamOfSeason(Season season, Team team) {
+        Optional<Engine> engine = teamOfSeasonRepository.findEngineBySeasonAndTeam(season, team);
+        if (engine.isEmpty()) {
+            throwApiNotFoundExceptionForTeamNotInSeason(season.getId(), team.getId());
+        }
+        return engine.get();
+    }
+
     public EngineDTO getEngineOfTeamOfSeason(UUID seasonId, UUID teamId) {
         Season season = seasonApplicationService.getSeasonById(seasonId);
         Team team = teamApplicationService.getTeamById(teamId);
-        Optional<Engine> engine = teamOfSeasonRepository.findEngineBySeasonAndTeam(season, team);
-        if (engine.isEmpty()) {
-            throwApiNotFoundExceptionForTeamNotInSeason(seasonId, teamId);
-        }
-        return engineMapper.toEngineDTO(engine.get());
+        return engineMapper.toEngineDTO(getEngineOfTeamOfSeason(season, team));
     }
 
     public ResponsePage<DriverDTO> getDriversOfSeason(
