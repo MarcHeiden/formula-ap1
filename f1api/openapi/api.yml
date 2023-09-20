@@ -9,7 +9,7 @@ tags:
   - name: DriverController
   - name: EngineController
   - name: TeamOfSeasonController
-  - name: DriverOfRaceController
+  #- name: DriverOfRaceController
   - name: Seasons
   - name: Races
   - name: Qualifyings
@@ -22,7 +22,7 @@ tags:
   - name: Drivers
   - name: Engines
   - name: TeamsOfSeasons
-  - name: DriversOfRaces
+  #- name: DriversOfRaces
 paths:
   # SeasonController
   /seasons:
@@ -485,8 +485,6 @@ paths:
           $ref: "./components/responses.yml#/400"
         404:
           $ref: "./components/responses.yml#/404"
-        409:
-          $ref: "./components/responses.yml#/409"
         422:
           $ref: "./components/responses.yml#/422"
         500:
@@ -594,8 +592,6 @@ paths:
           $ref: "./components/responses.yml#/400"
         404:
           $ref: "./components/responses.yml#/404"
-        409:
-          $ref: "./components/responses.yml#/409"
         422:
           $ref: "./components/responses.yml#/422"
         500:
@@ -935,8 +931,6 @@ paths:
           $ref: "./components/responses.yml#/400"
         404:
           $ref: "./components/responses.yml#/404"
-        409:
-          $ref: "./components/responses.yml#/409"
         422:
           $ref: "./components/responses.yml#/422"
         500:
@@ -1534,76 +1528,76 @@ paths:
           $ref: "./components/responses.yml#/500"
 
   # DriverOfRaceController
-  /driversOfRaces:
-    x-internal: true
-    get:
-      summary: Get driversOfRaces / Get driverOfRace by raceId and driverId
-      tags:
-        - "DriversOfRaces"
-        - "DriverOfRaceController"
-      parameters:
-        - $ref: "./components/parameters.yml#/raceIdQuery"
-        - $ref: "./components/parameters.yml#/driverIdQuery"
-      responses:
-        200:
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "./components/schemas.yml#/DriversOfRaces"
-        400:
-          $ref: "./components/responses.yml#/400"
-        500:
-          $ref: "./components/responses.yml#/500"
-  /driversOfRaces/{driverOfRaceId}:
-    x-internal: true
-    patch:
-      summary: Update driverOfRace
-      tags:
-        - "DriversOfRaces"
-        - "DriverOfRaceController"
-      parameters:
-        - $ref: "./components/parameters.yml#/driverOfRaceId"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "./components/schemas.yml#/DriverOfRace"
-      responses:
-        200:
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "./components/schemas.yml#/DriverOfRace"
-        400:
-          $ref: "./components/responses.yml#/400"
-        404:
-          $ref: "./components/responses.yml#/404"
-        409:
-          $ref: "./components/responses.yml#/409"
-        422:
-          $ref: "./components/responses.yml#/422"
-        500:
-          $ref: "./components/responses.yml#/500"
-    get:
-      summary: Get driverOfRace / Not particularly needed
-      tags:
-        - "DriversOfRaces"
-        - "DriverOfRaceController"
-      parameters:
-        - $ref: "./components/parameters.yml#/driverOfRaceId"
-      responses:
-        200:
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "./components/schemas.yml#/DriverOfRace"
-        400:
-          $ref: "./components/responses.yml#/400"
-        404:
-          $ref: "./components/responses.yml#/404"
-        500:
-          $ref: "./components/responses.yml#/500"
+  #/driversOfRaces:
+  #  x-internal: true
+  #  get:
+  #    summary: Get driversOfRaces / Get driverOfRace by raceId and driverId
+  #    tags:
+  #      - "DriversOfRaces"
+  #      - "DriverOfRaceController"
+  #    parameters:
+  #      - $ref: "./components/parameters.yml#/raceIdQuery"
+  #      - $ref: "./components/parameters.yml#/driverIdQuery"
+  #    responses:
+  #      200:
+  #        description: OK
+  #        content:
+  #          application/json:
+  #            schema:
+  #              $ref: "./components/schemas.yml#/DriversOfRaces"
+  #      400:
+  #        $ref: "./components/responses.yml#/400"
+  #      500:
+  #        $ref: "./components/responses.yml#/500"
+  #/driversOfRaces/{driverOfRaceId}:
+  #  x-internal: true
+  #  patch:
+  #    summary: Update driverOfRace
+  #    tags:
+  #      - "DriversOfRaces"
+  #      - "DriverOfRaceController"
+  #    parameters:
+  #      - $ref: "./components/parameters.yml#/driverOfRaceId"
+  #    requestBody:
+  #      required: true
+  #      content:
+  #        application/json:
+  #          schema:
+  #            $ref: "./components/schemas.yml#/DriverOfRace"
+  #    responses:
+  #      200:
+  #        description: OK
+  #        content:
+  #          application/json:
+  #            schema:
+  #              $ref: "./components/schemas.yml#/DriverOfRace"
+  #      400:
+  #        $ref: "./components/responses.yml#/400"
+  #      404:
+  #        $ref: "./components/responses.yml#/404"
+  #      409:
+  #        $ref: "./components/responses.yml#/409"
+  #      422:
+  #        $ref: "./components/responses.yml#/422"
+  #      500:
+  #        $ref: "./components/responses.yml#/500"
+  #  get:
+  #    summary: Get driverOfRace / Not particularly needed
+  #    tags:
+  #      - "DriversOfRaces"
+  #      - "DriverOfRaceController"
+  #    parameters:
+  #      - $ref: "./components/parameters.yml#/driverOfRaceId"
+  #    responses:
+  #      200:
+  #        description: OK
+  #        content:
+  #          application/json:
+  #            schema:
+  #              $ref: "./components/schemas.yml#/DriverOfRace"
+  #      400:
+  #        $ref: "./components/responses.yml#/400"
+  #      404:
+  #        $ref: "./components/responses.yml#/404"
+  #      500:
+  #        $ref: "./components/responses.yml#/500"
