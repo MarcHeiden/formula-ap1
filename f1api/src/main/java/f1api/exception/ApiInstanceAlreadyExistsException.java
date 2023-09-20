@@ -1,12 +1,11 @@
 package f1api.exception;
 
 import java.util.Map;
-import org.springframework.http.HttpStatus;
 
-public class ApiInstanceAlreadyExistsException extends ApiException {
+public class ApiInstanceAlreadyExistsException extends ApiConflictException {
 
     public ApiInstanceAlreadyExistsException(String message) {
-        super(message, HttpStatus.CONFLICT);
+        super(message);
     }
 
     public static ApiInstanceAlreadyExistsException of(String instance, String property, String propertyValue) {
