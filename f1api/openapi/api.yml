@@ -1,7 +1,41 @@
 openapi: "3.0.0"
 info:
   title: F1 API
-  version: "1.0"
+  version: "1.0.0"
+  description: |
+    ## Paging and Sorting
+
+    The following query paramters can be used to control the paging and sorting of collections.
+
+    ### `pageSize`
+
+    Defines the number of elements per page.
+
+    **Default value:** 25
+
+    **Notice:** maximum number is 100
+
+    ### `pageNumber`
+
+    Specifies the page number that should be returned.
+
+    **Notice:** first page has the number 0
+
+    **Default value:** 0
+
+    ### `sort`
+
+    Specifies by which properties to sort. <br>
+    By default the sort order is ascending. This can be changed by adding `asc` for ascending or `desc` for
+    descending separated by a comma after the sort property.
+
+    **Hint:** To sort by more than one property, simply add a new sort parameter to the query.
+
+    ### Example
+
+    GET `/drivers?pageSize=20&pageNumber=0&sort=firstName,asc`
+
+    will return the first page with a maximum of 20 drivers sorted by first name in ascending order.
 tags:
   - name: SeasonController
   - name: RaceController
