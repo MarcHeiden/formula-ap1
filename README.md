@@ -13,3 +13,9 @@ Lint OpenAPI
 ```shell
 > redocly lint f1api-internal --config ./f1api/openapi/redocly-cli-config.yml
 ```
+
+## Format Java Files with Spotless
+
+```shell
+> ./gradlew spotlessJavaApply
+```
