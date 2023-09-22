@@ -33,9 +33,9 @@ info:
 
     ### Example
 
-    GET `/drivers?pageSize=20&pageNumber=0&sort=firstName,asc`
+    GET `/drivers?pageSize=25&pageNumber=0&sort=firstName,asc`
 
-    will return the first page with a maximum of 20 drivers sorted by first name in ascending order.
+    will return the first page with a maximum of 25 drivers sorted by first name in ascending order.
 tags:
   - name: SeasonController
   - name: RaceController
