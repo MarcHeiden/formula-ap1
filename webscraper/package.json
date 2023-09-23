@@ -8,15 +8,19 @@
   },
   "devDependencies": {
     "@types/node": "^18.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.7.2",
+    "@typescript-eslint/parser": "^6.7.2",
+    "eslint": "^8.50.0",
     "prettier": "3.0.3",
     "ts-node": "^10.8.0",
-    "typescript": "^5.0.0"
+    "typescript": "^5.2.2"
   },
   "scripts": {
     "dev": "npm run prettier-apply && node --loader ts-node/esm src/main.ts",
     "prod": "node dist/main.js",
     "build": "tsc",
     "prettier-check": "npx prettier . --check",
-    "prettier-apply": "npx prettier . --write"
+    "prettier-apply": "npx prettier . --write",
+    "lint": "npx eslint ."
   }
 }
