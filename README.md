@@ -19,3 +19,16 @@ Lint OpenAPI
 ```shell
 > ./gradlew spotlessJavaApply
 ```
+
+## Apply Prettier format
+
+```shell
+> npm run prettier-apply
+```
+
+## Lint web scraper project locally
+
+```shell
+> npm run lint
+```
+
