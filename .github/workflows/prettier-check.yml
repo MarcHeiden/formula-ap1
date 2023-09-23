@@ -1,0 +1,26 @@
+name: Prettier check
+on:
+  pull_request:
+    branches: ["main"]
+    paths:
+      - "webscraper/**"
+  workflow_dispatch:
+
+jobs:
+  prettier-check:
+    name: Prettier check
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: "webscraper"
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: "npm"
+          cache-dependency-path: "webscraper/package-lock.json"
+      - name: Clean install dependencies
+        run: npm ci
+      - name: Run prettier check
+        run: npm run prettier-check

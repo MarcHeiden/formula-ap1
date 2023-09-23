@@ -1,0 +1,7 @@
+dist
+node_modules
+apify_storage
+crawlee_storage
+storage
+package-lock.json
+**/*.yml

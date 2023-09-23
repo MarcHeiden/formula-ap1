@@ -5,17 +5,6 @@ charset = utf-8
 end_of_line = lf
 insert_final_newline = true
 
-# ignore for assets
-[/assets/**]
-charset = unset
-end_of_line = unset
-insert_final_newline = unset
-indent_style = unset
-indent_size = unset
-tab_width = unset
-trim_trailing_whitespace = unset
-max_line_length = unset
-
 # validated by spotless
 #[*.java]
 #indent_style = space
@@ -26,3 +15,14 @@ max_line_length = unset
 [{*.yaml,*.yml}]
 indent_style = space
 indent_size = 2
+
+# ignore for assets
+[/assets/**]
+charset = unset
+end_of_line = unset
+insert_final_newline = unset
+indent_style = unset
+indent_size = unset
+tab_width = unset
+trim_trailing_whitespace = unset
+max_line_length = unset
