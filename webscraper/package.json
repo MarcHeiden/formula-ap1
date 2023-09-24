@@ -21,6 +21,6 @@
     "build": "tsc",
     "prettier-check": "npx prettier . --check",
     "prettier-apply": "npx prettier . --write",
-    "lint": "npx eslint ."
+    "lint": "npx eslint . --max-warnings 0"
   }
 }
