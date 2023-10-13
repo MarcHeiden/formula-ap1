@@ -25,9 +25,10 @@
     // Type checking
     "strict": true,
     "noUncheckedIndexedAccess": true,
-    "noUnusedLocals": false,
-    "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
+    // checked with eslint
+    /*"noUnusedLocals": true,
+    "noUnusedParameters": true,*/
   },
   "include": ["./src/**/*"]
 }
