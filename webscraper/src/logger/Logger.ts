@@ -31,8 +31,8 @@ export class Logger {
                         return `${timestamp} ${colorizedLevel} ${unexpectedError ? `[Unexpected Error] ` : ""}${
                             name ? `${name} ` : ""
                         }${message || ""} ${colorizedUrls || ""}${colorizedData || ""}${stack ? `\n${stack}` : ""}`;
-                    }),
-                ),
+                    })
+                )
             }),
             new DailyRotateFile({
                 // create new log file every month and keep the last 7 files
@@ -41,9 +41,9 @@ export class Logger {
                 dirname: "./logs/",
                 filename: "log%DATE%.txt",
                 maxFiles: 7,
-                utc: true, // use utc date
-            }),
-        ],
+                utc: true // use utc date
+            })
+        ]
     });
 
     logError(error: unknown) {

@@ -52,14 +52,14 @@ export class F1ApiClient {
         endpoint: string | URL,
         searchParameters?: SearchParameters | URLSearchParams,
         method?: Method,
-        body?: ApiType,
+        body?: ApiType
     ): Promise<T> {
         const options = new Options({
             prefixUrl: process.env.F1API_BASE_URL,
             throwHttpErrors: false,
             method: method,
             json: body,
-            searchParams: searchParameters,
+            searchParams: searchParameters
         });
         const client = got.extend(options);
         let responseBody: T | ApiError | undefined;
@@ -83,7 +83,7 @@ export class F1ApiClient {
     private async getApiTypes<T extends ApiType>(
         endpoint: string | URL,
         notFoundErrorMessage: string,
-        searchParameters?: SearchParameters | URLSearchParams,
+        searchParameters?: SearchParameters | URLSearchParams
     ): Promise<T[]> {
         const apiPage = await this.useApi<ApiPage<T>>(endpoint, searchParameters);
         if (apiPage.content === undefined) {
@@ -95,7 +95,7 @@ export class F1ApiClient {
     private async getApiTypeBySearchParameters<T extends ApiType>(
         endpoint: string | URL,
         searchParameters: SearchParameters | URLSearchParams,
-        notFoundErrorMessage: string,
+        notFoundErrorMessage: string
     ): Promise<T> {
         const apiTypes = await this.getApiTypes<T>(endpoint, notFoundErrorMessage, searchParameters);
         if (apiTypes[0] === undefined) {
@@ -106,75 +106,79 @@ export class F1ApiClient {
 
     private async getSeasonBySeasonYear(seasonYear: number): Promise<Season> {
         const searchParameters: SearchParameters = {
-            seasonYear: seasonYear,
+            seasonYear: seasonYear
         };
         const notFoundErrorMessage = `Season ${seasonYear} does not exist`;
         return await this.getApiTypeBySearchParameters<Season>(
             this.seasonsEndpoint,
             searchParameters,
-            notFoundErrorMessage,
+            notFoundErrorMessage
         );
     }
 
     private async getTeamByTeamName(teamName: string): Promise<Team> {
         const searchParameters: SearchParameters = {
-            teamName: teamName,
+            teamName: teamName
         };
         const notFoundErrorMessage = `Team with the teamName '${teamName}' does not exist`;
         return await this.getApiTypeBySearchParameters<Team>(
             this.teamsEndpoint,
             searchParameters,
-            notFoundErrorMessage,
+            notFoundErrorMessage
         );
     }
 
     private async getEngineByManufacturer(manufacturer: string): Promise<Engine> {
         const searchParameters: SearchParameters = {
-            manufacturer: manufacturer,
+            manufacturer: manufacturer
         };
         const notFoundErrorMessage = `Engine with the manufacturer '${manufacturer}' does not exist`;
         return await this.getApiTypeBySearchParameters<Engine>(
             this.enginesEndpoint,
             searchParameters,
-            notFoundErrorMessage,
+            notFoundErrorMessage
         );
     }
 
     private async getDriverByName(firstName: string, lastName: string): Promise<Driver> {
         const searchParameters: SearchParameters = {
             firstName: firstName,
-            lastName: lastName,
+            lastName: lastName
         };
-        const notFoundErrorMessage = `Driver with the firstName '${firstName}' and lastName '${lastName}' does not exist`;
+        // prettier-ignore
+        const notFoundErrorMessage =
+            `Driver with the firstName '${firstName}' and lastName '${lastName}' does not exist`;
         return await this.getApiTypeBySearchParameters<Driver>(
             this.driversEndpoint,
             searchParameters,
-            notFoundErrorMessage,
+            notFoundErrorMessage
         );
     }
 
     private async getRaceByDate(date: string): Promise<Race> {
         const searchParameters: SearchParameters = {
-            date: date,
+            date: date
         };
         const notFoundErrorMessage = `Race with the date '${date}' does not exist`;
         return await this.getApiTypeBySearchParameters<Race>(
             this.racesEndpoint,
             searchParameters,
-            notFoundErrorMessage,
+            notFoundErrorMessage
         );
     }
 
     private async getTeamOfSeasonBySeasonAndTeam(season: Season, team: Team): Promise<TeamOfSeason> {
         const searchParameters: SearchParameters = {
             seasonId: season.seasonId,
-            teamId: team.teamId,
+            teamId: team.teamId
         };
-        const notFoundErrorMessage = `TeamOfSeason does not exist for the season ${season.seasonYear} and the team '${team.teamName}'`;
+        // prettier-ignore
+        const notFoundErrorMessage =
+            `TeamOfSeason does not exist for the season ${season.seasonYear} and the team '${team.teamName}'`;
         return await this.getApiTypeBySearchParameters<TeamOfSeason>(
             this.teamOfSeasonEndpoint,
             searchParameters,
-            notFoundErrorMessage,
+            notFoundErrorMessage
         );
     }
 
@@ -183,7 +187,7 @@ export class F1ApiClient {
         const endpoint = `${this.seasonsEndpoint}/${season.seasonId}/races`;
         const searchParameters: SearchParameters = {
             sort: "date,asc",
-            pageSize: "50", // Get all races as there probably won't be more than 50 races in a season
+            pageSize: "50" // Get all races as there probably won't be more than 50 races in a season
         };
         const notFoundErrorMessage = `Season ${seasonYear} has no races`;
         return await this.getApiTypes<Race>(endpoint, notFoundErrorMessage, searchParameters);
@@ -199,15 +203,17 @@ export class F1ApiClient {
         season: Season,
         team: Team,
         firstName: string,
-        lastName: string,
+        lastName: string
     ): Promise<Driver> {
         const drivers = await this.getDriversOfTeamOfSeason(season, team);
         const filteredDrivers = drivers.filter(
-            (driver) => driver.firstName === firstName && driver.lastName === lastName,
+            (driver) => driver.firstName === firstName && driver.lastName === lastName
         );
         if (filteredDrivers.length === 0) {
             throw new F1ApiNotFoundError(
-                `Team '${team.teamName}' has no driver with the firstName '${firstName}' and lastName '${lastName}' in the season ${season.seasonYear}`,
+                // prettier-ignore
+                `Team '${team.teamName}' has no driver with the firstName '${firstName}' ` +
+                `and lastName '${lastName}' in the season ${season.seasonYear}`
             );
         }
         return filteredDrivers[0] as Driver;
@@ -222,7 +228,7 @@ export class F1ApiClient {
     private async postAndLogIfAlreadyExists<T extends ApiType>(
         endpoint: string | URL,
         body: ApiType,
-        logMessage: string,
+        logMessage: string
     ): Promise<T | undefined> {
         try {
             return await this.post<T>(endpoint, body, logMessage);
@@ -334,15 +340,15 @@ export class F1ApiClient {
             const [team, engine, drivers] = await Promise.all([
                 this.postTeamOrGetAlreadyExistingOne(teamData_.team),
                 this.postEngineOrGetAlreadyExistingOne(teamData_.engine),
-                Promise.all(teamData_.drivers.map((driver) => this.postDriverOrGetAlreadyExistingOne(driver))),
+                Promise.all(teamData_.drivers.map((driver) => this.postDriverOrGetAlreadyExistingOne(driver)))
             ]);
             teamsOfSeason.push(
                 new TeamOfSeason(
                     drivers.map((driver) => driver.driverId),
                     season.seasonId,
                     team.teamId,
-                    engine.engineId,
-                ),
+                    engine.engineId
+                )
             );
         }
         await Promise.all(teamsOfSeason.map((teamOfSeason) => this.postTeamOfSeason(teamOfSeason)));
@@ -378,7 +384,7 @@ export class F1ApiClient {
                         race.season,
                         team,
                         qualifyingData_.driver.firstName,
-                        qualifyingData_.driver.lastName,
+                        qualifyingData_.driver.lastName
                     );
                 } catch (error) {
                     if (error instanceof F1ApiNotFoundError) {
@@ -392,7 +398,7 @@ export class F1ApiClient {
                     }
                 }
                 return new Qualifying(qualifyingData_.position, driver.driverId, team.teamId);
-            }),
+            })
         );
         await Promise.all(qualifying.map((qualifying_) => this.postQualifyingForDriverOfRace(race, qualifying_)));
     }
@@ -411,7 +417,7 @@ export class F1ApiClient {
                 }
                 const driver = await this.getDriverByName(resultData_.driver.firstName, resultData_.driver.lastName);
                 return new Result(driver.driverId, resultData_.position, resultData_.dnf);
-            }),
+            })
         );
         await Promise.all(results.map((result) => this.postResultForDriverOfRace(race, result)));
     }
@@ -430,10 +436,10 @@ export class F1ApiClient {
                 }
                 const driver = await this.getDriverByName(
                     fastestLapData_.driver.firstName,
-                    fastestLapData_.driver.lastName,
+                    fastestLapData_.driver.lastName
                 );
                 return new FastestLap(fastestLapData_.time, driver.driverId);
-            }),
+            })
         );
         await Promise.all(fastestLaps.map((fastestLap) => this.postFastestLapForDriverOfRace(race, fastestLap)));
     }
@@ -452,10 +458,10 @@ export class F1ApiClient {
                 }
                 const driver = await this.getDriverByName(
                     topSpeedData_.driver.firstName,
-                    topSpeedData_.driver.lastName,
+                    topSpeedData_.driver.lastName
                 );
                 return new TopSpeed(topSpeedData_.speed, driver.driverId);
-            }),
+            })
         );
         await Promise.all(topSpeeds.map((topSpeed) => this.postTopSpeedForDriverOfRace(race, topSpeed)));
     }
@@ -474,10 +480,10 @@ export class F1ApiClient {
                 }
                 const driver = await this.getDriverByName(
                     leadingLapsData_.driver.firstName,
-                    leadingLapsData_.driver.lastName,
+                    leadingLapsData_.driver.lastName
                 );
                 return new LeadingLaps(leadingLapsData_.numberOfLaps, driver.driverId);
-            }),
+            })
         );
         await Promise.all(leadingLaps.map((leadingLaps_) => this.postLeadingLapsForDriverOfRace(race, leadingLaps_)));
     }
@@ -490,7 +496,7 @@ export class F1ApiClient {
         }
         const driver = await this.getDriverByName(
             fastestPitStopData.driver.firstName,
-            fastestPitStopData.driver.lastName,
+            fastestPitStopData.driver.lastName
         );
         const fastestPitStop = new FastestPitStop(fastestPitStopData.duration, driver.driverId);
         await this.postAndLogIfAlreadyExists(endpoint, fastestPitStop, logMessage);

@@ -6,7 +6,7 @@ import {
     createPlaywrightRouter,
     PlaywrightCrawler,
     CheerioCrawlerOptions,
-    PlaywrightCrawlerOptions,
+    PlaywrightCrawlerOptions
 } from "crawlee";
 import { MemoryStorage } from "@crawlee/memory-storage";
 import { Logger } from "../logger/Logger.js";
@@ -45,9 +45,9 @@ export class Scraper {
             // https://github.com/apify/crawlee/discussions/2062
             new Configuration({
                 storageClient: new MemoryStorage({
-                    persistStorage: false, // Allows to rescrape
-                }),
-            }),
+                    persistStorage: false // Allows to rescrape
+                })
+            })
         );
     }
 
@@ -57,9 +57,9 @@ export class Scraper {
             // https://github.com/apify/crawlee/discussions/2062
             new Configuration({
                 storageClient: new MemoryStorage({
-                    persistStorage: false, // Allows to rescrape
-                }),
-            }),
+                    persistStorage: false // Allows to rescrape
+                })
+            })
         );
     }
 
@@ -116,18 +116,18 @@ export class Scraper {
                     const race = new Race(raceName, date);
                     raceMap.set(race.raceName, race);
                     const userData: UserData = {
-                        raceName: race.raceName,
+                        raceName: race.raceName
                     };
                     raceRequests.push({
                         userData: userData,
-                        url: raceUrl,
+                        url: raceUrl
                     });
                 });
             });
         });
 
         const cheerioCrawler = this.getCheerioCrawler({
-            requestHandler: cheerioRouter,
+            requestHandler: cheerioRouter
         });
 
         const playwrightRouter = createPlaywrightRouter();
@@ -153,7 +153,7 @@ export class Scraper {
         });
 
         const playwrightCrawler = this.getPlaywrightCrawler({
-            requestHandler: playwrightRouter,
+            requestHandler: playwrightRouter
         });
 
         return await this.logScraping(async () => {
@@ -176,7 +176,7 @@ export class Scraper {
                     const team = new Team(this.getTrimmedText($(element)));
                     const teamSpecificData = $(element).nextUntil("p:contains('Other drivers')");
                     const engine = new Engine(
-                        $(teamSpecificData).filter("p:contains('Engines')").text().replace("Engines:", "").trim(),
+                        $(teamSpecificData).filter("p:contains('Engines')").text().replace("Engines:", "").trim()
                     );
                     const driverData = $(teamSpecificData).find("strong a");
                     const drivers: Driver[] = [];
@@ -189,7 +189,7 @@ export class Scraper {
         });
 
         const cheerioCrawler = this.getCheerioCrawler({
-            requestHandler: cheerioRouter,
+            requestHandler: cheerioRouter
         });
 
         return await this.logScraping(async () => {
@@ -214,7 +214,7 @@ export class Scraper {
         });
 
         const cheerioCrawler = this.getCheerioCrawler({
-            requestHandler: cheerioRouter,
+            requestHandler: cheerioRouter
         });
 
         return await this.logScraping(async () => {
@@ -237,7 +237,7 @@ export class Scraper {
         });
 
         const cheerioCrawler = this.getCheerioCrawler({
-            requestHandler: cheerioRouter,
+            requestHandler: cheerioRouter
         });
 
         await cheerioCrawler.run(requests);
@@ -263,18 +263,18 @@ export class Scraper {
                             throw new ScraperError(`Could not scrape driver url from ${raceUrl}`);
                         }
                         const userData: RaceDataUserData<QualifyingData> = {
-                            raceData: new QualifyingData(position, team),
+                            raceData: new QualifyingData(position, team)
                         };
                         driverRequests.push({
                             userData: userData,
-                            url: driverUrl,
+                            url: driverUrl
                         });
                     });
             });
         });
 
         const cheerioCrawler = this.getCheerioCrawler({
-            requestHandler: cheerioRouter,
+            requestHandler: cheerioRouter
         });
 
         return await this.logScraping(async () => {
@@ -305,11 +305,11 @@ export class Scraper {
                             throw new ScraperError(`Could not scrape driver url from ${raceUrl}`);
                         }
                         const userData: RaceDataUserData<ResultData> = {
-                            raceData: new ResultData(position),
+                            raceData: new ResultData(position)
                         };
                         driverRequests.push({
                             userData: userData,
-                            url: driverUrl,
+                            url: driverUrl
                         });
                     });
                 // Scrape result data for driver who did not finish the race
@@ -324,18 +324,18 @@ export class Scraper {
                             throw new ScraperError(`Could not scrape driver url from ${raceUrl}`);
                         }
                         const userData: RaceDataUserData<ResultData> = {
-                            raceData: new ResultData(undefined, true),
+                            raceData: new ResultData(undefined, true)
                         };
                         driverRequests.push({
                             userData: userData,
-                            url: driverUrl,
+                            url: driverUrl
                         });
                     });
             });
         });
 
         const cheerioCrawler = this.getCheerioCrawler({
-            requestHandler: cheerioRouter,
+            requestHandler: cheerioRouter
         });
 
         return await this.logScraping(async () => {
@@ -362,18 +362,18 @@ export class Scraper {
                             throw new ScraperError(`Could not scrape driver url from ${raceUrl}`);
                         }
                         const userData: RaceDataUserData<FastestLapData> = {
-                            raceData: new FastestLapData(time),
+                            raceData: new FastestLapData(time)
                         };
                         driverRequests.push({
                             userData: userData,
-                            url: driverUrl,
+                            url: driverUrl
                         });
                     });
             });
         });
 
         const cheerioCrawler = this.getCheerioCrawler({
-            requestHandler: cheerioRouter,
+            requestHandler: cheerioRouter
         });
 
         return await this.logScraping(async () => {
@@ -400,18 +400,18 @@ export class Scraper {
                             throw new ScraperError(`Could not scrape driver url from ${raceUrl}`);
                         }
                         const userData: RaceDataUserData<TopSpeedData> = {
-                            raceData: TopSpeedData.ofSpeedString(speed),
+                            raceData: TopSpeedData.ofSpeedString(speed)
                         };
                         driverRequests.push({
                             userData: userData,
-                            url: driverUrl,
+                            url: driverUrl
                         });
                     });
             });
         });
 
         const cheerioCrawler = this.getCheerioCrawler({
-            requestHandler: cheerioRouter,
+            requestHandler: cheerioRouter
         });
 
         return await this.logScraping(async () => {
@@ -438,18 +438,18 @@ export class Scraper {
                             throw new ScraperError(`Could not scrape driver url from ${raceUrl}`);
                         }
                         const userData: RaceDataUserData<LeadingLapsData> = {
-                            raceData: new LeadingLapsData(numberOfLaps),
+                            raceData: new LeadingLapsData(numberOfLaps)
                         };
                         driverRequests.push({
                             userData: userData,
-                            url: driverUrl,
+                            url: driverUrl
                         });
                     });
             });
         });
 
         const cheerioCrawler = this.getCheerioCrawler({
-            requestHandler: cheerioRouter,
+            requestHandler: cheerioRouter
         });
 
         return await this.logScraping(async () => {
@@ -473,17 +473,17 @@ export class Scraper {
                     throw new ScraperError(`Could not scrape driver url from ${raceUrl}`);
                 }
                 const userData: RaceDataUserData<FastestPitStopData> = {
-                    raceData: new FastestPitStopData(duration),
+                    raceData: new FastestPitStopData(duration)
                 };
                 driverRequest = {
                     userData: userData,
-                    url: driverUrl,
+                    url: driverUrl
                 };
             });
         });
 
         const cheerioCrawler = this.getCheerioCrawler({
-            requestHandler: cheerioRouter,
+            requestHandler: cheerioRouter
         });
 
         return await this.logScraping(async () => {

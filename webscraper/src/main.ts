@@ -95,8 +95,8 @@ async function createRaceData(seasonYear: number) {
                             scraper
                                 .scrapeFastestPitStopData(race, raceUrl)
                                 .then((fastestPitStopData) =>
-                                    f1ApiClient.postFastestPitStopOfRace(race, fastestPitStopData),
-                                ),
+                                    f1ApiClient.postFastestPitStopOfRace(race, fastestPitStopData)
+                                )
                         ]);
                         createdRaceDataForRacesWithDate.push(race.date);
                     }, logMessage);
