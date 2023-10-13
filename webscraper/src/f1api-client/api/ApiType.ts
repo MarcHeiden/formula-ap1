@@ -1,3 +1,3 @@
 import { ApiData } from "./ApiData.js";
 
-export interface ApiType extends ApiData {}
+export abstract class ApiType extends ApiData {}

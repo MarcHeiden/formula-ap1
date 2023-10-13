@@ -1,13 +1,16 @@
 import { ApiType } from "./ApiType.js";
+import { Season } from "./Season.js";
 
-export class Race implements ApiType {
-    raceId?: string;
-    raceName: string;
-    date: string;
-    private time?: string;
+export class Race extends ApiType {
+    readonly raceId?: string;
+    readonly raceName: string;
+    readonly date: string;
+    time?: string;
     cancelled?: boolean;
+    readonly season?: Season;
 
     constructor(raceName: string, date: string, time?: string, cancelled?: boolean) {
+        super();
         this.raceName = raceName;
         // map "05.03.2023" to "2023-03-05" date format
         if (date.match("^\\d{2}\\.\\d{2}\\.\\d{4}$")) {

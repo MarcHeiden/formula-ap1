@@ -7,8 +7,6 @@ import { F1ApiRequestError } from "../f1api-client/error/F1ApiRequestError.js";
 import { F1ApiError } from "../f1api-client/error/F1ApiError.js";
 
 export class Logger {
-    private errorLevel = "error";
-
     private colorizeGrey(string: string): string {
         return format.colorize({ colors: { grey: "grey" } }).colorize("grey", string);
     }
@@ -48,7 +46,15 @@ export class Logger {
         ],
     });
 
-    logAppError(error: AppError) {
+    logError(error: unknown) {
+        if (error instanceof AppError) {
+            this.logAppError(error);
+        } else {
+            this.logUnexpectedError(error);
+        }
+    }
+
+    logAppError(error: AppError, logLevel: "warn" | "error" = "error") {
         const meta: {
             name: string;
             stack: string | undefined;
@@ -68,10 +74,14 @@ export class Logger {
             message = error.apiError.message;
             meta.error = error.apiError;
         }
-        this.logger.log(this.errorLevel, message, meta);
+        if (logLevel === "warn") {
+            this.logger.log(logLevel, message);
+        } else {
+            this.logger.log(logLevel, message, meta);
+        }
     }
 
-    logUnexpectedError(error: unknown) {
+    private logUnexpectedError(error: unknown) {
         const meta: {
             name?: string;
             stack?: string;
@@ -84,7 +94,7 @@ export class Logger {
             meta.name = error.name;
             meta.stack = error.stack;
         }
-        this.logger.log(this.errorLevel, message, meta);
+        this.logger.error(message, meta);
     }
 
     logExit(exitCode: number) {
@@ -95,12 +105,12 @@ export class Logger {
         this.logger.log(level, `Process will exit with exit code ${exitCode}`);
     }
 
-    warn(message: string) {
-        this.logger.warn(message);
+    logAlreadyExists(error: F1ApiError, data: ApiType) {
+        this.logger.warn(error.apiError.message, { data: data });
     }
 
-    logAlreadyExists(message: string, data: ApiType) {
-        this.logger.warn(message, { data: data });
+    info(message: string) {
+        this.logger.info(message);
     }
 
     logCreateData(message: string) {
@@ -115,27 +125,19 @@ export class Logger {
         this.logger.info(`Scrape ${message}`);
     }
 
-    logScraped(message: string, data: ApiType | ApiType[]) {
+    logScraped(message: string, data: unknown) {
         this.logger.info(`Scraped ${message}`, { data: data });
     }
 
-    logPost(message: string) {
-        this.logger.info(`Post ${message}`);
+    logPost(message: string, data: ApiType) {
+        this.logger.info(`Post ${message}`, { data: data });
     }
 
-    logPosted(message: string, data: ApiType | ApiType[]) {
+    logPosted(message: string, data: ApiType) {
         this.logger.info(`Posted ${message}`, { data: data });
     }
 
-    logProcessUrls(urls: string[]) {
-        this.logger.info(`Process URLs`, { urls: urls });
-    }
-
-    logProcessUrl(url: string) {
-        this.logger.info(`Process ${url}`);
-    }
-
-    logEnqueueUrls(urls: string[]) {
-        this.logger.info(`Enqueue URLs`, { urls: urls });
+    logPatched(message: string, data: ApiType) {
+        this.logger.info(`Patched ${message}`, { data: data });
     }
 }

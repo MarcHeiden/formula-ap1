@@ -1,4 +1,4 @@
-export interface ApiError {
+export type ApiError = {
     httpStatusCode: number;
     message: string;
     timestamp: string;
@@ -6,4 +6,4 @@ export interface ApiError {
         fieldName: string;
         message: string;
     }[];
-}
+};

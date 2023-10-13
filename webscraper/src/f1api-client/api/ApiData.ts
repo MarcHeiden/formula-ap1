@@ -1,1 +1,1 @@
-export interface ApiData {}
+export abstract class ApiData {}

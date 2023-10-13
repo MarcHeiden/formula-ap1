@@ -1,5 +1,5 @@
-export abstract class AppError extends Error {
-    protected constructor(message?: string) {
+export class AppError extends Error {
+    constructor(message?: string) {
         super(message);
         this.name = AppError.name;
     }
