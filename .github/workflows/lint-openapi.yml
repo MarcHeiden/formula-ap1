@@ -1,12 +1,9 @@
 name: Lint OpenAPI
 on:
-  #push:
-  #  paths:
-  #    - "f1api/openapi/**"
   pull_request:
     branches: ["main"]
     paths:
-      - "f1api/openapi/**"
+      - "api/openapi/**"
   # Allows to run this workflow manually from the Actions tab
   workflow_dispatch:
 
@@ -27,4 +24,4 @@ jobs:
       - name: Install redocly cli
         run: npm install -g ${{ vars.REDOCLY_CLI }}
       - name: Lint OpenAPI
-        run: redocly lint f1api-internal --config ${{ vars.REDOCLY_CLI_CONFIG }}
+        run: redocly lint api-internal --config ${{ vars.REDOCLY_CLI_CONFIG }}

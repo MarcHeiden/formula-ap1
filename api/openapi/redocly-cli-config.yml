@@ -27,9 +27,9 @@ rules:
   operation-tag-defined: error
 
 apis:
-  f1api-internal:
-    root: ./f1api/openapi/api.yml
-  f1api:
-    root: ./f1api/openapi/api.yml
+  api-internal:
+    root: ./api/openapi/api.yml
+  api:
+    root: ./api/openapi/api.yml
     decorators:
       remove-x-internal: on

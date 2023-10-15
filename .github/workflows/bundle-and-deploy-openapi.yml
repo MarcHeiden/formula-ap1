@@ -4,7 +4,7 @@ on:
     branches:
       - "main"
     paths:
-      - "f1api/openapi/**"
+      - "api/openapi/**"
   workflow_dispatch:
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
@@ -29,7 +29,7 @@ jobs:
       run:
         shell: bash
     env:
-      REMOVE_TAGS_SCRIPT: ./f1api/openapi/remove-tags.sh
+      REMOVE_TAGS_SCRIPT: ./api/openapi/remove-tags.sh
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -39,11 +39,11 @@ jobs:
       - name: Install redocly cli
         run: npm install -g ${{ vars.REDOCLY_CLI }}
       - name: Bundle public OpenAPI spec
-        run: redocly bundle f1api --config ${{ vars.REDOCLY_CLI_CONFIG }} -o ${{ vars.BUNDLED_OPENAPI_SPEC }}
+        run: redocly bundle api --config ${{ vars.REDOCLY_CLI_CONFIG }} -o ${{ vars.BUNDLED_OPENAPI_SPEC }}
       - name: Remove unnecessary tags from bundled OpenAPI spec
         run: chmod -v u+x ${{ env.REMOVE_TAGS_SCRIPT }} && ${{ env.REMOVE_TAGS_SCRIPT }} ${{ vars.BUNDLED_OPENAPI_SPEC }}
       - name: Bundle internal OpenAPI spec
-        run: redocly bundle f1api-internal --config ${{ vars.REDOCLY_CLI_CONFIG }} -o ${{ vars.BUNDLED_INTERNAL_OPENAPI_SPEC }}
+        run: redocly bundle api-internal --config ${{ vars.REDOCLY_CLI_CONFIG }} -o ${{ vars.BUNDLED_INTERNAL_OPENAPI_SPEC }}
       - name: Setup GitHub Pages
         uses: actions/configure-pages@v3
       - name: Upload GitHub Pages artifact
