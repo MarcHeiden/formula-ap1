@@ -4,8 +4,8 @@ on:
     branches: ["main"]
     paths:
       - "**.java"
-      - "f1api/build.gradle.kts"
-      - "f1api/settings.gradle.kts"
+      - "api/build.gradle.kts"
+      - "api/settings.gradle.kts"
   workflow_dispatch:
 
 jobs:
@@ -24,4 +24,4 @@ jobs:
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
       - name: Run spotless check
-        run: cd ./f1api && chmod -v u+x gradlew && ./gradlew spotlessJavaCheck
+        run: cd ./api && chmod -v u+x gradlew && ./gradlew spotlessJavaCheck

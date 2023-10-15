@@ -11,7 +11,7 @@ Install [Redocly CLI](https://github.com/Redocly/redocly-cli)
 Lint OpenAPI
 
 ```shell
-> redocly lint f1api-internal --config ./f1api/openapi/redocly-cli-config.yml
+> redocly lint api-internal --config ./api/openapi/redocly-cli-config.yml
 ```
 
 ## Format Java Files with Spotless
@@ -26,7 +26,7 @@ Lint OpenAPI
 > npm run prettier-apply
 ```
 
-## Lint web scraper project locally
+## Lint scraper project locally
 
 ```shell
 > npm run lint
