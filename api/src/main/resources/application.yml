@@ -1,0 +1,25 @@
+# Base config
+# https://docs.spring.io/spring-boot/docs/current/reference/html/application-properties.html
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+  data:
+    web:
+      pageable:
+        page-parameter: pageNumber
+        size-parameter: pageSize
+        default-page-size: ${default-page-size:25}
+        max-page-size: ${max-page-size:100}
+  web:
+    locale: en
+    resources:
+      # needed for NoHandlerFoundException handling
+      # https://stackoverflow.com/a/51050702
+      add-mappings: false
+  mvc:
+    # throw NoHandlerFoundException
+    throw-exception-if-no-handler-found: true
+  jackson:
+    # do not include empty fields in json
+    default-property-inclusion: non_empty
