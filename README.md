@@ -26,7 +26,7 @@ Lint OpenAPI
 > npm run prettier-apply
 ```
 
-## Lint web scraper project locally
+## Lint scraper project locally
 
 ```shell
 > npm run lint

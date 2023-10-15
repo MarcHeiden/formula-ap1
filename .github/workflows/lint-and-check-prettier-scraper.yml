@@ -1,18 +1,18 @@
-name: Lint web scraper and run prettier check
+name: Lint scraper and run prettier check
 on:
   pull_request:
     branches: ["main"]
     paths:
-      - "webscraper/**"
+      - "scraper/**"
   workflow_dispatch:
 
 defaults:
   run:
-    working-directory: "webscraper"
+    working-directory: "scraper"
 
 env:
   NODE_VERSION: 18
-  PACKAGE_LOCK: webscraper/package-lock.json
+  PACKAGE_LOCK: scraper/package-lock.json
 
 jobs:
   lint:
