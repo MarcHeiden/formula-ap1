@@ -1,8 +1,8 @@
 package api.driverofrace.application;
 
+import api.validation.OnCreate;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
-import api.validation.OnCreate;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;

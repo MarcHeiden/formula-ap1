@@ -1,8 +1,8 @@
 package api.teamofseason.application;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import api.validation.OnCreate;
 import api.validation.OnUpdate;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
