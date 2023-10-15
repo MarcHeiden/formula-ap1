@@ -1,6 +1,6 @@
-import { Team } from "../f1api-client/api/Team.js";
-import { Engine } from "../f1api-client/api/Engine.js";
-import { Driver } from "../f1api-client/api/Driver.js";
+import { Team } from "../api-client/api/Team.js";
+import { Engine } from "../api-client/api/Engine.js";
+import { Driver } from "../api-client/api/Driver.js";
 
 export class TeamData {
     readonly team: Team;

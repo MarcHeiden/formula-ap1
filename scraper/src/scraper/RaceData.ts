@@ -1,4 +1,4 @@
-import { Driver } from "../f1api-client/api/Driver.js";
+import { Driver } from "../api-client/api/Driver.js";
 
 export abstract class RaceData {
     driver?: Driver;

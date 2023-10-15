@@ -1,5 +1,5 @@
 import { RaceData } from "./RaceData.js";
-import { Driver } from "../f1api-client/api/Driver.js";
+import { Driver } from "../api-client/api/Driver.js";
 
 export class FastestPitStopData extends RaceData {
     readonly duration: string;

@@ -1,4 +1,4 @@
-import { Driver } from "../f1api-client/api/Driver.js";
+import { Driver } from "../api-client/api/Driver.js";
 import { RaceData } from "./RaceData.js";
 
 export class ResultData extends RaceData {

@@ -1,5 +1,5 @@
-import { Driver } from "../f1api-client/api/Driver.js";
-import { Team } from "../f1api-client/api/Team.js";
+import { Driver } from "../api-client/api/Driver.js";
+import { Team } from "../api-client/api/Team.js";
 import { RaceData } from "./RaceData.js";
 
 export class QualifyingData extends RaceData {

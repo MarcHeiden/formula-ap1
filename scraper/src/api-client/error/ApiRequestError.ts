@@ -1,11 +1,11 @@
-import { F1ApiClientError } from "./F1ApiClientError.js";
+import { ApiClientError } from "./ApiClientError.js";
 import { RequestError } from "got";
 
-export class F1ApiRequestError extends F1ApiClientError {
+export class ApiRequestError extends ApiClientError {
     readonly requestError: RequestError;
     constructor(requestError: RequestError) {
         super();
-        this.name = F1ApiRequestError.name;
+        this.name = ApiRequestError.name;
         this.requestError = requestError;
     }
 }

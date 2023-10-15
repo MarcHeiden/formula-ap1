@@ -5,10 +5,10 @@ import { ApiError } from "./api/ApiError.js";
 import { Season } from "./api/Season.js";
 import { ApiPage } from "./api/ApiPage.js";
 import { Race } from "./api/Race.js";
-import { F1ApiClientError } from "./error/F1ApiClientError.js";
-import { F1ApiNotFoundError } from "./error/F1ApiNotFoundError.js";
-import { F1ApiError } from "./error/F1ApiError.js";
-import { F1ApiRequestError } from "./error/F1ApiRequestError.js";
+import { ApiClientError } from "./error/ApiClientError.js";
+import { ApiNotFoundError } from "./error/ApiNotFoundError.js";
+import { WrappedApiError } from "./error/WrappedApiError.js";
+import { ApiRequestError } from "./error/ApiRequestError.js";
 import { Logger } from "../logger/Logger.js";
 import { TeamData } from "../scraper/TeamData.js";
 import { Team } from "./api/Team.js";
@@ -28,7 +28,7 @@ import { LeadingLaps } from "./api/LeadingLaps.js";
 import { FastestPitStopData } from "../scraper/FastestPitStopData.js";
 import { FastestPitStop } from "./api/FastestPitStop.js";
 
-export class F1ApiClient {
+export class ApiClient {
     private readonly logger: Logger;
     private readonly seasonsEndpoint = "seasons";
     private readonly teamsEndpoint = "teams";
@@ -55,7 +55,7 @@ export class F1ApiClient {
         body?: ApiType
     ): Promise<T> {
         const options = new Options({
-            prefixUrl: process.env.F1API_BASE_URL,
+            prefixUrl: process.env.API_BASE_URL,
             throwHttpErrors: false,
             method: method,
             json: body,
@@ -67,15 +67,15 @@ export class F1ApiClient {
             responseBody = await client(endpoint).json();
         } catch (error) {
             if (error instanceof RequestError) {
-                throw new F1ApiRequestError(error);
+                throw new ApiRequestError(error);
             }
             throw error;
         }
         if (responseBody === undefined) {
-            throw new F1ApiClientError("Response body is undefined");
+            throw new ApiClientError("Response body is undefined");
         }
         if (this.isApiError(responseBody)) {
-            throw new F1ApiError(responseBody);
+            throw new WrappedApiError(responseBody);
         }
         return responseBody;
     }
@@ -87,7 +87,7 @@ export class F1ApiClient {
     ): Promise<T[]> {
         const apiPage = await this.useApi<ApiPage<T>>(endpoint, searchParameters);
         if (apiPage.content === undefined) {
-            throw new F1ApiNotFoundError(notFoundErrorMessage);
+            throw new ApiNotFoundError(notFoundErrorMessage);
         }
         return apiPage.content;
     }
@@ -99,7 +99,7 @@ export class F1ApiClient {
     ): Promise<T> {
         const apiTypes = await this.getApiTypes<T>(endpoint, notFoundErrorMessage, searchParameters);
         if (apiTypes[0] === undefined) {
-            throw new F1ApiNotFoundError(notFoundErrorMessage);
+            throw new ApiNotFoundError(notFoundErrorMessage);
         }
         return apiTypes[0];
     }
@@ -210,7 +210,7 @@ export class F1ApiClient {
             (driver) => driver.firstName === firstName && driver.lastName === lastName
         );
         if (filteredDrivers.length === 0) {
-            throw new F1ApiNotFoundError(
+            throw new ApiNotFoundError(
                 // prettier-ignore
                 `Team '${team.teamName}' has no driver with the firstName '${firstName}' ` +
                 `and lastName '${lastName}' in the season ${season.seasonYear}`
@@ -233,7 +233,7 @@ export class F1ApiClient {
         try {
             return await this.post<T>(endpoint, body, logMessage);
         } catch (error) {
-            if (error instanceof F1ApiError) {
+            if (error instanceof WrappedApiError) {
                 if (error.apiError.httpStatusCode === 409 && error.apiError.message.toLowerCase().includes("already")) {
                     this.logger.logAlreadyExists(error, body);
                 } else {
@@ -262,7 +262,7 @@ export class F1ApiClient {
         try {
             season = await this.getSeasonBySeasonYear(seasonYear);
         } catch (error) {
-            if (error instanceof F1ApiNotFoundError) {
+            if (error instanceof ApiNotFoundError) {
                 this.logger.logAppError(error, "warn");
                 this.logger.info(`Post season ${seasonYear} now and retry to post races`);
                 await this.postSeason(seasonYear);
@@ -324,7 +324,7 @@ export class F1ApiClient {
         try {
             season = await this.getSeasonBySeasonYear(seasonYear);
         } catch (error) {
-            if (error instanceof F1ApiNotFoundError) {
+            if (error instanceof ApiNotFoundError) {
                 this.logger.logAppError(error, "warn");
                 this.logger.info(`Post season ${seasonYear} now`);
                 await this.postSeason(seasonYear);
@@ -335,7 +335,7 @@ export class F1ApiClient {
             }
         }
         const teamsOfSeason: TeamOfSeason[] = [];
-        // Usage of Promise.all causes sql constraint violation in f1api
+        // Usage of Promise.all causes sql constraint violation in api
         for (const teamData_ of teamData) {
             const [team, engine, drivers] = await Promise.all([
                 this.postTeamOrGetAlreadyExistingOne(teamData_.team),
@@ -373,10 +373,10 @@ export class F1ApiClient {
             qualifyingData.map(async (qualifyingData_) => {
                 const team = await this.getTeamByTeamName(qualifyingData_.team.teamName);
                 if (qualifyingData_.driver === undefined) {
-                    throw new F1ApiClientError("Driver is undefined");
+                    throw new ApiClientError("Driver is undefined");
                 }
                 if (race.season === undefined) {
-                    throw new F1ApiClientError(`Season of the race '${race.raceName}' is undefined`);
+                    throw new ApiClientError(`Season of the race '${race.raceName}' is undefined`);
                 }
                 let driver: Driver;
                 try {
@@ -387,7 +387,7 @@ export class F1ApiClient {
                         qualifyingData_.driver.lastName
                     );
                 } catch (error) {
-                    if (error instanceof F1ApiNotFoundError) {
+                    if (error instanceof ApiNotFoundError) {
                         this.logger.logAppError(error, "warn");
                         this.logger.info("Post driver now and patch teamOfSeason");
                         driver = await this.postDriverOrGetAlreadyExistingOne(qualifyingData_.driver);
@@ -413,7 +413,7 @@ export class F1ApiClient {
         const results = await Promise.all(
             resultData.map(async (resultData_) => {
                 if (resultData_.driver === undefined) {
-                    throw new F1ApiClientError("Driver is undefined");
+                    throw new ApiClientError("Driver is undefined");
                 }
                 const driver = await this.getDriverByName(resultData_.driver.firstName, resultData_.driver.lastName);
                 return new Result(driver.driverId, resultData_.position, resultData_.dnf);
@@ -432,7 +432,7 @@ export class F1ApiClient {
         const fastestLaps = await Promise.all(
             fastestLapData.map(async (fastestLapData_) => {
                 if (fastestLapData_.driver === undefined) {
-                    throw new F1ApiClientError("Driver is undefined");
+                    throw new ApiClientError("Driver is undefined");
                 }
                 const driver = await this.getDriverByName(
                     fastestLapData_.driver.firstName,
@@ -454,7 +454,7 @@ export class F1ApiClient {
         const topSpeeds = await Promise.all(
             topSpeedData.map(async (topSpeedData_) => {
                 if (topSpeedData_.driver === undefined) {
-                    throw new F1ApiClientError("Driver is undefined");
+                    throw new ApiClientError("Driver is undefined");
                 }
                 const driver = await this.getDriverByName(
                     topSpeedData_.driver.firstName,
@@ -476,7 +476,7 @@ export class F1ApiClient {
         const leadingLaps = await Promise.all(
             leadingLapsData.map(async (leadingLapsData_) => {
                 if (leadingLapsData_.driver === undefined) {
-                    throw new F1ApiClientError("Driver is undefined");
+                    throw new ApiClientError("Driver is undefined");
                 }
                 const driver = await this.getDriverByName(
                     leadingLapsData_.driver.firstName,
@@ -492,7 +492,7 @@ export class F1ApiClient {
         const logMessage = `fastest pit stop of race '${race.raceName}'`;
         const endpoint = `${this.racesEndpoint}/${race.raceId}/fastestPitStop`;
         if (fastestPitStopData.driver === undefined) {
-            throw new F1ApiClientError("Driver is undefined");
+            throw new ApiClientError("Driver is undefined");
         }
         const driver = await this.getDriverByName(
             fastestPitStopData.driver.firstName,

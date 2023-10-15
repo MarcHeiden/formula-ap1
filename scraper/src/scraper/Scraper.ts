@@ -1,4 +1,4 @@
-import { Race } from "../f1api-client/api/Race.js";
+import { Race } from "../api-client/api/Race.js";
 import {
     CheerioCrawler,
     Configuration,
@@ -11,9 +11,9 @@ import {
 import { MemoryStorage } from "@crawlee/memory-storage";
 import { Logger } from "../logger/Logger.js";
 import { ScraperError } from "./error/ScraperError.js";
-import { Team } from "../f1api-client/api/Team.js";
-import { Engine } from "../f1api-client/api/Engine.js";
-import { Driver } from "../f1api-client/api/Driver.js";
+import { Team } from "../api-client/api/Team.js";
+import { Engine } from "../api-client/api/Engine.js";
+import { Driver } from "../api-client/api/Driver.js";
 import { TeamData } from "./TeamData.js";
 import { QualifyingData } from "./QualifyingData.js";
 import { RaceData } from "./RaceData.js";

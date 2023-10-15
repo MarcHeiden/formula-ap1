@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { F1ApiClient } from "./f1api-client/F1ApiClient.js";
+import { ApiClient } from "./api-client/ApiClient.js";
 import { Scraper } from "./scraper/Scraper.js";
 import { Logger } from "./logger/Logger.js";
 import { ErrorHandler } from "./error/ErrorHandler.js";
@@ -15,7 +15,7 @@ process.on("uncaughtException", (error: unknown) => {
 
 const logger = new Logger();
 const errorHandler = new ErrorHandler(logger);
-const f1ApiClient = new F1ApiClient(logger);
+const f1ApiClient = new ApiClient(logger);
 const scraper = new Scraper(logger);
 
 async function logDataCreation(execute: () => Promise<void>, logMessage: string) {

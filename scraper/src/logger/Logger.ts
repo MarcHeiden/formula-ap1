@@ -1,10 +1,10 @@
 import { createLogger, format, transports } from "winston";
 import DailyRotateFile from "winston-daily-rotate-file";
 import { AppError } from "../error/AppError.js";
-import { ApiType } from "../f1api-client/api/ApiType.js";
+import { ApiType } from "../api-client/api/ApiType.js";
 import { ScraperError } from "../scraper/error/ScraperError.js";
-import { F1ApiRequestError } from "../f1api-client/error/F1ApiRequestError.js";
-import { F1ApiError } from "../f1api-client/error/F1ApiError.js";
+import { ApiRequestError } from "../api-client/error/ApiRequestError.js";
+import { WrappedApiError } from "../api-client/error/WrappedApiError.js";
 
 export class Logger {
     private colorizeGrey(string: string): string {
@@ -67,10 +67,10 @@ export class Logger {
                 meta.stack = error.error.stack;
                 meta.error = error.error;
             }
-        } else if (error instanceof F1ApiRequestError) {
+        } else if (error instanceof ApiRequestError) {
             message = error.requestError.message;
             meta.error = error.requestError;
-        } else if (error instanceof F1ApiError) {
+        } else if (error instanceof WrappedApiError) {
             message = error.apiError.message;
             meta.error = error.apiError;
         }
@@ -105,7 +105,7 @@ export class Logger {
         this.logger.log(level, `Process will exit with exit code ${exitCode}`);
     }
 
-    logAlreadyExists(error: F1ApiError, data: ApiType) {
+    logAlreadyExists(error: WrappedApiError, data: ApiType) {
         this.logger.warn(error.apiError.message, { data: data });
     }
 
