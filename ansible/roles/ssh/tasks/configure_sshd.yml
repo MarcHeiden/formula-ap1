@@ -1,0 +1,30 @@
+---
+- name: Set permissions for /etc/ssh/sshd_config
+  file:
+    path: /etc/ssh/sshd_config
+    state: touch
+    owner: root
+    group: root
+    mode: "600"
+
+- name: Remove custom sshd configuration
+  file:
+    path: /etc/ssh/sshd_config.d
+    state: absent
+
+- name: Create sshd_config.d directory
+  file:
+    path: /etc/ssh/sshd_config.d
+    state: directory
+    owner: root
+    group: root
+    mode: "755"
+
+- name: Configure custom sshd.conf
+  template:
+    src: sshd.conf.j2
+    dest: /etc/ssh/sshd_config.d/sshd.conf
+    owner: root
+    group: root
+    mode: "600"
+  notify: "ssh : Restart sshd service"

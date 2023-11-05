@@ -1,0 +1,10 @@
+---
+docker_compose_limit_docker_resources: false
+docker_compose_user: "{{ ansible_user }}"
+# Copied compose files will live in "{{ docker_compose_project_directory }}/ansible-generated" directory
+docker_compose_project_directory: "/home/{{ docker_compose_user }}/formula-ap1"
+# If set to "dev" traefik api will be exposed at port 8080
+docker_compose_profile: prod
+docker_compose_postgres_password:
+# Host on which the api will listen
+docker_compose_api_host: api.localhost

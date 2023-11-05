@@ -22,13 +22,17 @@ public class FastestPitStop {
     }
 
     public String getDurationAsString() {
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("ss.SSS");
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("mm:ss.SSS");
         return duration.format(dateTimeFormatter);
     }
 
     public static FastestPitStop ofDurationString(
-            @NotNull @Pattern(regexp = "^([0-5][0-9])\\.([0-9]{3})$") String durationString) {
-        durationString = "00:00:" + durationString;
+            @NotNull @Pattern(regexp = "^([0-5]?[0-9]):([0-5][0-9])\\.([0-9]{3})$") String durationString) {
+        if (durationString.matches("^([0-5][0-9]):([0-5][0-9])\\.([0-9]{3})$")) {
+            durationString = "00:" + durationString;
+        } else {
+            durationString = "00:0" + durationString;
+        }
         // use dummy date 0001-01-01
         return new FastestPitStop(LocalDateTime.of(LocalDate.of(1, 1, 1), LocalTime.parse(durationString)));
     }

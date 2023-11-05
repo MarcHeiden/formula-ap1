@@ -1,0 +1,25 @@
+---
+- name: Configure docker daemon
+  copy:
+    src: daemon.json
+    dest: /etc/docker/daemon.json
+    owner: root
+    group: root
+    mode: "600"
+  notify:
+    - "docker_compose : Start docker-resource-limit.slice"
+    - "docker_compose : Restart docker"
+
+- name: Limit docker resources
+  copy:
+    src: docker-resource-limit.slice
+    dest: /etc/systemd/system/docker-resource-limit.slice
+    owner: root
+    group: root
+    mode: "600"
+  notify:
+    - "docker_compose : Start docker-resource-limit.slice"
+    - "docker_compose : Restart docker"
+
+- name: Run notified handlers
+  meta: flush_handlers

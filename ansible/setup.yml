@@ -1,0 +1,38 @@
+---
+- hosts: servers
+  vars:
+    user: "{{ inventory_hostname }}"
+    user_password: "{{ vault_user_password }}"
+    user_ssh_key_passphrase: "{{ vault_user_ssh_key_passphrase }}"
+
+  roles:
+    - role: system
+      tags:
+        - system
+      system_create_user: true
+      system_user: "{{ user }}"
+      system_user_password: "{{ user_password }}"
+      system_disable_ipv6: true
+      system_change_swap_file_size: true
+      system_swap_file_size_mb: 4096
+
+    - role: ssh
+      tags:
+        - ssh
+      ssh_user: "{{ user }}"
+      ssh_generate_key: true
+      ssh_key_passphrase_: "{{ user_ssh_key_passphrase }}"
+      ssh_localhost_user: marc
+
+    - role: install_docker
+      tags:
+        - install_docker
+
+    - role: docker_compose
+      tags:
+        - docker_compose
+      docker_compose_user: root
+      docker_compose_project_directory: "/home/{{ user }}/formula-ap1"
+      docker_compose_postgres_password: "{{ vault_docker_compose_postgres_password }}"
+      docker_compose_api_host: api.formula-ap1.com
+      docker_compose_limit_docker_resources: true

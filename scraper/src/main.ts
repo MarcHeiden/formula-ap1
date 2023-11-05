@@ -6,17 +6,17 @@ import { ErrorHandler } from "./error/ErrorHandler.js";
 import { parseISO, isAfter, addHours } from "date-fns";
 import { AppError } from "./error/AppError.js";
 
+const logger = new Logger();
+const errorHandler = new ErrorHandler(logger);
+const f1ApiClient = new ApiClient(logger);
+const scraper = new Scraper(logger);
+
 process.on("exit", (exitCode) => {
     logger.logExit(exitCode);
 });
 process.on("uncaughtException", (error: unknown) => {
     errorHandler.handleErrors(error);
 });
-
-const logger = new Logger();
-const errorHandler = new ErrorHandler(logger);
-const f1ApiClient = new ApiClient(logger);
-const scraper = new Scraper(logger);
 
 async function logDataCreation(execute: () => Promise<void>, logMessage: string) {
     logger.logCreateData(logMessage);

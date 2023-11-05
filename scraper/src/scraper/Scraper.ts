@@ -292,45 +292,35 @@ export class Scraper {
         cheerioRouter.addDefaultHandler(async ({ $ }) => {
             await this.logOnHandlerError(() => {
                 const tables = $(".content tbody");
-                // Scrape result data for driver who finished the race
-                tables
-                    .eq(0)
-                    .children("tr")
-                    .has("td.text-right")
-                    .each((index_, row) => {
-                        const columns = $(row).children("td");
-                        const position = Number(this.getTrimmedText(columns.eq(0)));
-                        const driverUrl = columns.eq(2).find("a").attr("href");
-                        if (driverUrl === undefined) {
-                            throw new ScraperError(`Could not scrape driver url from ${raceUrl}`);
-                        }
-                        const userData: RaceDataUserData<ResultData> = {
-                            raceData: new ResultData(position)
-                        };
-                        driverRequests.push({
-                            userData: userData,
-                            url: driverUrl
+                tables.each((tableIndex, table) => {
+                    $(table)
+                        .children("tr")
+                        .has("td.text-right")
+                        .each((rowIndex_, row) => {
+                            const columns = $(row).children("td");
+                            const driverUrl = columns.eq(2).find("a").attr("href");
+                            if (driverUrl === undefined) {
+                                throw new ScraperError(`Could not scrape driver url from ${raceUrl}`);
+                            }
+                            let userData: RaceDataUserData<ResultData>;
+                            if (tableIndex === 0) {
+                                // Driver has result
+                                const position = Number(this.getTrimmedText(columns.eq(0)));
+                                userData = {
+                                    raceData: new ResultData(position)
+                                };
+                            } else {
+                                // Driver did not finish the race or was disqualified
+                                userData = {
+                                    raceData: new ResultData(undefined, true)
+                                };
+                            }
+                            driverRequests.push({
+                                userData: userData,
+                                url: driverUrl
+                            });
                         });
-                    });
-                // Scrape result data for driver who did not finish the race
-                tables
-                    .eq(1)
-                    .children("tr")
-                    .has("td.text-right")
-                    .each((index_, row) => {
-                        const columns = $(row).children("td");
-                        const driverUrl = columns.eq(2).find("a").attr("href");
-                        if (driverUrl === undefined) {
-                            throw new ScraperError(`Could not scrape driver url from ${raceUrl}`);
-                        }
-                        const userData: RaceDataUserData<ResultData> = {
-                            raceData: new ResultData(undefined, true)
-                        };
-                        driverRequests.push({
-                            userData: userData,
-                            url: driverUrl
-                        });
-                    });
+                });
             });
         });
 

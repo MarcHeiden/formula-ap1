@@ -47,3 +47,9 @@ dependencies {
 tasks.withType<Test> {
 	useJUnitPlatform()
 }
+
+// Disable plain.jar generation in build/libs
+// https://stackoverflow.com/a/67663956
+tasks.jar{
+    enabled = false
+}

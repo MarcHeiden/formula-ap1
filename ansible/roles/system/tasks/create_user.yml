@@ -1,0 +1,24 @@
+---
+- name: "Create user {{ system_user }}"
+  user:
+    name: "{{ system_user }}"
+    password: "{{ system_user_password | string | password_hash('sha512') }}"
+    groups:
+      - sudo
+      - users
+    state: present
+    append: true
+    shell: "{{ system_user_shell }}"
+
+- name: "Ensure group {{ system_user }} exists"
+  group:
+    name: "{{ system_user }}"
+    state: present
+
+- name: "Set permissions for home directory of {{ system_user }}"
+  file:
+    path: "/home/{{ system_user }}"
+    state: directory
+    mode: "755"
+    owner: "{{ system_user }}"
+    group: "{{ system_user }}"

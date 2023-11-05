@@ -1,0 +1,30 @@
+---
+- name: "Check if {{ docker_compose_project_directory_ }} directory exists"
+  stat:
+    path: "{{ docker_compose_project_directory_ }}"
+  register: docker_compose_project_directory_stat
+
+- name: Run docker compose down
+  shell:
+    chdir: "{{ docker_compose_project_directory_ }}"
+    cmd: sudo docker compose -p formula-ap1 down
+  when: docker_compose_project_directory_stat.stat.exists
+
+- name: Remove log volumes
+  shell: "sudo docker volume rm {{ item | quote }}"
+  loop:
+    - formula-ap1_scraper-v0-logs
+    - formula-ap1_traefik-logs
+  when: docker_compose_project_directory_stat.stat.exists
+
+- name: Copy compose files
+  import_tasks: copy_compose_files.yml
+
+- name: Configure docker resource usage
+  import_tasks: configure_resource_usage.yml
+  when: docker_compose_limit_docker_resources | bool
+
+- name: Run docker compose up
+  shell:
+    chdir: "{{ docker_compose_project_directory_ }}"
+    cmd: sudo docker compose -p formula-ap1 up -d --pull always
