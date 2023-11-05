@@ -1,11 +1,11 @@
 openapi: "3.0.0"
 info:
-  title: fap1
-  version: "1.0.0"
+  title: formula-ap1
+  version: "0.1.0"
   description: |
     ## Paging and Sorting
 
-    The following query paramters can be used to control the paging and sorting of collections.
+    The following query parameters can be used to control the paging and sorting of collections.
 
     ### `pageSize`
 
@@ -57,6 +57,8 @@ tags:
   - name: Engines
   - name: TeamsOfSeasons
   #- name: DriversOfRaces
+servers:
+  - url: http://api.formula-ap1.com/v0
 paths:
   # SeasonController
   /seasons:

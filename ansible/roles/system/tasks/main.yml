@@ -1,0 +1,40 @@
+---
+- name: Update and upgrade apt packages
+  apt:
+    upgrade: yes
+    autoremove: yes
+    update_cache: yes
+
+- name: Change ansible user password
+  user:
+    name: "{{ ansible_user }}"
+    state: present
+    update_password: always
+    password: "{{ system_new_ansible_user_password | string | password_hash('sha512') }}"
+  when: system_change_ansible_user_password | bool
+
+- name: Delete custom sudoers configuration
+  file:
+    path: /etc/sudoers.d
+    state: absent
+
+- name: Set hostname
+  hostname:
+    name: "{{ inventory_hostname }}"
+
+- name: Configure language and time settings
+  import_tasks: language_time_settings.yml
+
+- name: Configure swap file
+  import_role:
+    name: geerlingguy.swap
+  vars:
+    swap_file_size_mb: "{{ system_swap_file_size_mb }}"
+  when: system_change_swap_file_size | bool
+
+- name: Configure network
+  import_tasks: network.yml
+
+- name: Create new user
+  import_tasks: create_user.yml
+  when: system_create_user | bool

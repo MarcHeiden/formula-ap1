@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # Check if filename parameter was specified
 if [ $# -eq 0 ]; then
     echo "Filename parameter was not specified."

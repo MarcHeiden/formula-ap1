@@ -1,0 +1,4 @@
+---
+- name: Reload procps service
+  shell:
+    cmd: service procps force-reload

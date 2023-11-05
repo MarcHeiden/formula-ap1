@@ -1,0 +1,14 @@
+---
+- name: Configure sshd
+  import_tasks: configure_sshd.yml
+
+- name: Disable root password
+  user:
+    name: root
+    password: "!"
+    password_lock: true
+  when: ssh_disable_root_login | bool
+
+- name: Generate and authorize a new ssh key pair
+  import_tasks: generate_key.yml
+  when: ssh_generate_key | bool

@@ -1,0 +1,16 @@
+# Ansible user
+system_change_ansible_user_password: false
+system_new_ansible_user_password:
+# New user
+system_create_user: false
+system_user:
+system_user_password:
+system_user_shell: /bin/bash
+# Language and time
+system_locale: en_US.UTF-8
+system_timezone: Etc/UTC
+# Swap
+system_change_swap_file_size: false
+system_swap_file_size_mb:
+# Network
+system_disable_ipv6: false

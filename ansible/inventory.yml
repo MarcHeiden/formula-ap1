@@ -1,0 +1,19 @@
+---
+all:
+  hosts:
+    localhost:
+      ansible_connection: local
+      ansible_become_password: "{{ vault_localhost_password }}"
+
+  children:
+    servers:
+      hosts:
+        formula-ap1-ubuntu:
+          ansible_host: 212.227.225.49
+          ansible_port: 22
+          ansible_user: formula-ap1-ubuntu
+          ansible_connection: ssh
+          # Either use password or key
+          #ansible_password: "{{ vault_ssh_password }}"
+          ansible_ssh_private_key_file: ~/.ssh/formula-ap1-ubuntu
+          ansible_become_password: "{{ vault_user_password }}"

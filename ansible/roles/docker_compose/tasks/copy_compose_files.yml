@@ -1,0 +1,33 @@
+---
+- name: Delete old compose files
+  file:
+    path: "{{ docker_compose_project_directory_ }}"
+    state: absent
+
+- name: Create project directory
+  file:
+    path: "{{ docker_compose_project_directory_ }}"
+    state: directory
+    owner: "{{ docker_compose_user }}"
+    group: "{{ docker_compose_user }}"
+    mode: "700"
+
+- name: Copy scraper-seccomp-profile.json
+  copy:
+    src: scraper-seccomp-profile.json
+    dest: "{{ docker_compose_project_directory_ }}/scraper-seccomp-profile.json"
+    owner: "{{ docker_compose_user }}"
+    group: "{{ docker_compose_user }}"
+    mode: "600"
+
+- name: Copy compose.yml, traefik-static-config.yml and traefik-dynamic-config.yml
+  template:
+    src: "{{ item }}.j2"
+    dest: "{{ docker_compose_project_directory_ }}/{{ item }}"
+    owner: "{{ docker_compose_user }}"
+    group: "{{ docker_compose_user }}"
+    mode: "600"
+  loop:
+    - compose.yml
+    - traefik-static-config.yml
+    - traefik-dynamic-config.yml

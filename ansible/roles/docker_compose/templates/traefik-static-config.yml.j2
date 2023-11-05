@@ -1,0 +1,37 @@
+global:
+  sendAnonymousUsage: false
+
+entryPoints:
+  http:
+    address: :80
+
+providers:
+  file:
+    filename: /etc/traefik/traefik-dynamic-config.yml
+    watch: true # Watch for config changes
+
+# Traefik logging config
+log:
+  level: ERROR
+  filePath: /var/log/traefik/log.txt
+  format: json
+
+# Requests logging config
+accessLog:
+  filePath: /var/log/traefik/accessLog.txt
+  format: json
+  bufferingSize: 100 # https://doc.traefik.io/traefik/observability/access-logs/#bufferingsize
+
+{% if docker_compose_profile == "dev" %}
+# Traefik api config
+# Disable in production
+api:
+  insecure: true
+  dashboard: true
+{% endif %}
+
+#experimental:
+#  plugins:
+#    fail2ban:
+#      moduleName: "github.com/tomMoulard/fail2ban"
+#      version: "v0.7.1"

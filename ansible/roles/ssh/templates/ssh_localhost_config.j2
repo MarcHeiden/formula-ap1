@@ -1,0 +1,6 @@
+Host {{ inventory_hostname }}
+  HostName {{ ansible_host }}
+  User {{ ssh_user }}
+  IdentityFile ~/.ssh/{{ inventory_hostname }}
+  IdentitiesOnly yes
+  Port {{ ssh_port }}

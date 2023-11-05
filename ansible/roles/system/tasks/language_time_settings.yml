@@ -1,0 +1,9 @@
+---
+- name: Configure locale
+  locale_gen:
+    name: "{{ system_locale }}"
+    state: present
+
+- name: Configure timezone
+  community.general.timezone:
+    name: "{{ system_timezone }}"
