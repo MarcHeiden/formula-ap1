@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class FastestPitStopDTO {
-    @Pattern(regexp = "^([0-5][0-9])\\.([0-9]{3})$")
+    @Pattern(regexp = "^([0-5]?[0-9]):([0-5][0-9])\\.([0-9]{3})$")
     @NotNull
     private String duration;
 
