@@ -29,7 +29,7 @@ public class DriverDTO {
 
     @Getter
     @JsonIgnore
-    private static final Set<String> notNullPropertiesOnUpdate = Set.of("firstName", "lastName");
+    private static final Set<String> emptyPropertiesOnUpdate = Set.of("firstName", "lastName");
 
     @Getter
     @JsonIgnore

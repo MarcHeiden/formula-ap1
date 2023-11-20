@@ -21,19 +21,16 @@ import lombok.*;
         })
 public class DriverOfRace extends BaseEntity {
     @NotNull
-    /*@OnDelete(action = OnDeleteAction.CASCADE)*/
     @ManyToOne(optional = false)
     @JoinColumn(name = "raceId", referencedColumnName = "id", nullable = false)
     private Race race;
 
     @NotNull
-    /*@OnDelete(action = OnDeleteAction.CASCADE)*/
     @ManyToOne(optional = false)
     @JoinColumn(name = "driverId", referencedColumnName = "id", nullable = false)
     private Driver driver;
 
     @NotNull
-    /*@OnDelete(action = OnDeleteAction.CASCADE)*/
     @ManyToOne(optional = false)
     @JoinColumn(name = "teamId", referencedColumnName = "id", nullable = false)
     private Team team;

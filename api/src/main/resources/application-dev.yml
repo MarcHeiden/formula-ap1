@@ -1,5 +1,5 @@
 spring:
-  # specify settings for docker compose dev tools
+  # Specify settings for docker compose support
   docker:
     compose:
       file: "./api/compose-dev.yml"

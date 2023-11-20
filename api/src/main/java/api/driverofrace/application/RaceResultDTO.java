@@ -33,7 +33,7 @@ public class RaceResultDTO {
 
     @Getter
     @JsonIgnore
-    private static final Set<String> notNullProperties = Set.of("position", "dnf");
+    private static final Set<String> emptyProperties = Set.of("position", "dnf");
 
     @Getter
     @JsonIgnore

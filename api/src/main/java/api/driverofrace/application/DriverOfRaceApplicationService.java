@@ -245,15 +245,27 @@ public class DriverOfRaceApplicationService {
         return toQualifyingResultDTO(driverOfRace);
     }
 
+    /**
+     * Checks if either postion or dnf of the raceResultDTO is defined and whether
+     * the postion is set to null if dnf is set to true.
+     * @param raceResultDTO
+     * @throws ApiInvalidPropertyException if validation failed
+     */
     private void validateRaceResultDTO(RaceResultDTO raceResultDTO) {
         if (raceResultDTO.isEmpty()) {
-            throw ApiPropertyIsNullException.of(RaceResultDTO.getNotNullProperties());
+            throw ApiPropertyIsNullException.of(RaceResultDTO.getEmptyProperties());
         }
         if (raceResultDTO.getPosition() != null && (raceResultDTO.getDnf() != null && raceResultDTO.getDnf())) {
             throw new ApiInvalidPropertyException("Driver can not have a position if dnf is set to true.");
         }
     }
 
+    /**
+     * Checks in addition to {@link DriverOfRaceApplicationService#validateRaceResultDTO(RaceResultDTO)} whether
+     * a position is defined if dnf of the raceResultDTO is set to false.
+     * @param raceResultDTO
+     * @throws ApiInvalidPropertyException if validation failed
+     */
     private void validateRaceResultDTOOnCreate(RaceResultDTO raceResultDTO) {
         validateRaceResultDTO(raceResultDTO);
         if (raceResultDTO.getPosition() == null && !raceResultDTO.getDnf()) {
@@ -261,6 +273,14 @@ public class DriverOfRaceApplicationService {
         }
     }
 
+    /**
+     * Checks in addition to {@link DriverOfRaceApplicationService#validateRaceResultDTO(RaceResultDTO)} whether
+     * a position is defined in the raceResultDTO or the corresponding driverOfRace object
+     * if dnf of the raceResultDTO is set to false.
+     * @param raceResultDTO
+     * @param driverOfRace instance for which the raceResult is to be updated
+     * @throws ApiInvalidPropertyException if validation failed
+     */
     private void validateRaceResultDTOOnUpdate(RaceResultDTO raceResultDTO, DriverOfRace driverOfRace) {
         validateRaceResultDTO(raceResultDTO);
         if (raceResultDTO.getPosition() == null
@@ -270,6 +290,10 @@ public class DriverOfRaceApplicationService {
         }
     }
 
+    /**
+     * If dnf of the raceResultDTO is set to null it is interpreted as if it is set to false.
+     * @param raceResultDTO
+     */
     private void setRaceResultDTODnfToFalseByDefault(RaceResultDTO raceResultDTO) {
         if (raceResultDTO.getDnf() == null) {
             raceResultDTO.setDnf(false);
@@ -316,6 +340,7 @@ public class DriverOfRaceApplicationService {
         DriverOfRace driverOfRace = getDriverOfRaceByRaceAndDriverAndRaceResultIsNotNull(race, driver);
         validateRaceResultDTOOnUpdate(raceResultDTO, driverOfRace);
         setRaceResultDTODnfToFalseByDefault(raceResultDTO);
+        // Set position to old position if no new postion is defined and dnf is set to false
         if (raceResultDTO.getPosition() == null && !raceResultDTO.getDnf()) {
             raceResultDTO.setPosition(driverOfRace.getRaceResult().getPosition());
         }

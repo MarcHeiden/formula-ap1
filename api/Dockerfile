@@ -7,7 +7,7 @@ WORKDIR ${appRootPath}
 COPY gradle gradle
 COPY gradlew build.gradle.kts settings.gradle.kts ./
 COPY src src
-# Cache dependencies
+# Cache build dependencies
 # https://docs.docker.com/engine/reference/builder/#run---mount
 RUN --mount=type=cache,target=/root/.gradle ./gradlew clean build --exclude-task test
 ARG extractedJarLayers

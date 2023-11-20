@@ -14,6 +14,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
+/**
+ * Catches all thrown exceptions and creates and returns a corresponding
+ * {@link ApiExceptionInfo} instance from the caught exception.
+ */
 @ControllerAdvice
 public class ApiExceptionHandler {
     private final ApiExceptionMapper apiExceptionMapper;
@@ -23,7 +27,11 @@ public class ApiExceptionHandler {
         this.apiExceptionMapper = apiExceptionMapper;
     }
 
-    // Validation Error
+    /**
+     * Handles {@link MethodArgumentNotValidException}, which is thrown when validation fails.
+     * HTTP Status Code is 422 Unprocessable Entity.
+     * @param methodArgumentNotValidException
+     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiExceptionInfo> handleMethodArgumentNotValidException(
             MethodArgumentNotValidException methodArgumentNotValidException) {
@@ -37,6 +45,11 @@ public class ApiExceptionHandler {
         return ResponseEntity.status(httpStatus).body(apiExceptionInfo);
     }
 
+    /**
+     * Handles {@link ConstraintViolationException}, which is thrown when validation fails.
+     * HTTP Status Code is 422 Unprocessable Entity.
+     * @param constraintViolationException
+     */
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ApiExceptionInfo> handleConstraintValidationException(
             ConstraintViolationException constraintViolationException) {
@@ -52,7 +65,11 @@ public class ApiExceptionHandler {
         return ResponseEntity.status(httpStatus).body(apiExceptionInfo);
     }
 
-    // Deserialization Error
+    /**
+     * Handles {@link HttpMessageNotReadableException}, which is thrown when the request body can not be deserialized.
+     * HTTP Status Code is 400 Bad Request.
+     * @param httpMessageNotReadableException
+     */
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ApiExceptionInfo> handleHttpMessageNotReadableException(
             HttpMessageNotReadableException httpMessageNotReadableException) {
@@ -62,7 +79,12 @@ public class ApiExceptionHandler {
         return ResponseEntity.status(httpStatus).body(apiExceptionInfo);
     }
 
-    // Invalid type for parameter
+    /**
+     * Handles {@link MethodArgumentTypeMismatchException}, which is thrown when controller parameters
+     * have the wrong type.
+     * HTTP Status Code is 400 Bad Request.
+     * @param methodArgumentTypeMismatchException
+     */
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<ApiExceptionInfo> handleMethodArgumentTypeMismatchException(
             MethodArgumentTypeMismatchException methodArgumentTypeMismatchException) {
@@ -72,7 +94,11 @@ public class ApiExceptionHandler {
         return ResponseEntity.status(httpStatus).body(apiExceptionInfo);
     }
 
-    // HTTP Method not supported
+    /**
+     * Handles {@link HttpRequestMethodNotSupportedException}.
+     * HTTP Status Code is defined by {@link HttpRequestMethodNotSupportedException}.
+     * @param httpRequestMethodNotSupportedException
+     */
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<ApiExceptionInfo> handleHttpRequestMethodNotSupportedException(
             HttpRequestMethodNotSupportedException httpRequestMethodNotSupportedException) {
@@ -83,7 +109,11 @@ public class ApiExceptionHandler {
         return ResponseEntity.status(httpStatus).body(apiExceptionInfo);
     }
 
-    // Default Spring Not Found Exception
+    /**
+     * Handles {@link NoHandlerFoundException}, the default Spring Not Found Exception.
+     * HTTP Status Code is defined by {@link NoHandlerFoundException}.
+     * @param noHandlerFoundException
+     */
     @ExceptionHandler(NoHandlerFoundException.class)
     public ResponseEntity<ApiExceptionInfo> handleNoHandlerFoundException(
             NoHandlerFoundException noHandlerFoundException) {
@@ -94,7 +124,11 @@ public class ApiExceptionHandler {
         return ResponseEntity.status(httpStatus).body(apiExceptionInfo);
     }
 
-    // Invalid sort property
+    /**
+     * Handles {@link PropertyReferenceException}, which is thrown when the sort property is invalid.
+     * HTTP Status Code is 400 Bad Request.
+     * @param propertyReferenceException
+     */
     @ExceptionHandler(PropertyReferenceException.class)
     public ResponseEntity<ApiExceptionInfo> handlePropertyReferenceException(
             PropertyReferenceException propertyReferenceException) {
@@ -104,7 +138,12 @@ public class ApiExceptionHandler {
         return ResponseEntity.status(httpStatus).body(apiExceptionInfo);
     }
 
-    // Missing required query parameter
+    /**
+     * Handles {@link MissingServletRequestParameterException}, which is thrown when a required parameter
+     * is not specified.
+     * HTTP Status Code is 400 Bad Request.
+     * @param missingServletRequestParameterException
+     */
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ResponseEntity<ApiExceptionInfo> handleMissingServletRequestParameterException(
             MissingServletRequestParameterException missingServletRequestParameterException) {
@@ -115,12 +154,21 @@ public class ApiExceptionHandler {
         return ResponseEntity.status(httpStatus).body(apiExceptionInfo);
     }
 
+    /**
+     * Handles {@link ApiException}.
+     * HTTP Status Code is defined by {@link ApiException}.
+     * @param apiException
+     */
     @ExceptionHandler(ApiException.class)
     public ResponseEntity<ApiExceptionInfo> handleApiException(ApiException apiException) {
         return ResponseEntity.status(apiException.getHttpStatus())
                 .body(apiExceptionMapper.toApiExceptionInfo(apiException));
     }
 
+    /**
+     * Handles all exceptions that are not handled by a specific handler.
+     * HTTP Status Code is 500 Internal Server Error.
+     */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiExceptionInfo> handleUncaughtException() {
         HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;

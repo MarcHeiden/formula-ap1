@@ -14,7 +14,7 @@ import lombok.*;
 @EqualsAndHashCode
 @Embeddable
 public class FastestLap {
-    // usage of LocalDateTime to save milliseconds in Postgres
+    // Use of LocalDateTime to store milliseconds in postgres as this did not work with LocalTime.
     private LocalDateTime time;
 
     public LocalTime getTime() {
@@ -29,7 +29,7 @@ public class FastestLap {
     public static FastestLap ofTimeString(
             @NotNull @Pattern(regexp = "^([0-9]):([0-5][0-9])\\.([0-9]{3})$") String timeString) {
         timeString = "00:0" + timeString;
-        // use dummy date 0001-01-01
+        // Use dummy date 0001-01-01 as it is never accessed (see comment above)
         return new FastestLap(LocalDateTime.of(LocalDate.of(1, 1, 1), LocalTime.parse(timeString)));
     }
 }

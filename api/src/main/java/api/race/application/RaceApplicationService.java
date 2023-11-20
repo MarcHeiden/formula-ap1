@@ -99,7 +99,7 @@ public class RaceApplicationService {
         Season season = seasonApplicationService.getSeasonById(seasonId);
         checkIfRaceAlreadyExists(raceDTO.getDate(), raceDTO.getRaceName(), season);
         checkIfDateYearEqualsSeasonYear(raceDTO.getDate(), season);
-        // cancelled == false by default
+        // Set cancelled to false if not specified
         if (raceDTO.getCancelled() == null) {
             raceDTO.setCancelled(false);
         }
@@ -156,7 +156,7 @@ public class RaceApplicationService {
     public RaceDTO updateRace(UUID raceId, RaceDTO raceDTO) {
         Race race = getRaceById(raceId);
         if (raceDTO.isEmptyOnUpdate()) {
-            throw ApiPropertyIsNullException.of(RaceDTO.getNotNullPropertiesOnUpdate());
+            throw ApiPropertyIsNullException.of(RaceDTO.getEmptyPropertiesOnUpdate());
         }
         if (raceDTO.getRaceName() != null) {
             checkIfDateYearEqualsSeasonYear(raceDTO.getDate(), race.getSeason());

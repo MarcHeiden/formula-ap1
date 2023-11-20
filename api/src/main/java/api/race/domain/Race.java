@@ -42,7 +42,6 @@ public class Race extends BaseEntity {
     private Boolean cancelled = false;
 
     @NotNull
-    /*@OnDelete(action = OnDeleteAction.CASCADE)*/
     @ManyToOne(optional = false)
     @JoinColumn(name = "seasonId", referencedColumnName = "id", nullable = false)
     private Season season;

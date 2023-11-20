@@ -14,7 +14,7 @@ import lombok.*;
 @EqualsAndHashCode
 @Embeddable
 public class FastestPitStop {
-    // usage of LocalDateTime to save milliseconds in Postgres
+    // Use of LocalDateTime to store milliseconds in postgres as this did not work with LocalTime.
     private LocalDateTime duration;
 
     public LocalTime getDuration() {
@@ -33,7 +33,7 @@ public class FastestPitStop {
         } else {
             durationString = "00:0" + durationString;
         }
-        // use dummy date 0001-01-01
+        // Use dummy date 0001-01-01 as it is never accessed (see comment above)
         return new FastestPitStop(LocalDateTime.of(LocalDate.of(1, 1, 1), LocalTime.parse(durationString)));
     }
 }
