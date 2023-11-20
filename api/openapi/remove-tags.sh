@@ -1,4 +1,6 @@
 #!/bin/bash
+# Script to remove *Controller, TeamsOfSeasons and DriversOfRaces tags from the generated public API documentation
+
 # Check if filename parameter was specified
 if [ $# -eq 0 ]; then
     echo "Filename parameter was not specified."

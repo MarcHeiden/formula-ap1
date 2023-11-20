@@ -2,8 +2,25 @@ openapi: "3.0.0"
 info:
   title: formula-ap1
   version: "0.1.0"
+  # [<img alt="" src="https://github.githubassets.com/assets/GitHub-Mark-ea2971cee799.png" width="50">](https://github.com/MarcHeiden/formula-ap1)
+  #  https://img.shields.io/badge/GitHub-7d8492?style=for-the-badge&logo=github
+  #  https://img.shields.io/badge/GitHub-3b4151?style=for-the-badge&logo=github
+  #  https://img.shields.io/badge/GitHub-1b1b1b?style=for-the-badge&logo=github
   description: |
-    ## Paging and Sorting
+    [<img alt="GitHub Badge" 
+    src="https://img.shields.io/badge/GitHub-1b1b1b?style=for-the-badge&logo=github">
+    ](https://github.com/MarcHeiden/formula-ap1)
+
+    > **The api is not ready for production yet.**
+
+    formula-ap1 is a REST API that provides data about the formula one racing series.
+
+    **Notice:** If you want to try out the API via Swagger UI, make sure to not load the page over HTTPS as 
+    the API is served over HTTP which leads to a
+    [mixed content](https://developer.mozilla.org/en-US/docs/Web/Security/Mixed_content) error.
+    So just use HTTP and everything will work.
+
+    ## Paging and Sorting 
 
     The following query parameters can be used to control the paging and sorting of collections.
 
@@ -33,9 +50,52 @@ info:
 
     ### Example
 
-    GET `/drivers?pageSize=25&pageNumber=0&sort=firstName,asc`
+    GET `/drivers?pageSize=2&pageNumber=0&sort=firstName,asc`
 
-    will return the first page with a maximum of 25 drivers sorted by first name in ascending order.
+    will return the first page with a maximum of 2 drivers sorted by their first name in ascending order. <br>
+    An example response could look like this:
+
+    ```json
+    {
+      "totalElements": 22,
+      "totalPages": 11,
+      "pageNumber": 1,
+      "pageSize": 2,
+      "content": [
+        {
+          "driverId": "914d8841-f26e-4e50-9716-b8f024e78e94",
+          "firstName": "Charles",
+          "lastName": "Leclerc"
+        },
+        {
+          "driverId": "a79e616b-145e-4a54-8276-8cd84cba2f1e",
+          "firstName": "Daniel",
+          "lastName": "Ricciardo"
+        }
+      ]
+    }
+    ```
+
+    ## Rate Limiting
+
+    A client can send 7 requests per second as long as
+    the number of requests that are currently processed for the client is less than or equal to 3.
+    If one of these limits is exceeded the api returns 429 Too Many Requests.
+
+    ## FAQ
+
+    ### When will new race data be available?
+
+    Qualifying, Result, Fastest Laps, Top Speeds, Leading Laps and Fastest Pit Stop data will
+    usually be available 4 hours after the race start.
+
+    ### Where does the api get the data from?
+
+    The data is mainly scraped from these pages:
+
+    - [www.motorsportstats.com](https://www.motorsportstats.com)
+    - [www.motorsport-total.com](https://www.motorsport-total.com)
+
 tags:
   - name: SeasonController
   - name: RaceController
@@ -52,6 +112,12 @@ tags:
   - name: TopSpeeds
   - name: LeadingLaps
   - name: FastestPitStops
+    description: |
+      **Notice**: At this time the duration of the fastest pit stop is the time that elapses between 
+      entering and leaving the pit lane.
+      So, it does not match the duration of the tire change as measured by the 
+      [DHL Fastest Pit Stop Award](https://inmotion.dhl/en/formula-1/fastest-pit-stop-award).
+      The duration of the tire change might be added in the future.
   - name: Teams
   - name: Drivers
   - name: Engines
@@ -163,6 +229,8 @@ paths:
     post:
       x-internal: true
       summary: Create race of a season
+      description: |
+        **Notice:** If cancelled is undefined/set to null it is interpreted as if it is set to false.
       tags:
         - "Races"
         - "SeasonController"
@@ -552,7 +620,8 @@ paths:
       x-internal: true
       summary: Create race result for a driver of a race
       description: |
-        **Notice:** The driver must have a qualifying entry for the race.
+        **Notice:** The driver must have a qualifying entry for the race. <br>
+        **Notice:** If dnf is undefined/set to null it is interpreted as if it is set to false.
       tags:
         - "Results"
         - "RaceController"
@@ -605,6 +674,8 @@ paths:
     patch:
       x-internal: true
       summary: Update race result for a driver of a race
+      description: |
+        **Notice:** If dnf is undefined/set to null it is interpreted as if it is set to false.
       tags:
         - "Results"
         - "RaceController"

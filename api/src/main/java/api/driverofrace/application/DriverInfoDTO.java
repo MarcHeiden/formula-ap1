@@ -11,6 +11,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Provides data about a driver that is needed by all other DTOs in this package.
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Data

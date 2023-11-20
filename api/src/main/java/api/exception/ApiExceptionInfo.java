@@ -10,6 +10,9 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
+/**
+ * Is passed in the response body if an exception occurs.
+ */
 @Getter
 @RequiredArgsConstructor
 @JsonPropertyOrder({"httpStatusCode"})
@@ -24,6 +27,7 @@ public class ApiExceptionInfo {
 
     // Get current UTC date and time
     private final Instant timestamp = Instant.now();
+
     private final String message;
 
     private record ValidationError(String fieldName, String message) {}
@@ -33,11 +37,4 @@ public class ApiExceptionInfo {
     public void addValidationError(String fieldName, String message) {
         this.validationErrors.add(new ValidationError(fieldName, message));
     }
-
-    /*@Default
-    public ApiExceptionInfo(HttpStatus httpStatus, String message, List<ValidationError> validationErrors) {
-        this.httpStatus = httpStatus;
-        this.message = message;
-        this.validationErrors = validationErrors;
-    }*/
 }

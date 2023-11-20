@@ -42,7 +42,7 @@ public class RaceDTO {
 
     @Getter
     @JsonIgnore
-    private static final Set<String> notNullPropertiesOnUpdate = Set.of("raceName", "date", "time", "cancelled");
+    private static final Set<String> emptyPropertiesOnUpdate = Set.of("raceName", "date", "time", "cancelled");
 
     @Getter
     @JsonIgnore

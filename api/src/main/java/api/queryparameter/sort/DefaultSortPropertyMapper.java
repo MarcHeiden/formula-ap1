@@ -5,6 +5,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
+/**
+ * Implementation of {@link SortPropertyMapper} with an empty sortProperties map that
+ * models the case where all property names in an entity and the corresponding DTO match.
+ */
 @Component
 @NoArgsConstructor
 @Getter

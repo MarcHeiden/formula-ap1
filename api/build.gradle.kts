@@ -11,11 +11,10 @@ java {
 	sourceCompatibility = JavaVersion.VERSION_17
 }
 
-// spotless code formatter
+// Spotless code formatter
 spotless {
     java {
         //removeUnusedImports()
-        // use palantir java format
         palantirJavaFormat()
     }
 }

@@ -3,18 +3,15 @@ package api.exception;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
+/**
+ * Abstract base exception that is extended by all project specific exceptions.
+ */
 @Getter
 public abstract class ApiException extends RuntimeException {
     private final HttpStatus httpStatus;
-    /*private List<ValidationError> validationErrors = new ArrayList<>();*/
 
     public ApiException(String message, HttpStatus httpStatus) {
         super(message);
         this.httpStatus = httpStatus;
     }
-
-    /*public ApiException(String message, HttpStatus httpStatus, List<ValidationError> validationErrors) {
-        this(message, httpStatus);
-        this.validationErrors = validationErrors;
-    }*/
 }

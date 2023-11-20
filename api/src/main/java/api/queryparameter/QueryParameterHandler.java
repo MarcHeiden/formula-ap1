@@ -7,6 +7,9 @@ import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.util.MultiValueMap;
 
+/**
+ * Provides functions that checks if given query parameters and sort properties are valid.
+ */
 public class QueryParameterHandler {
 
     public static Pageable handleQueryParameters(

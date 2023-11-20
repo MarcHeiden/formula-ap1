@@ -25,13 +25,11 @@ import lombok.*;
         })
 public class TeamOfSeason extends BaseEntity {
     @NotNull
-    /*@OnDelete(action = OnDeleteAction.CASCADE)*/
     @ManyToOne(optional = false)
     @JoinColumn(name = "seasonId", referencedColumnName = "id", nullable = false)
     private Season season;
 
     @NotNull
-    /*@OnDelete(action = OnDeleteAction.CASCADE)*/
     @ManyToOne(optional = false)
     @JoinColumn(name = "teamId", referencedColumnName = "id", nullable = false)
     private Team team;
@@ -41,7 +39,6 @@ public class TeamOfSeason extends BaseEntity {
     private Set<Driver> drivers;
 
     @NotNull
-    /*@OnDelete(action = OnDeleteAction.CASCADE)*/
     @ManyToOne(optional = false)
     @JoinColumn(name = "engineId", referencedColumnName = "id", nullable = false)
     private Engine engine;
