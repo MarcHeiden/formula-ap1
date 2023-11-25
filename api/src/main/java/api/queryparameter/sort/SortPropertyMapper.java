@@ -23,7 +23,7 @@ public interface SortPropertyMapper {
      * @param sort current {@link Sort} instance
      * @param dtoProperties properties of the DTO
      * @param sortPrefix sort prefix to add for JPA queries
-     * @return New sort with valid sort properties.
+     * @return new sort with valid sort properties
      * @throws ApiInvalidSortPropertyException if sort property does not exist in the
      * dtoProperties or if it is an id.
      */

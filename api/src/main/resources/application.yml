@@ -1,5 +1,5 @@
 # Base config
-# https://docs.spring.io/spring-boot/docs/current/reference/html/application-properties.html
+# Available options: https://docs.spring.io/spring-boot/docs/current/reference/html/application-properties.html
 spring:
   jpa:
     hibernate:
