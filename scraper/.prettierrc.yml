@@ -1,2 +1,4 @@
-# https://prettier.io/docs/en/options.html
+# Prettier configuration
+# Available options: https://prettier.io/docs/en/options.html
+# Do not add trailing commas in multi-line comma-separated syntactic structures
 trailingComma: none

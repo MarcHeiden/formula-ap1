@@ -10,12 +10,15 @@ export class Driver extends ApiType {
         super();
         this.firstName = firstName;
         this.lastName = lastName;
+        // Remove suffix Jnr from Carlos Sainz' name
         if (this.firstName === "Carlos" && lastName.includes("Sainz")) {
             this.lastName = lastName.replace("Jnr", "").trim();
         }
+        // Internationalize name of Nico Hülkenberg to Nico Hulkenberg
         if (this.firstName === "Nico" && lastName === "Hülkenberg") {
             this.lastName = "Hulkenberg";
         }
+        // Correct wrong name for Zhou Guanyu
         if (firstName === "Guanyu" && lastName === "Zhou") {
             this.firstName = lastName;
             this.lastName = firstName;

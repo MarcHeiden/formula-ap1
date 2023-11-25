@@ -8,7 +8,10 @@ COPY src src
 RUN --mount=type=cache,target=/root/.npm npm ci
 RUN npm run build
 
+# Playwright docker documentation:
 # https://playwright.dev/docs/docker
+# https://mcr.microsoft.com/en-us/product/playwright/about
+# Playwright version must match version specified in package.json
 FROM mcr.microsoft.com/playwright:v1.39.0 as prod
 ARG appRootPath
 WORKDIR ${appRootPath}

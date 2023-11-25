@@ -1,4 +1,5 @@
-# https://typescript-eslint.io/linting/typed-linting
+# ESLint configuration
+# Docs: https://typescript-eslint.io/linting/typed-linting, https://eslint.org/docs/latest/use/configure
 env:
   node: true
   es2022: true
@@ -11,8 +12,12 @@ parserOptions:
   project: true
   tsconfigRootDir: __dirname
 plugins:
-  - "@typescript-eslint"
+  - "@typescript-eslint" # Adds support for TypeScript linting
+  - "eslint-plugin-tsdoc" # Adds support to lint tsdoc
 root: true
 rules:
+  # Disable the base rule as it can report incorrect errors
+  # see https://typescript-eslint.io/rules/no-unused-vars
   no-unused-vars: off
   "@typescript-eslint/no-unused-vars": warn
+  tsdoc/syntax: warn

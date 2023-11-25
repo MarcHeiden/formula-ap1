@@ -1,3 +1,6 @@
+/**
+ * Represents an API error response.
+ */
 export type ApiError = {
     httpStatusCode: number;
     message: string;

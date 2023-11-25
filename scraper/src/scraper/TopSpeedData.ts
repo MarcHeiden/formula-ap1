@@ -10,6 +10,7 @@ export class TopSpeedData extends RaceData {
     }
 
     static ofSpeedString(speedString: string): TopSpeedData {
+        // Map "350,5" to "350.5" number format
         const speed = Number(speedString.replace(",", "."));
         return new TopSpeedData(speed);
     }
