@@ -1,3 +1,4 @@
+# Configuration for the 'prod' Spring profile
 spring:
   datasource:
     url: jdbc:postgresql:${db.url://postgres:5432/postgres}

@@ -1,3 +1,4 @@
+# Configuration for the 'dev' Spring profile
 spring:
   # Specify settings for docker compose support
   docker:

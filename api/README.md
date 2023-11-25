@@ -99,7 +99,9 @@ Every exception that is thrown is caught by the
 [`ApiExceptionHandler`](./src/main/java/api/exception/ApiExceptionHandler.java)
 , which creates and returns a corresponding
 [`ApiExceptionInfo`](./src/main/java/api/exception/ApiExceptionHandler.java)
-from the caught exception. [`ApiException`](./src/main/java/api/exception/ApiException.java)
+from the caught exception.
+
+[`ApiException`](./src/main/java/api/exception/ApiException.java)
 acts as abstract base exception that is extended by all project specific
 exceptions.
 
@@ -269,7 +271,7 @@ As the properties are not always named the same in an entity and the correspondi
 
 Since the property names in the DTO do not always match the property name in the corresponding entity-->
 
-### Response Page
+### `ResponsePage`
 
 Instead of passing the complete page object as response body, only
 the properties `totalElements`, `totalPages`, `pageNumber`, `pageSize`
@@ -290,27 +292,44 @@ For more general information about Paging with Spring, take a look at these blog
 [Reflectoring](https://reflectoring.io/spring-boot-paging/) and
 [HowToDoInJava](https://howtodoinjava.com/spring-data/pagination-sorting-example/).
 
-## Formatting
+## Environment Variables
 
-<!-- This project uses the spotless gradle plugin -->
+### `SPRING_PROFILES_ACTIVE`
 
-This project uses the [palantir-java-format](https://github.com/palantir/palantir-java-format). To format files
-accordingly, execute:
+Specifies the Spring Profile. Available options are `prod` and `dev`.
+Depending on which profile is used, the configurations defined in
+[`application-prod.yml`](./src/main/resources/application-prod.yml) or
+[`application-dev.yml`](./src/main/resources/application-dev.yml) are used.
 
-```shell
-> ./gradlew spotlessJavaApply
-```
+If set to `dev`, starting the application will also start the postgres service specified
+in the [`compose-dev.yml`](./compose-dev.yml) via the
+[Spring Docker Compose Support](https://spring.io/blog/2023/06/21/docker-compose-support-in-spring-boot-3-1).
 
-To check whether all files comply with the format, as done by the
-[Spotless check workflow](../.github/workflows/spotless-check.yml) whenever a pull request
-is created, run:
+### `DEFAULT_PAGE_SIZE`
 
-```shell
-> ./gradlew spotlessJavaCheck
-```
+Specifies the default `pageSize` used for paging of collections.
 
-<!-- This is also done by the [Spotless check workflow](../.github/workflows/spotless-check.yml) whenever a pull request
-is created. -->
+**Default value:** 25
+
+### `MAX_PAGE_SIZE`
+
+Specifies the maximum allowed `pageSize`.
+
+**Default value:** 100
+
+### `prod` specific Environment Variables
+
+#### `DB_URL`
+
+Specifies the PostgreSQL URL.
+
+**Default value:** //postgres:5432/postgres
+
+#### `DB_USERNAME`
+
+#### `DB_PASSWORD`
+
+Specifies the password for the specified `DB_USERNAME`.
 
 ## Docker
 
@@ -318,7 +337,11 @@ The [`Dockerfile`](./Dockerfile) used to build the image of the API available on
 [DockerHub](https://hub.docker.com/repository/docker/marcheiden/formula-ap1) is based on suggestions of
 [this](https://spring.io/guides/topicals/spring-boot-docker/) Spring Guide. It makes use of
 [Multi-stage builds](https://docs.docker.com/build/building/multi-stage/) and JAR layers to
-speed up subsequent builds.
+speed up subsequent builds. The Alpine version of the
+[Eclipse Temurin JRE image](https://hub.docker.com/_/eclipse-temurin) is used as base image.
+
+<!-- The image is based on the Alpine version of the
+[Eclipse Temurin JRE image](https://hub.docker.com/_/eclipse-temurin). -->
 
 <!-- The [`Dockerfile`](./Dockerfile) used to build the image of the API available on
 [DockerHub](https://hub.docker.com/repository/docker/marcheiden/formula-ap1)
@@ -348,39 +371,31 @@ To build a container image from the Dockerfile run:
 
 ### Environment Variables
 
-#### `SPRING_PROFILES_ACTIVE`
+See [Environment Variables](#environment-variables).
 
-Specifies the Spring Profile. Available options are `prod` and `dev`.
-Depending on which profile is used, the configurations defined in
-[`application-prod.yml`](./src/main/resources/application-prod.yml) or
-[`application-dev.yml`](./src/main/resources/application-dev.yml) are used.
+**Notice:** Set `SPRING_PROFILES_ACTIVE` to `prod` as `dev` is meant to be used during local development only
+and does not work when running the application via Docker with the provided image.
 
-If set to `dev`, starting the application will also start the postgres service specified
-in the [`compose-dev.yml`](./compose-dev.yml) via the
-[Spring Docker Compose Support](https://spring.io/blog/2023/06/21/docker-compose-support-in-spring-boot-3-1).
+<!-- **Notice:** Set `SPRING_PROFILES_ACTIVE` to `prod` as `dev` is meant to be used during local development only
+and does not work when running the application in a container. -->
 
-#### `DEFAULT_PAGE_SIZE`
+## Formatting
 
-Specifies the default `pageSize` used for paging of collections.
+<!-- This project uses the spotless gradle plugin -->
 
-**Default value:** 25
+This project uses the [palantir-java-format](https://github.com/palantir/palantir-java-format). To format files
+accordingly, execute:
 
-#### `MAX_PAGE_SIZE`
+```shell
+> ./gradlew spotlessJavaApply
+```
 
-Specifies the maximum allowed `pageSize`.
+To check whether all files comply with the format, as done by the
+[Spotless check workflow](../.github/workflows/spotless-check.yml), run:
 
-**Default value:** 100
+```shell
+> ./gradlew spotlessJavaCheck
+```
 
-#### `prod` specific Environment Variables
-
-##### `DB_URL`
-
-Specifies the PostgreSQL URL.
-
-**Default value:** //postgres:5432/postgres
-
-##### `DB_USERNAME`
-
-##### `DB_PASSWORD`
-
-Specifies the password for the specified `DB_USERNAME`.
+<!-- This is also done by the [Spotless check workflow](../.github/workflows/spotless-check.yml) whenever a pull request
+is created. -->
