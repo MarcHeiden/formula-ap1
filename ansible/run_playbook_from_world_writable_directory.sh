@@ -1,4 +1,8 @@
 #!/bin/bash
+# Script to run ansible playbooks that live in a world writable directory.
+# See https://docs.ansible.com/ansible/devel/reference_appendices/config.html#cfg-in-world-writable-dir
+# Usage: ./run_playbook_under_wsl.sh <playbook.yml> [--tags <tag1,tag2>]
+
 # Check if playbook is specified
 if [ $# -eq 0 ]; then
     echo "Playbook is not specified."

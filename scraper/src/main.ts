@@ -8,28 +8,40 @@ import { AppError } from "./error/AppError.js";
 
 const logger = new Logger();
 const errorHandler = new ErrorHandler(logger);
-const f1ApiClient = new ApiClient(logger);
+const apiClient = new ApiClient(logger);
 const scraper = new Scraper(logger);
 
+// Log process exit
 process.on("exit", (exitCode) => {
     logger.logExit(exitCode);
 });
+
+// Catch errors and handle them
 process.on("uncaughtException", (error: unknown) => {
     errorHandler.handleErrors(error);
 });
 
+/**
+ * Invokes and logs data creation process defined in the given execute function.
+ * @param execute - function that is executed
+ * @param logMessage - message that is logged
+ */
 async function logDataCreation(execute: () => Promise<void>, logMessage: string) {
     logger.logCreateData(logMessage);
     await execute();
     logger.logCreatedData(logMessage);
 }
 
+/**
+ * Creates races, teams, drivers and engines of a season.
+ * @param seasonYear - of the season
+ */
 async function createSeasonData(seasonYear: number) {
     async function createRacesOfSeason() {
         const logMessage = `races of season ${seasonYear}`;
         await logDataCreation(async () => {
             const scrapedRaces = await scraper.scrapeRacesOfSeason(seasonYear);
-            await f1ApiClient.postRacesOfSeason(seasonYear, scrapedRaces);
+            await apiClient.postRacesOfSeason(seasonYear, scrapedRaces);
         }, logMessage);
     }
 
@@ -37,7 +49,7 @@ async function createSeasonData(seasonYear: number) {
         const logMessage = `team data of season ${seasonYear}`;
         await logDataCreation(async () => {
             const teamData = await scraper.scrapeTeamDataOfSeason(seasonYear);
-            await f1ApiClient.postTeamsOfSeason(seasonYear, teamData);
+            await apiClient.postTeamsOfSeason(seasonYear, teamData);
         }, logMessage);
     }
 
@@ -48,20 +60,29 @@ async function createSeasonData(seasonYear: number) {
     }, logMessage);
 }
 
+/**
+ * Creates qualifying, result, fastest laps, leading laps, top speeds and
+ * fastest pit stop for races of a season.
+ * @param seasonYear - of the season to that the races belong
+ */
 async function createRaceData(seasonYear: number) {
     const logMessage = `race data for races of season ${seasonYear}`;
     await logDataCreation(async () => {
-        const createdRaceDataForRacesWithDate: string[] = [];
+        const createdRaceDataForRacesWithDate: string[] = []; // Stores dates of races for that race data was created
         // eslint-disable-next-line no-constant-condition
         while (true) {
-            const races = await f1ApiClient.getRacesOfSeasonOrderedByDateAsc(seasonYear);
+            const races = await apiClient.getRacesOfSeasonOrderedByDateAsc(seasonYear);
             const uncancelledRaces = races.filter((race) => race.cancelled === false);
             if (uncancelledRaces.length === createdRaceDataForRacesWithDate.length) {
-                break; // Exit loop since race data was created for all races of the season
+                break; // Exit loop since race data was created for all uncancelled races of the season
             }
             for (let i = 0; i < uncancelledRaces.length; i++) {
                 const race = uncancelledRaces[i];
-                if (race !== undefined && !createdRaceDataForRacesWithDate.includes(race.date)) {
+                if (
+                    race !== undefined &&
+                    race.date !== undefined &&
+                    !createdRaceDataForRacesWithDate.includes(race.date)
+                ) {
                     const raceDatePlusFourHours = addHours(parseISO(`${race.date} ${race.time}`), 4);
                     while (!isAfter(new Date(), raceDatePlusFourHours)) {
                         // Wait until race finishes
@@ -73,34 +94,40 @@ async function createRaceData(seasonYear: number) {
                         if (raceUrl === undefined) {
                             throw new AppError(`Race url of race '${race.raceName}' does not exist`);
                         }
-                        // Qualifying and result must be created first to create drivers of race,
-                        // update teams of season with new drivers and create race result for driver of race
+                        // Qualifying must be created first, as this creates the driverOfRace object.
                         await scraper
                             .scrapeQualifyingDataOfRace(race, raceUrl)
-                            .then((qualifyingData) => f1ApiClient.postQualifyingOfRace(race, qualifyingData));
+                            .then((qualifyingData) => apiClient.postQualifyingOfRace(race, qualifyingData));
+                        // Race result must be created second, as the API for all other data checks that it exists.
                         await scraper
                             .scrapeResultDataOfRace(race, raceUrl)
-                            .then((resultData) => f1ApiClient.postResultOfRace(race, resultData));
+                            .then((resultData) => apiClient.postResultOfRace(race, resultData));
                         // Create other race data concurrently
                         await Promise.all([
                             scraper
                                 .scrapeFastestLapData(race, raceUrl)
-                                .then((fastestLapData) => f1ApiClient.postFastestLapsOfRace(race, fastestLapData)),
+                                .then((fastestLapData) => apiClient.postFastestLapsOfRace(race, fastestLapData)),
                             scraper
                                 .scrapeTopSpeedData(race, raceUrl)
-                                .then((topSpeedData) => f1ApiClient.postTopSpeedsOfRace(race, topSpeedData)),
+                                .then((topSpeedData) => apiClient.postTopSpeedsOfRace(race, topSpeedData)),
                             scraper
                                 .scrapeLeadingLapsData(race, raceUrl)
-                                .then((leadingLapsData) => f1ApiClient.postLeadingLapsOfRace(race, leadingLapsData)),
+                                .then((leadingLapsData) => apiClient.postLeadingLapsOfRace(race, leadingLapsData)),
                             scraper
                                 .scrapeFastestPitStopData(race, raceUrl)
                                 .then((fastestPitStopData) =>
-                                    f1ApiClient.postFastestPitStopOfRace(race, fastestPitStopData)
+                                    apiClient.postFastestPitStopOfRace(race, fastestPitStopData)
                                 )
                         ]);
-                        createdRaceDataForRacesWithDate.push(race.date);
+                        if (race.date !== undefined) {
+                            // Add date of current race to createdRaceDataForRacesWithDate
+                            // as race data was created for it.
+                            createdRaceDataForRacesWithDate.push(race.date);
+                        }
                     }, logMessage);
-                    break; // Exit loop to get latest races of season
+                    // Exit loop to get latest races of season. This is necessary as it could be that
+                    // new races were added to the season or a race was postponed.
+                    break;
                 }
             }
         }

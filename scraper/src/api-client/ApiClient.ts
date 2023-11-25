@@ -28,6 +28,9 @@ import { LeadingLaps } from "./api/LeadingLaps.js";
 import { FastestPitStopData } from "../scraper/FastestPitStopData.js";
 import { FastestPitStop } from "./api/FastestPitStop.js";
 
+/**
+ * Provides methods to interact with the API.
+ */
 export class ApiClient {
     private readonly logger: Logger;
     private readonly seasonsEndpoint = "seasons";
@@ -45,7 +48,20 @@ export class ApiClient {
         return (responseBody as ApiError).httpStatusCode !== undefined;
     }
 
-    // On error: consider to look up retry and timeout settings
+    /**
+     * Makes an API request using the {@link https://github.com/sindresorhus/got | got library} and
+     * returns the response body as instance of T.
+     * @param endpoint - API endpoint
+     * @param searchParameters - API endpoint query parameters
+     * @param method - HTTP method
+     * @param body - request body of type {@link ApiType}
+     * @typeParam T - type of instance of {@link ApiData}
+     * @returns response body of type T returned by the API wrapped in a {@link Promise}
+     * @throws ApiRequestError if request failed
+     * @throws ApiClientError if response body is undefined
+     * @throws WrappedApiError if API returned an error response
+     */
+    // On error: Consider to look up retry and timeout settings
     // https://github.com/sindresorhus/got/blob/main/documentation/7-retry.md
     // https://github.com/sindresorhus/got/blob/main/documentation/6-timeout.md
     private async useApi<T extends ApiData>(
@@ -80,6 +96,15 @@ export class ApiClient {
         return responseBody;
     }
 
+    /**
+     * Submits a request to a collection API resource.
+     * @param endpoint - API endpoint
+     * @param notFoundErrorMessage - message for {@link ApiNotFoundError}
+     * @param searchParameters - API endpoint query parameters
+     * @throws ApiNotFoundError if the API did not return any instances of T
+     * @returns list of instances of T returned by the API wrapped in a {@link Promise}
+     * @typeParam T - type of instance of {@link ApiType}
+     */
     private async getApiTypes<T extends ApiType>(
         endpoint: string | URL,
         notFoundErrorMessage: string,
@@ -92,6 +117,16 @@ export class ApiClient {
         return apiPage.content;
     }
 
+    /**
+     * Returns instance of T returned by the API for the given searchParameters.
+     * @param endpoint - API endpoint
+     * @param searchParameters - API endpoint query parameters
+     * @param notFoundErrorMessage - message for {@link ApiNotFoundError}
+     * @throws ApiNotFoundError if the API did not return an instance of T for the given
+     * searchParameters
+     * @returns instance of T returned by the API wrapped in a {@link Promise}
+     * @typeParam T - type of instance of {@link ApiType}
+     */
     private async getApiTypeBySearchParameters<T extends ApiType>(
         endpoint: string | URL,
         searchParameters: SearchParameters | URLSearchParams,
@@ -187,7 +222,7 @@ export class ApiClient {
         const endpoint = `${this.seasonsEndpoint}/${season.seasonId}/races`;
         const searchParameters: SearchParameters = {
             sort: "date,asc",
-            pageSize: "50" // Get all races as there probably won't be more than 50 races in a season
+            pageSize: "50" // Set to 50 as there probably won't be more than 50 races in a season
         };
         const notFoundErrorMessage = `Season ${seasonYear} has no races`;
         return await this.getApiTypes<Race>(endpoint, notFoundErrorMessage, searchParameters);
@@ -219,21 +254,39 @@ export class ApiClient {
         return filteredDrivers[0] as Driver;
     }
 
-    private async post<T extends ApiType>(endpoint: string | URL, body: ApiType, logMessage: string): Promise<T> {
+    /**
+     * Creates a post request to the API for the given body.
+     * @param endpoint - API endpoint
+     * @param body - instance of T which is posted
+     * @param logMessage - message that is logged when the post request was successful
+     * @returns the posted instance of T wrapped in a {@link Promise}
+     * @typeParam T - type of instance of {@link ApiType}
+     */
+    private async post<T extends ApiType>(endpoint: string | URL, body: T, logMessage: string): Promise<T> {
         const apiType = await this.useApi<T>(endpoint, undefined, "post", body);
         this.logger.logPosted(logMessage, apiType);
         return apiType;
     }
 
+    /**
+     * Creates a post request to the API for the given body and logs warning message if the object already exists.
+     * @param endpoint - API endpoint
+     * @param body - instance of T which is posted
+     * @param logMessage - message that is logged when the post request was successful
+     * @returns {@link Promise} of posted instance of T or undefined if the object already exists
+     * @typeParam T - type of instance of {@link ApiType}
+     */
     private async postAndLogIfAlreadyExists<T extends ApiType>(
         endpoint: string | URL,
-        body: ApiType,
+        body: T,
         logMessage: string
     ): Promise<T | undefined> {
         try {
             return await this.post<T>(endpoint, body, logMessage);
         } catch (error) {
             if (error instanceof WrappedApiError) {
+                // If the HTTP status code is 409 and the error message of the API response includes the string
+                // "already", it is assumed that the error occurred because the object already exists.
                 if (error.apiError.httpStatusCode === 409 && error.apiError.message.toLowerCase().includes("already")) {
                     this.logger.logAlreadyExists(error, body);
                 } else {
@@ -335,7 +388,7 @@ export class ApiClient {
             }
         }
         const teamsOfSeason: TeamOfSeason[] = [];
-        // Usage of Promise.all causes sql constraint violation in api
+        // Use of Promise.all causes sql constraint violation in API
         for (const teamData_ of teamData) {
             const [team, engine, drivers] = await Promise.all([
                 this.postTeamOrGetAlreadyExistingOne(teamData_.team),
@@ -388,6 +441,7 @@ export class ApiClient {
                     );
                 } catch (error) {
                     if (error instanceof ApiNotFoundError) {
+                        // Add driver to teamOfSeason as he is not a member yet
                         this.logger.logAppError(error, "warn");
                         this.logger.info("Post driver now and patch teamOfSeason");
                         driver = await this.postDriverOrGetAlreadyExistingOne(qualifyingData_.driver);

@@ -1,5 +1,8 @@
 import { Logger } from "../logger/Logger.js";
 
+/**
+ * Provides method to handle errors.
+ */
 export class ErrorHandler {
     private readonly logger: Logger;
 

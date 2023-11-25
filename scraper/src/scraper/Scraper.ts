@@ -32,6 +32,9 @@ type DriverOfRaceDataRequest<T extends RaceData> = {
     url: string;
 };
 
+/**
+ * Implements scraping logic using the {@link https://crawlee.dev/ | Crawlee library}.
+ */
 export class Scraper {
     private readonly logger: Logger;
 
@@ -42,10 +45,11 @@ export class Scraper {
     private getCheerioCrawler(options: CheerioCrawlerOptions) {
         return new CheerioCrawler(
             options,
-            // https://github.com/apify/crawlee/discussions/2062
+            // Disable storage to allow re-scraping of already scraped urls
+            // see https://github.com/apify/crawlee/discussions/2062
             new Configuration({
                 storageClient: new MemoryStorage({
-                    persistStorage: false // Allows to rescrape
+                    persistStorage: false
                 })
             })
         );
@@ -54,10 +58,11 @@ export class Scraper {
     private getPlaywrightCrawler(options: PlaywrightCrawlerOptions) {
         return new PlaywrightCrawler(
             options,
-            // https://github.com/apify/crawlee/discussions/2062
+            // Disable storage to allow re-scraping of already scraped urls
+            // see https://github.com/apify/crawlee/discussions/2062
             new Configuration({
                 storageClient: new MemoryStorage({
-                    persistStorage: false // Allows to rescrape
+                    persistStorage: false
                 })
             })
         );
@@ -67,7 +72,15 @@ export class Scraper {
         return cheerio.text().trim();
     }
 
-    private async logScraping<T>(execute: () => Promise<T>, logMessage: string) {
+    /**
+     * Executes scraping process, logs scraped data, throws error on scraping error and returns scraped data of type T.
+     * @param execute - function that defines the scraping process that is executed
+     * @param logMessage - message that is logged when data is scraped
+     * @throws ScraperError if an error occurs during scraping
+     * @returns {@link Promise} of T
+     * @typeParam T - type of the data that are scraped
+     */
+    private async handleScraping<T>(execute: () => Promise<T>, logMessage: string) {
         this.logger.logScrape(logMessage);
         try {
             const scrapedData = await execute();
@@ -78,6 +91,10 @@ export class Scraper {
         }
     }
 
+    /**
+     * Logs errors occurred inside a crawlee router handler.
+     * @param execute - function that defines the scraping logic to execute inside a crawlee router handler
+     */
     private async logOnHandlerError(execute: () => Promise<void> | void) {
         try {
             await execute();
@@ -105,15 +122,15 @@ export class Scraper {
 
         const cheerioRouter = createCheerioRouter();
 
+        // Scrapes race urls and race names from startUrl
         cheerioRouter.addDefaultHandler(async ({ $ }) => {
             await this.logOnHandlerError(() => {
                 $("tbody tr").each((_index, row) => {
                     const columns = $(row).children("td");
-                    const date = this.getTrimmedText(columns.eq(1));
                     const raceLink = columns.eq(2).find("a").eq(0);
                     const raceName = this.getTrimmedText(raceLink);
                     const raceUrl = `${motorSportStatsBaseUrl}${raceLink.attr("href")}`;
-                    const race = new Race(raceName, date);
+                    const race = new Race(raceName);
                     raceMap.set(race.raceName, race);
                     const userData: UserData = {
                         raceName: race.raceName
@@ -132,10 +149,16 @@ export class Scraper {
 
         const playwrightRouter = createPlaywrightRouter();
 
+        // Scrapes race date and time from scraped race url
         playwrightRouter.addDefaultHandler<UserData>(async ({ request, page }) => {
             await this.logOnHandlerError(async () => {
+                // Switch to "Your time" to get UTC date
                 await page.getByText("Race time").first().click();
                 await page.getByText("Your time").click();
+                const date = await page.locator("h3").nth(2).textContent();
+                if (date === null) {
+                    throw new ScraperError(`Could not scrape race date from ${request.url}`);
+                }
                 const time = await page
                     .locator("h3 ~ div")
                     .filter({ hasText: "Race" })
@@ -143,10 +166,11 @@ export class Scraper {
                     .nth(1)
                     .textContent();
                 if (time === null) {
-                    throw new ScraperError(`Could no scrape race time from ${request.url}`);
+                    throw new ScraperError(`Could not scrape race time from ${request.url}`);
                 }
                 const race = raceMap.get(request.userData.raceName);
                 if (race !== undefined) {
+                    race.setDate(`${seasonYear} ${date.trim()}`);
                     race.setTime(time.trim());
                 }
             });
@@ -156,7 +180,7 @@ export class Scraper {
             requestHandler: playwrightRouter
         });
 
-        return await this.logScraping(async () => {
+        return await this.handleScraping(async () => {
             await cheerioCrawler.run([startUrl]);
             await playwrightCrawler.run(raceRequests);
             return [...raceMap.values()];
@@ -192,12 +216,18 @@ export class Scraper {
             requestHandler: cheerioRouter
         });
 
-        return await this.logScraping(async () => {
+        return await this.handleScraping(async () => {
             await cheerioCrawler.run([url]);
             return teamData;
         }, logMessage);
     }
 
+    /**
+     * Scrapes race urls which provide qualifying, result, fastest laps, leading laps, top speed and
+     * fastest pit stop data of a race.
+     * @param seasonYear - races are scraped for this season year
+     * @returns {@link Promise} of scraped race urls
+     */
     async scrapeRaceUrls(seasonYear: number): Promise<string[]> {
         const url = `https://www.motorsport-total.com/formel-1/ergebnisse/${seasonYear}`;
         const logMessage = `race urls of season ${seasonYear} from ${url}`;
@@ -217,12 +247,19 @@ export class Scraper {
             requestHandler: cheerioRouter
         });
 
-        return await this.logScraping(async () => {
+        return await this.handleScraping(async () => {
             await cheerioCrawler.run([url]);
             return raceUrls;
         }, logMessage);
     }
 
+    /**
+     * Scrapes drivers for instances of T.
+     * @param requests - list of {@link DriverOfRaceDataRequest} of T that contains the urls that are scraped and
+     * the instances of {@link RaceData} for which the driver is scraped.
+     * @returns {@link Promise} of list of T
+     * @typeParam T - type of instance of {@link RaceData} for which the driver is scraped
+     */
     private async scrapeDriverOfRaceData<T extends RaceData>(requests: DriverOfRaceDataRequest<T>[]): Promise<T[]> {
         const data: T[] = [];
 
@@ -277,7 +314,7 @@ export class Scraper {
             requestHandler: cheerioRouter
         });
 
-        return await this.logScraping(async () => {
+        return await this.handleScraping(async () => {
             await cheerioCrawler.run([`${raceUrl}/qualifying`]);
             return await this.scrapeDriverOfRaceData<QualifyingData>(driverRequests);
         }, logMessage);
@@ -328,7 +365,7 @@ export class Scraper {
             requestHandler: cheerioRouter
         });
 
-        return await this.logScraping(async () => {
+        return await this.handleScraping(async () => {
             await cheerioCrawler.run([`${raceUrl}/rennen`]);
             return await this.scrapeDriverOfRaceData<ResultData>(driverRequests);
         }, logMessage);
@@ -366,7 +403,7 @@ export class Scraper {
             requestHandler: cheerioRouter
         });
 
-        return await this.logScraping(async () => {
+        return await this.handleScraping(async () => {
             await cheerioCrawler.run([`${raceUrl}/rennen/schnellste-runden`]);
             return await this.scrapeDriverOfRaceData<FastestLapData>(driverRequests);
         }, logMessage);
@@ -404,7 +441,7 @@ export class Scraper {
             requestHandler: cheerioRouter
         });
 
-        return await this.logScraping(async () => {
+        return await this.handleScraping(async () => {
             await cheerioCrawler.run([`${raceUrl}/rennen/topspeeds`]);
             return await this.scrapeDriverOfRaceData<TopSpeedData>(driverRequests);
         }, logMessage);
@@ -442,7 +479,7 @@ export class Scraper {
             requestHandler: cheerioRouter
         });
 
-        return await this.logScraping(async () => {
+        return await this.handleScraping(async () => {
             await cheerioCrawler.run([`${raceUrl}/rennen/fuehrungsrunden`]);
             return await this.scrapeDriverOfRaceData<LeadingLapsData>(driverRequests);
         }, logMessage);
@@ -476,7 +513,7 @@ export class Scraper {
             requestHandler: cheerioRouter
         });
 
-        return await this.logScraping(async () => {
+        return await this.handleScraping(async () => {
             await cheerioCrawler.run([`${raceUrl}/rennen/boxenstopps`]);
             const fastestPitStopData = await this.scrapeDriverOfRaceData<FastestPitStopData>([driverRequest]);
             if (fastestPitStopData[0] === undefined) {

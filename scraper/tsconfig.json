@@ -1,5 +1,5 @@
 {
-  // https://www.typescriptlang.org/tsconfig
+  // Docs: https://www.typescriptlang.org/tsconfig
   "compilerOptions": {
     // Modules
     "module": "NodeNext",
@@ -26,7 +26,7 @@
     "strict": true,
     "noUncheckedIndexedAccess": true,
     "noFallthroughCasesInSwitch": true
-    // checked with eslint
+    // Checked with ESLint
     /*"noUnusedLocals": true,
     "noUnusedParameters": true,*/
   },

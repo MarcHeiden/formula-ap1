@@ -6,16 +6,27 @@ import { ScraperError } from "../scraper/error/ScraperError.js";
 import { ApiRequestError } from "../api-client/error/ApiRequestError.js";
 import { WrappedApiError } from "../api-client/error/WrappedApiError.js";
 
+/**
+ * Acts as wrapper around {@link winston.Logger}. Logs are logged
+ * to the console and a logfile located in the ./logs directory.
+ */
 export class Logger {
+    /**
+     * Colorizes the given string grey.
+     * @param string - string to colorize
+     * @returns colorized string
+     */
     private colorizeGrey(string: string): string {
         return format.colorize({ colors: { grey: "grey" } }).colorize("grey", string);
     }
 
     private logger = createLogger({
         level: process.env.LOG_LEVEL || "info",
+        // Format for logs which are logged to the logfile
         format: format.combine(format.errors({ stack: true }), format.timestamp(), format.json()),
         transports: [
             new transports.Console({
+                // Format for logs which are logged to the console
                 format: format.combine(
                     format.timestamp(),
                     format.printf(({ timestamp, level, name, message, stack, unexpectedError, data, urls }) => {
@@ -35,13 +46,13 @@ export class Logger {
                 )
             }),
             new DailyRotateFile({
-                // create new log file every month and keep the last 7 files
+                // Create new logfile every month and keep the last 7 files
                 // docs: https://github.com/winstonjs/winston-daily-rotate-file#options
                 frequency: "1m",
                 dirname: "./logs/",
                 filename: "log%DATE%.txt",
                 maxFiles: 7,
-                utc: true // use utc date
+                utc: true // Use utc date
             })
         ]
     });

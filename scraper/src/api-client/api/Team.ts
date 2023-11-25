@@ -7,6 +7,7 @@ export class Team extends ApiType {
     constructor(teamName: string) {
         super();
         this.teamName = teamName;
+        // Use only Haas as team name for Haas F1 team
         if (teamName === "Haas F1") {
             this.teamName = "Haas";
         }
