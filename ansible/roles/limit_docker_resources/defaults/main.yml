@@ -1,21 +1,11 @@
-# Available settings: https://www.freedesktop.org/software/systemd/man/latest/systemd.resource-control.html
-
-[Unit]
-Description=Slice that limits docker resources
-Before=slices.target
-
-[Slice]
-CPUAccounting=true
+---
 # Specifies what percentage of the available CPU resources Docker is allowed to use.
 # Total available CPU quota = CPU cores * 100%.
 # Example: If set to "200%", Docker is allowed to use 2 CPU cores
-CPUQuota={{ limit_docker_resources_cpu_quota }}
-
-# Memory Management
-MemoryAccounting=true
+limit_docker_resources_cpu_quota:
 # Specifies the desired maximum RAM that Docker should use in Megabyte (with base 1024).
 # As this is a soft max, RAM usage may go above this limit.
-MemoryHigh={{ limit_docker_resources_desired_max_ram_mb }}M
+limit_docker_resources_desired_max_ram_mb:
 # Specifies the maximum RAM that Docker is allowed to use in Megabyte (with base 1024).
 # Should be larger than docker_compose_docker_cpu_quota.
-MemoryMax={{ limit_docker_resources_max_ram_mb }}M
+limit_docker_resources_max_ram_mb:

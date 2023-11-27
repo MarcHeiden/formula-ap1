@@ -4,9 +4,9 @@ services:
     depends_on:
       postgres:
         condition: service_started
-        restart: true # Restart api service if postgres is restarted manually
+        restart: true # Restart API service if postgres is restarted manually
     restart: unless-stopped
-    # Set health status to healthy if api processed /seasons get request successfully
+    # Set health status to healthy if the /seasons endpoint is reachable
     # Healthcheck options: https://docs.docker.com/engine/reference/builder/#healthcheck
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://localhost:8080/seasons"]
@@ -16,11 +16,8 @@ services:
       retries: 5
     environment:
       SPRING_PROFILES_ACTIVE: prod
-      #DB_URL: //postgres:5432/postgres #default
       DB_USERNAME: postgres
       DB_PASSWORD: {{ docker_compose_postgres_password }}
-      #DEFAULT_PAGE_SIZE: 25 #default
-      #MAX_PAGE_SIZE: 100 #default
 
   postgres:
     image: "postgres:15-alpine"
@@ -34,14 +31,14 @@ services:
         source: postgres-data
         target: /var/lib/postgresql/data
 
-  # On playwright error: maybe set ipc: "host" as suggested in the docs:
+  # On Playwright error: maybe set ipc to "host" as suggested in the docs:
   # https://playwright.dev/docs/docker#run-the-image
   scraper-v0:
     image: "marcheiden/formula-ap1:scraper-v0"
     init: true # See https://github.com/nodejs/docker-node/blob/main/docs/BestPractices.md#handling-kernel-signals
     depends_on:
       api-v0:
-        condition: service_healthy # Start scraper if api healthcheck resolved successfully
+        condition: service_healthy # Start scraper if API is healthy
         restart: false
     # Use seccomp profile as suggested in the docs: https://playwright.dev/docs/docker#crawling-and-scraping
     # Seccomp profile: https://github.com/microsoft/playwright/blob/main/utils/docker/seccomp_profile.json
@@ -50,8 +47,6 @@ services:
     environment:
       API_BASE_URL: http://api-v0:8080
       START_SEASON_YEAR: 2023
-      #LOG_LEVEL: info #default
-      #SCRAPE_SEASON_DATA_OF_FIRST_SEASON: true #default
     volumes:
       - type: volume
         source: scraper-v0-logs

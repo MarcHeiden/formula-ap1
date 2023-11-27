@@ -2,7 +2,7 @@ http:
   routers:
     formula-ap1-api-v0:
       service: formula-ap1-api-v0
-      # Only allow get requests but not /teamsOfSeasons
+      # Only allow get requests but not to /teamsOfSeasons
       rule: >- 
         Host(`{{ docker_compose_api_host }}`) &&
         Method(`GET`) &&
@@ -20,6 +20,7 @@ http:
         regex:
           - "\\/v(\\d)+"
 
+    # Allow CORS for all origins
     formula-ap1-api-cors:
       headers:
         accessControlAllowOriginList:
@@ -43,19 +44,19 @@ http:
     #          - "127.0.0.1"
     #      rules:
     #        findtime: 1h # Period
-    #        maxretry: 500 # Amount of requests
+    #        maxretry: 500 # Amount of requests allows during the findtime
     #        bantime: 1h
     #        enabled: true # Enable plugin
 
     #formula-ap1-api-max-connections:
-    #  # Server will handle 100 connections at time
+    #  # Server will handle 100 connections at a time
     #  inFlightReq:
     #    amount: 100
     #    sourceCriterion:
     #      requestHost: true
 
     formula-ap1-api-v0-max-connections-single-client:
-      # Single client/IP can have 3 connections at a time
+      # Single client/IP can have 3 open connections at a time
       inFlightReq:
         amount: 3
         sourceCriterion:

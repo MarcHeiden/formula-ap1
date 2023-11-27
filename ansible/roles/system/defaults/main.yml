@@ -1,16 +1,25 @@
-# Ansible user
+# Ansible user settings
 system_change_ansible_user_password: false
 system_new_ansible_user_password:
-# New user
+
+# New user settings
+# Specifies whether to create a new user
 system_create_user: false
+# Username of the new user
 system_user:
+# Password for the new user
 system_user_password:
+# Default shell for the new user
 system_user_shell: /bin/bash
-# Language and time
+
+# Language and time settings
 system_locale: en_US.UTF-8
 system_timezone: Etc/UTC
-# Swap
+
+# Swap file settings
 system_change_swap_file_size: false
+# Swap file size in Megabyte (with base 1024)
 system_swap_file_size_mb:
-# Network
+
+# Network settings
 system_disable_ipv6: false
