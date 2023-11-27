@@ -57,7 +57,7 @@ The following model represents the domain layer:
 <!--The following model represents the domain layer implemented with
 [Spring Data JPA](https://spring.io/projects/spring-data-jpa):-->
 
-<img alt="" src="domain-model.png">
+<img alt="Domain Model" src="domain-model.png">
 
 VO stands for Value Object, which leads to an implementation as Embeddable in Spring.
 

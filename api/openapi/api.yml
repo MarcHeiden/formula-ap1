@@ -80,7 +80,7 @@ info:
 
     A client can send 7 requests per second as long as
     the number of requests that are currently processed for the client is less than or equal to 3.
-    If one of these limits is exceeded the api returns 429 Too Many Requests.
+    If one of these limits is exceeded the API returns 429 Too Many Requests.
 
     ## FAQ
 
@@ -89,7 +89,7 @@ info:
     Qualifying, Result, Fastest Laps, Top Speeds, Leading Laps and Fastest Pit Stop data will
     usually be available 4 hours after the race start.
 
-    ### Where does the api get the data from?
+    ### Where does the API get the data from?
 
     The data is mainly scraped from these pages:
 

@@ -1,5 +1,6 @@
 #!/bin/bash
-# Script to remove *Controller, TeamsOfSeasons and DriversOfRaces tags from the generated public API documentation
+# Script to remove *Controller, TeamsOfSeasons and DriversOfRaces tags from the generated public API documentation.
+# Usage: ./remove-tags.sh <openapi-file.yml>
 
 # Check if filename parameter was specified
 if [ $# -eq 0 ]; then
