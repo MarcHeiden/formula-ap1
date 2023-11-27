@@ -1,10 +1,16 @@
 ---
-docker_compose_limit_docker_resources: false
-docker_compose_user: "{{ ansible_user }}"
-# Copied compose files will live in "{{ docker_compose_project_directory }}/ansible-generated" directory
+# Copying of Compose files
+# If set to true, the compose files are copied, but the compose project is not started
+docker_compose_only_copy_files: false
+# Copied Compose files will live in the directory "{{ docker_compose_project_directory }}/ansible-generated"
 docker_compose_project_directory: "/home/{{ docker_compose_user }}/formula-ap1"
-# If set to "dev" traefik api will be exposed at port 8080
+# Copied Compose files will be owned by this user
+docker_compose_user: "{{ ansible_user }}"
+
+# Docker Compose project settings
+# If set to "dev", the Traefik API will be exposed at port 8080
 docker_compose_profile: prod
+# The password of the postgres db
 docker_compose_postgres_password:
-# Host on which the api will listen
+# Host on which the API will listen
 docker_compose_api_host: api.localhost

@@ -1,4 +1,6 @@
 ---
+# Playbook to set up a VPS and deploy the API and Scraper
+# with Traefik as reverse proxy via Docker Compose.
 - hosts: servers
   vars:
     user: "{{ inventory_hostname }}"
@@ -28,6 +30,14 @@
       tags:
         - install_docker
 
+    - role: limit_docker_resources
+      tags:
+        - limit_docker_resources
+      limit_docker_resources_cpu_quota: 190%
+      limit_docker_resources_desired_max_ram_mb: 1536
+      # 1900M at all => 236M left for system
+      limit_docker_resources_max_ram_mb: 1664
+
     - role: docker_compose
       tags:
         - docker_compose
@@ -35,4 +45,3 @@
       docker_compose_project_directory: "/home/{{ user }}/formula-ap1"
       docker_compose_postgres_password: "{{ vault_docker_compose_postgres_password }}"
       docker_compose_api_host: api.formula-ap1.com
-      docker_compose_limit_docker_resources: true

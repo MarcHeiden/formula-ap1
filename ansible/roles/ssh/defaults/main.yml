@@ -1,12 +1,19 @@
 ---
+# Specifies whether to disable root login
 ssh_disable_root_login: true
-# SSH Key Generation
+
+# SSH key pair generation settings
+# Specifies whether to generate a new ssh key pair
 ssh_generate_key: false
 # User for whom an ssh key is to be generated
 ssh_user: "{{ ansible_user }}"
+# Type of key to generate
 ssh_key_type_: ed25519
+# Key passphrase of the generated key
 ssh_key_passphrase_:
-# Generated ssh key will be put into /home/{{ ssh_localhost_user }}/.ssh/{{ inventory_hostname }}
+# Generated ssh key will be put into the directory /home/{{ ssh_localhost_user }}/.ssh/{{ inventory_hostname }} on
+# the localhost (machine on that the ansible is installed)
 ssh_localhost_user: root
-# SSH Server
+
+# SSH server port
 ssh_port: 22

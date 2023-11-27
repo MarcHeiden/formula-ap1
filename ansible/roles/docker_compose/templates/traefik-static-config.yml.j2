@@ -5,6 +5,7 @@ entryPoints:
   http:
     address: :80
 
+# Use config file to define dynamic configuration
 providers:
   file:
     filename: /etc/traefik/traefik-dynamic-config.yml
@@ -20,10 +21,10 @@ log:
 accessLog:
   filePath: /var/log/traefik/accessLog.txt
   format: json
-  bufferingSize: 100 # https://doc.traefik.io/traefik/observability/access-logs/#bufferingsize
+  bufferingSize: 100 # See https://doc.traefik.io/traefik/observability/access-logs/#bufferingsize
 
 {% if docker_compose_profile == "dev" %}
-# Traefik api config
+# Traefik API configuration
 # Disable in production
 api:
   insecure: true

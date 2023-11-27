@@ -1,0 +1,10 @@
+---
+# Playbook used in development to generate Compose files on the local machine.
+- hosts: localhost
+  roles:
+    - role: docker_compose
+      docker_compose_only_copy_files: true
+      docker_compose_project_directory: "."
+      docker_compose_user: marc
+      docker_compose_profile: dev
+      docker_compose_postgres_password: postgres
