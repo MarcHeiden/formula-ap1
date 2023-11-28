@@ -51,6 +51,11 @@ services:
       - type: volume
         source: scraper-v0-logs
         target: /app/logs
+    deploy:
+      resources:
+        limits:
+          # Allow to use 1.2 CPU cores
+          cpus: "1.2"
 
   traefik:
     image: traefik:v2.10

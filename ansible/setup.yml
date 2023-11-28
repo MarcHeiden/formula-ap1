@@ -15,14 +15,14 @@
       system_user: "{{ user }}"
       system_user_password: "{{ user_password }}"
       system_disable_ipv6: true
-      system_change_swap_file_size: true
-      system_swap_file_size_mb: 4096
+      #system_change_swap_file_size: true
+      #system_swap_file_size_mb: 8192
 
     - role: ssh
       tags:
         - ssh
-      ssh_user: "{{ user }}"
       ssh_generate_key: true
+      ssh_user: "{{ user }}"
       ssh_key_passphrase_: "{{ user_ssh_key_passphrase }}"
       ssh_localhost_user: marc
 
@@ -33,15 +33,14 @@
     - role: limit_docker_resources
       tags:
         - limit_docker_resources
-      limit_docker_resources_cpu_quota: 190%
-      limit_docker_resources_desired_max_ram_mb: 1536
-      # 1900M at all => 236M left for system
-      limit_docker_resources_max_ram_mb: 1664
+      limit_docker_resources_cpu_quota: 380%
+      limit_docker_resources_desired_max_ram_mb: 7168
+      # 7741M at all => 256M left for system
+      limit_docker_resources_max_ram_mb: 7485
 
     - role: docker_compose
       tags:
         - docker_compose
-      docker_compose_user: root
       docker_compose_project_directory: "/home/{{ user }}/formula-ap1"
       docker_compose_postgres_password: "{{ vault_docker_compose_postgres_password }}"
       docker_compose_api_host: api.formula-ap1.com
