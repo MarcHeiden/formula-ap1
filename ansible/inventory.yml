@@ -9,7 +9,7 @@ all:
     servers:
       hosts:
         formula-ap1-ubuntu:
-          ansible_host: 212.227.225.49
+          ansible_host: 128.140.101.68
           ansible_port: 22
           ansible_user: formula-ap1-ubuntu
           ansible_connection: ssh

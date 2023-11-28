@@ -3,9 +3,9 @@
 # If set to true, the compose files are copied, but the compose project is not started
 docker_compose_only_copy_files: false
 # Copied Compose files will live in the directory "{{ docker_compose_project_directory }}/ansible-generated"
-docker_compose_project_directory: "/home/{{ docker_compose_user }}/formula-ap1"
+docker_compose_project_directory:
 # Copied Compose files will be owned by this user
-docker_compose_user: "{{ ansible_user }}"
+docker_compose_user: root
 
 # Docker Compose project settings
 # If set to "dev", the Traefik API will be exposed at port 8080
