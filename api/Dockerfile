@@ -1,7 +1,7 @@
 ARG appRootPath=/app
 ARG extractedJarLayers=${appRootPath}/build/extracted
 
-FROM eclipse-temurin:17-jdk-alpine AS build
+FROM eclipse-temurin:17-jdk AS build
 ARG appRootPath
 WORKDIR ${appRootPath}
 COPY gradle gradle
@@ -16,9 +16,9 @@ ARG extractedJarLayers
 # https://docs.spring.io/spring-boot/docs/current/maven-plugin/reference/htmlsingle/#packaging.layers
 RUN mkdir -p ${extractedJarLayers} && java -Djarmode=layertools -jar build/libs/*.jar extract --destination ${extractedJarLayers}
 
-FROM eclipse-temurin:17-jre-alpine as prod
+FROM eclipse-temurin:17-jre as prod
 # Run app as system user app
-RUN addgroup -S app && adduser -S app -G app
+RUN useradd --system --user-group app
 USER app:app
 ARG appRootPath
 WORKDIR ${appRootPath}
