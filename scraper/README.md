@@ -8,48 +8,6 @@ and pass it to the API (see [`main.ts`](./src/main.ts)). The race data
 is scraped 4 hours after each race (see `createRaceData` function in [`main.ts`](./src/main.ts)), as
 the rules state that a race must end 3 hours after the official race start.
 
-<!-- It is meant to run in an infinite loop (see `main.ts`) to scrape season and race data
-and pass it to the API.
-
-It is meant to run in an infinite loop to scrape season and race data
-and pass it to the API. The race data (qualifying, result, fastest laps, leading laps, top speeds, fastest pit stop)
-are thereby scraped four hours after each race as the rules say that a race must end 3 hours after the official
-race start. -->
-
-<!-- ## Application Design
-
-The application is meant to run in an infinite loop to scrape season and race data
-and pass it to the API (see `main.ts`).
-
-The logic when data is scraped and passed to the API is defined in the `main.ts`.
-
-The `main.ts` is the entrypoint of the application. The logic when data is scraped and
-passed to the API is defined here.
-
-The `main.ts` is the entrypoint of the application.
-
-The infinite loop in `main.ts` calls.
-
-## `main.ts`
-
-The `main.ts` is the entrypoint of the application. The logic when data is scraped and
-passed to the API is defined here.
-
-The infinite loop in the `main.ts` executes repetitively the `createSeasonData` and `createRaceData` function.
-
-As the application is to run indefinitely the infinite loop in the `main.ts` executes
-repetitively the `createSeasonData` and `createRaceData` function. As the name
-
-As the application is meant to run indefinitely.
-
-The logic when data is scraped and passed to the API is defined in `main.ts`.
-
-This file contains the infinite loop -->
-
-<!-- ## Package Structure
-
-The project is divided into two major packages. The `scraper` package contains -->
-
 ## Scraping of Data
 
 The scraping logic is implemented in the [`Scraper`](./src/scraper/Scraper.ts) class using the
@@ -59,41 +17,19 @@ use server-side rendering and the
 [`PlaywrightCrawler`](https://crawlee.dev/docs/quick-start#playwrightcrawler) is used when JavaScript needs to
 be executed to scrape the content of a page.
 
-<!-- Thereby, the
-[`CheerioCrawler`](https://crawlee.dev/docs/quick-start#cheeriocrawler) is used to scrape data from pages that
-use server-side rendering. In contrast, the
-[`PlaywrightCrawler`](https://crawlee.dev/docs/quick-start#playwrightcrawler) is used when JavaScript needs to
-be executed to scrape the page content. -->
-
-<!-- Here scraping of content of pages that use server-side rendering is done with
-CheerioCrawler. -->
-
 As logs are handled by the [`Logger`](./src/logger/Logger.ts) class, the built-in logging functionality of Crawlee
 is disabled via the [`crawlee.json`](./crawlee.json) config file.
 
 ## API Client
 
-<!-- ## `ApiClient` -->
-
 The [`ApiClient`](./src/api-client/ApiClient.ts) class provides methods to interact with the API.
 HTTP requests are made using the [got library](https://github.com/sindresorhus/got).
-
-<!-- It uses [got](https://github.com/sindresorhus/got) as underlying HTTP request library. -->
 
 **Notice:** API responses are not deserialized into class objects, even though they are defined as class objects.
 This works because only the properties of an object and not the methods, defined in the corresponding
 class, are accessed... a quick and dirty implementation 🙃.
 
-<!-- **Notice:** API responses are not deserialized to class objects. They remain simple
-JavaScript objects and therefore only the properties of the object and not methods defined in the
-class can be accessed. -->
-
 ## Logging
-
-<!-- The [`Logger`](./src/logger/Logger.ts) class acts as a wrapper around the
-[winston logger library](https://github.com/winstonjs/winston). All logs are logged to the console
-and a logfile which is named `log<date>.txt` and located in the `./logs` directory. Every month a new
-logfile will be created. Logfiles older than 7 months are deleted. -->
 
 Logging of app events is handled by the [`Logger`](./src/logger/Logger.ts) class. It acts as a wrapper
 around the [winston logger library](https://github.com/winstonjs/winston). All logs are logged to the console
@@ -143,7 +79,7 @@ Can be set to `false` if season data already exists for the first season.
 
 ## Docker
 
-The image available on [DockerHub](https://hub.docker.com/repository/docker/marcheiden/formula-ap1) is built with
+The image available on [DockerHub](https://hub.docker.com/r/marcheiden/formula-ap1) is built with
 the [`Dockerfile`](./Dockerfile), which uses [Multi-stage builds](https://docs.docker.com/build/building/multi-stage/) to
 speed up subsequent builds.
 As the [`PlaywrightCrawler`](https://crawlee.dev/docs/quick-start#playwrightcrawler)
@@ -164,9 +100,6 @@ To build a container image from the Dockerfile, run:
 
 Multi-platform images can be built with builder instances whose driver type is `docker-container`.
 This command creates a builder with the name `multi-platform-builder`:
-
-<!-- To concurrently build multi-platform images and push them to the registry, a builder instance with the driver type
-`docker-container` is needed. The following command creates one w: -->
 
 ```shell
 > docker buildx create --driver docker-container --name multi-platform-builder
@@ -206,11 +139,6 @@ To lint the codebase, as done by the `Lint with eslint` job of the
 ```shell
 > npm run lint
 ```
-
-<!-- This also done by the `Lint scraper and run prettier` check workflow.
-
-The project uses the typescript-eslint plugin to lint the codebase with eslint.
-The lint configuration can be found in the `.eslintrc.yml` file. -->
 
 ## Formatting
 

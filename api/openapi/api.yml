@@ -2,10 +2,6 @@ openapi: "3.0.0"
 info:
   title: formula-ap1
   version: "0.1.0"
-  # [<img alt="" src="https://github.githubassets.com/assets/GitHub-Mark-ea2971cee799.png" width="50">](https://github.com/MarcHeiden/formula-ap1)
-  #  https://img.shields.io/badge/GitHub-7d8492?style=for-the-badge&logo=github
-  #  https://img.shields.io/badge/GitHub-3b4151?style=for-the-badge&logo=github
-  #  https://img.shields.io/badge/GitHub-1b1b1b?style=for-the-badge&logo=github
   description: |
     [<img alt="GitHub Badge" 
     src="https://img.shields.io/badge/GitHub-1b1b1b?style=for-the-badge&logo=github">
