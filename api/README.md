@@ -10,16 +10,23 @@ The API is built in Java with Spring Boot and PostgreSQL. Gradle is used as the 
 The API endpoints are documented with the OpenAPI Specification 3.0.
 To avoid dealing with a single large file, the
 parameter, response and schema components are documented in seperated files.
-During the deployment of the documentation to GitHub Pages the files are then bundled into a Swagger UI compliant file
-(see [Bundle and deploy OpenAPI to GitHub Pages workflow](../.github/workflows/bundle-and-deploy-openapi.yml)).
+During the deployment of the documentation to GitHub Pages, the files are bundled into a
+[Swagger UI](https://swagger.io/tools/swagger-ui/) compliant file
+(see [`Bundle and deploy OpenAPI to GitHub Pages`](../.github/workflows/bundle-and-deploy-openapi.yml) workflow).
 Thanks to a feature of the [Redocly CLI](https://github.com/Redocly/redocly-cli),
-which is used for linting and bundling the documentation, a public and an internal documentation
-can be generated, as paths for the public documentation can be excluded if `x-internal` is set to true.
+which is used for linting and bundling of the documentation, a public and an internal documentation
+can be generated, as paths for the public documentation can be excluded if the `x-internal` field is set to `true`.
+
+<!-- Thanks to a feature of the [Redocly CLI](https://github.com/Redocly/redocly-cli),
+which is used for linting and bundling of the documentation, a public and an internal documentation
+can be generated, as paths can be excluded with the `x-internal` field for the public documentation. -->
+
+<!-- with the `x-internal` field. -->
 
 ### Lint OpenAPI Documentation
 
-In order to lint the OpenAPI documentation locally, as done remote by the
-[Lint OpenAPI workflow](../.github/workflows/lint-openapi.yml), install the Redocly CLI globally via npm:
+In order to lint the OpenAPI documentation locally, as done by the
+[`Lint OpenAPI`](../.github/workflows/lint-openapi.yml) workflow, install the Redocly CLI globally via npm:
 
 ```shell
 > npm install @redocly/cli@"^1.0.2" -g
@@ -64,17 +71,24 @@ VO stands for Value Object, which leads to an implementation as Embeddable in Sp
 ## Package Structure
 
 Every entity from the domain model has its own package, which is dived into a domain and an application package.
-The first contains the entity and repository while the latter is used for the application logic.
+The first contains the entity and repository, while the latter is used for the application logic.
 The Controller, Application Service and DTO can be found here.
 
 ## DTOs
 
-To encapsulate domain objects only DTOs are passed to the outside.
+To encapsulate domain objects, only DTOs are passed to the outside.
 
 ### Mapping
 
-The mapping between the domain object and the DTOs is implemented with the [MapStruct](https://mapstruct.org/)
-Mapping Framework in a corresponding `Mapper` class in the application package.
+The mapping between a domain object and the corresponding DTO is implemented with the
+[MapStruct](https://mapstruct.org/) mapping framework in a `*Mapper` class of the application package
+(see e.g. [`SeasonMapper`](./src/main/java/api/season/application/SeasonMapper.java)).
+
+<!-- The mapping between a domain object and the corresponding DTO is implemented with the [MapStruct](https://mapstruct.org/)
+mapping framework in the `<domain-object>Mapper` class of the application package. -->
+
+<!-- The mapping between the domain object and the DTO is implemented with the [MapStruct](https://mapstruct.org/)
+mapping framework in the `Mapper` class of the application package. -->
 
 <!--The Mapping between the domain object and DTOs is realized with the
 [MapStruct](https://mapstruct.org/) Mapping Framework. This resolves in
@@ -84,13 +98,13 @@ a Mapper class in the application package for each entity.-->
 
 DTOs passed with a request are validated with
 [Spring's Bean Validation](https://docs.spring.io/spring-framework/reference/core/validation/beanvalidation.html).
-Since the validation constraints are not always the same for create and update operations, the validation groups
+As the validation constraints are not always the same for create and update operations, the validation groups
 [`OnCreate`](./src/main/java/api/validation/OnCreate.java) and
 [`OnUpdate`](./src/main/java/api/validation/OnUpdate.java) are used to
 specify when a constraint should apply, such as in the
 [`DriverInfoDTO`](./src/main/java/api/driverofrace/application/DriverInfoDTO.java).
 
-More information about validation with spring can be found in
+More information about validation with Spring can be found in
 [this](https://reflectoring.io/bean-validation-with-spring-boot/) blog post.
 
 ## Exception Handling
@@ -98,8 +112,10 @@ More information about validation with spring can be found in
 Every exception that is thrown is caught by the
 [`ApiExceptionHandler`](./src/main/java/api/exception/ApiExceptionHandler.java)
 , which creates and returns a corresponding
-[`ApiExceptionInfo`](./src/main/java/api/exception/ApiExceptionHandler.java)
+[`ApiExceptionInfo`](./src/main/java/api/exception/ApiExceptionInfo.java)
 from the caught exception.
+
+### Base Exception
 
 [`ApiException`](./src/main/java/api/exception/ApiException.java)
 acts as abstract base exception that is extended by all project specific
@@ -108,6 +124,9 @@ exceptions.
 ## Query Parameters / Paging and Sorting
 
 Paging is used to reduce network traffic if only a chunk of data is needed.
+General information about Paging with Spring can be found in these blog posts on
+[Reflectoring](https://reflectoring.io/spring-boot-paging/) and
+[HowToDoInJava](https://howtodoinjava.com/spring-data/pagination-sorting-example/).
 
 <!-- The paging and sorting parameters described in the API documentation are bundled in a Pageable object, which is
 therefore a parameter in all controller methods that return a collection. Another parameter that these controller
@@ -121,10 +140,11 @@ methods have is the `parameters` parameter, which is an instance of
 
 <!-- #### SortPropertyMapper -->
 
-The sort query parameter can be used to sort entities by their properties. If the sort property does not exist in the
-entity a `PropertyReferenceException` is thrown. Therefore, properties that are named differently in the entity and the
-corresponding DTO must be mapped to each other. <br>
-The mapping logic is implemented in the
+The `sort` query parameter can be used to sort entities by their properties.
+As a [`PropertyReferenceException`](https://docs.spring.io/spring-data/data-commons/docs/current/api/org/springframework/data/mapping/PropertyReferenceException.html)
+is thrown, if a given sort property does not exist in the entity, properties that are named differently in the entity
+and the corresponding DTO must be mapped to each other. <br>
+This mapping is implemented in the
 [`SortPropertyMapper`](./src/main/java/api/queryparameter/sort/SortPropertyMapper.java) interface.
 It defines a `getSortProperties` and a `map` function. <br> The first returns a map of the related sort properties,
 where the keys are the property names in the DTO and the values are the corresponding property names in the entity.
@@ -133,28 +153,35 @@ The concrete map is defined in the `SortPropertyMapper` implementation for the c
 The latter uses the map to create a valid `Sort` object: For each sort property of the given `Sort` object is checked
 whether it is a key in the `sortProperties` map.
 If this is the case, the sort property is replaced by the corresponding property name of the entity.
-If not it is assumed that the property has the same name in the entity and the DTO, and it is checked whether
+If not, it is assumed that the property has the same name in the entity and the DTO, and it is checked whether
 the sort property is contained in the `properties` list
-(cf. e.g [`SeasonDTO`](./src/main/java/api/season/application/SeasonDTO.java)) of the DTO.
+(cf. e.g [`SeasonDTO`](./src/main/java/api/season/application/SeasonDTO.java)) of the DTO and whether it is not an ID,
+as there is no point in sorting objects by their ID.
 If true, the property is left as it is. Otherwise, an
 [`ApiInvalidSortPropertyException`](./src/main/java/api/exception/ApiInvalidSortPropertyException.java) is thrown.
+
+<!-- If the sort property does not exist in the
+entity, a
+[`PropertyReferenceException`](https://docs.spring.io/spring-data/data-commons/docs/current/api/org/springframework/data/mapping/PropertyReferenceException.html)
+is thrown. Therefore, properties that are named differently in the entity and the
+corresponding DTO must be mapped to each other. <br> -->
 
 <!-- #### SortPropertyHandler -->
 
 Since the `Sort` object is encapsulated inside a `Pageable` object, the `map` function is called
 from the `handleSortProperties` functions of the
-[`SortPropertyHandler`](./src/main/java/api/queryparameter/sort/SortPropertyHandler.java) which then create a new
+[`SortPropertyHandler`](./src/main/java/api/queryparameter/sort/SortPropertyHandler.java), which create a new
 `Pageable` instance that can be passed to repository methods.
 
 <!-- ### Query Parameters -->
 
 ### Query Parameter Validation
 
-Spring ignores invalid query parameters by default. For example the following GET Request
+Spring ignores invalid query parameters by default. For example, the GET Request
 `/seasons?foo=bar` would be interpreted as GET `/seasons`. As this behaviour is not intuitive, the
 `checkIfParametersAreValid` method of the
 [`QueryParameter`](./src/main/java/api/queryparameter/QueryParameter.java) interface checks if given query parameters
-are contained in the `queryParameters` set defined for the corresponding entity and, if not,
+are contained in the `queryParameters` set, defined for the corresponding entity and, if not,
 throws an [`ApiInvalidQueryParameterException`](./src/main/java/api/exception/ApiInvalidQueryParameterException.java).
 
 <!-- ### Handling Query Parameters and Sort Properties -->
@@ -288,21 +315,27 @@ and `content` of the page are returned in form of an ResponsePage.
 Instead of passing an instance of Spring's Page class as response body the more lightweight
 ResponsePage is used.-->
 
-For more general information about Paging with Spring, take a look at these blog posts on
+<!-- For more general information about Paging with Spring, take a look at these blog posts on
 [Reflectoring](https://reflectoring.io/spring-boot-paging/) and
-[HowToDoInJava](https://howtodoinjava.com/spring-data/pagination-sorting-example/).
+[HowToDoInJava](https://howtodoinjava.com/spring-data/pagination-sorting-example/). -->
 
 ## Environment Variables
 
 ### `SPRING_PROFILES_ACTIVE`
 
 Specifies the Spring Profile. Available options are `prod` and `dev`.
-Depending on which profile is used, the configurations defined in
+Depending on which profile is used, either the configurations defined in
+[`application-prod.yml`](./src/main/resources/application-prod.yml) or
+[`application-dev.yml`](./src/main/resources/application-dev.yml) take effect.
+
+<!-- Depending on which profile is used, the configurations defined in
 [`application-prod.yml`](./src/main/resources/application-prod.yml) or
 [`application-dev.yml`](./src/main/resources/application-dev.yml) are used.
+ -->
+<!-- are applied -->
 
-If set to `dev`, starting the application will also start the postgres service specified
-in the [`compose-dev.yml`](./compose-dev.yml) via the
+If set to `dev`, starting the application will also start the postgres service, specified
+in the [`compose-dev.yml`](./compose-dev.yml), via the
 [Spring Docker Compose Support](https://spring.io/blog/2023/06/21/docker-compose-support-in-spring-boot-3-1).
 
 ### `DEFAULT_PAGE_SIZE`
@@ -327,18 +360,20 @@ Specifies the PostgreSQL URL.
 
 #### `DB_USERNAME`
 
+Specifies the PostgreSQL user.
+
 #### `DB_PASSWORD`
 
 Specifies the password for the specified `DB_USERNAME`.
 
 ## Docker
 
-The [`Dockerfile`](./Dockerfile) used to build the image of the API available on
-[DockerHub](https://hub.docker.com/repository/docker/marcheiden/formula-ap1) is based on suggestions of
+The [`Dockerfile`](./Dockerfile), used to build the image of the API available on
+[DockerHub](https://hub.docker.com/repository/docker/marcheiden/formula-ap1), is based on suggestions of
 [this](https://spring.io/guides/topicals/spring-boot-docker/) Spring Guide. It makes use of
 [Multi-stage builds](https://docs.docker.com/build/building/multi-stage/) and JAR layers to
-speed up subsequent builds. The Alpine version of the
-[Eclipse Temurin JRE image](https://hub.docker.com/_/eclipse-temurin) is used as base image.
+speed up subsequent builds. 
+The [Eclipse Temurin JRE image](https://hub.docker.com/_/eclipse-temurin) is used as base image.
 
 <!-- The image is based on the Alpine version of the
 [Eclipse Temurin JRE image](https://hub.docker.com/_/eclipse-temurin). -->
@@ -363,17 +398,46 @@ speed up subsequent builds. -->
 
 ### Build Image
 
-To build a container image from the Dockerfile run:
+To build a container image from the Dockerfile, run:
 
 ```shell
 > docker build -t <imageName>:<imageTag> --pull [--no-cache] .
 ```
 
+#### Multi-platform Images
+
+Multi-platform images can be built with builder instances whose driver type is `docker-container`.
+This command creates a builder with the name `multi-platform-builder`:
+
+<!-- To concurrently build multi-platform images and push them to the registry, a builder instance with the driver type
+`docker-container` is needed. The following command creates one w: -->
+
+```shell
+> docker buildx create --driver docker-container --name multi-platform-builder
+```
+
+To use the created builder to build an `amd64` and `arm64` linux image, execute:
+
+```shell
+> docker buildx --builder multi-platform-builder build \
+  --push \
+  -t <imageName>:<imageTag> \
+  --platform linux/amd64,linux/arm64 \
+  --pull \
+  [--no-cache] .
+```
+
+**Notice:** The `--push` option will try to push the built images to DockerHub. To push them to a local registry, take
+a look at [this](https://uninterrupted.tech/blog/creating-docker-images-that-can-run-on-different-platforms-including-raspberry-pi/)
+blog post. Unfortunately, this seems to be the only easy way to extract the built images, as Docker currently does
+not support loading of multi-platform images in a stable way and therefore the `--load` option does not work
+(cf. [GitHub Issue](https://github.com/docker/buildx/issues/59)).
+
 ### Environment Variables
 
 See [Environment Variables](#environment-variables).
 
-**Notice:** Set `SPRING_PROFILES_ACTIVE` to `prod` as `dev` is meant to be used during local development only
+**Notice:** Set `SPRING_PROFILES_ACTIVE` to `prod`, as `dev` is meant to be used for local development only
 and does not work when running the application via Docker with the provided image.
 
 <!-- **Notice:** Set `SPRING_PROFILES_ACTIVE` to `prod` as `dev` is meant to be used during local development only
@@ -391,7 +455,7 @@ accordingly, execute:
 ```
 
 To check whether all files comply with the format, as done by the
-[Spotless check workflow](../.github/workflows/spotless-check.yml), run:
+[`Spotless check`](../.github/workflows/spotless-check.yml) workflow, run:
 
 ```shell
 > ./gradlew spotlessJavaCheck

@@ -11,14 +11,14 @@ info:
     src="https://img.shields.io/badge/GitHub-1b1b1b?style=for-the-badge&logo=github">
     ](https://github.com/MarcHeiden/formula-ap1)
 
-    > **The API is not ready for production yet.**
+    **The API is not ready for production yet.**
 
     formula-ap1 is a REST API that provides data about the formula one racing series.
 
-    **Notice:** If you want to try out the API via Swagger UI, make sure to not load the page over HTTPS as 
-    the API is served over HTTP which leads to a
-    [mixed content](https://developer.mozilla.org/en-US/docs/Web/Security/Mixed_content) error.
-    So just use HTTP and everything will work.
+    **Notice:** If you want to try out the API via Swagger UI, make sure to not load the page over HTTPS, as
+    the API is served over HTTP, which leads to a
+    [mixed content](https://developer.mozilla.org/en-US/docs/Web/Security/Mixed_content) error. 
+    Just use HTTP and everything will work.
 
     ## Paging and Sorting 
 
@@ -30,13 +30,13 @@ info:
 
     **Default value:** 25
 
-    **Notice:** maximum number is 100
+    **Notice:** The maximum number is 100.
 
     ### `pageNumber`
 
     Specifies the page number that should be returned.
 
-    **Notice:** first page has the number 0
+    **Notice:** The first page has the number 0.
 
     **Default value:** 0
 
@@ -44,33 +44,33 @@ info:
 
     Specifies by which properties to sort. <br>
     By default the sort order is ascending. This can be changed by adding `asc` for ascending or `desc` for
-    descending separated by a comma after the sort property.
+    descending, separated by a comma, after the sort property.
 
-    **Hint:** To sort by more than one property, simply add a new sort parameter to the query.
+    **Hint:** To sort by more than one property, add a new sort parameter to the query.
 
     ### Example
 
     GET `/drivers?pageSize=2&pageNumber=0&sort=firstName,asc`
 
-    will return the first page with a maximum of 2 drivers sorted by their first name in ascending order. <br>
+    returns the first page with a maximum of 2 drivers, sorted by their first name in ascending order. <br>
     An example response could look like this:
 
     ```json
     {
       "totalElements": 22,
       "totalPages": 11,
-      "pageNumber": 1,
+      "pageNumber": 0,
       "pageSize": 2,
       "content": [
         {
-          "driverId": "914d8841-f26e-4e50-9716-b8f024e78e94",
-          "firstName": "Charles",
-          "lastName": "Leclerc"
+          "driverId": "37653b4a-0483-4f26-81bc-97a591bd30b5",
+          "firstName": "Alexander",
+          "lastName": "Albon"
         },
         {
-          "driverId": "a79e616b-145e-4a54-8276-8cd84cba2f1e",
-          "firstName": "Daniel",
-          "lastName": "Ricciardo"
+          "driverId": "457ae447-0c95-44e0-829b-bfdcb2e7bf1c",
+          "firstName": "Carlos",
+          "lastName": "Sainz"
         }
       ]
     }
@@ -80,7 +80,7 @@ info:
 
     A client can send 7 requests per second as long as
     the number of requests that are currently processed for the client is less than or equal to 3.
-    If one of these limits is exceeded the API returns 429 Too Many Requests.
+    If one of these limits is exceeded the API returns `429 Too Many Requests`.
 
     ## FAQ
 
@@ -113,11 +113,10 @@ tags:
   - name: LeadingLaps
   - name: FastestPitStops
     description: |
-      **Notice**: At this time the duration of the fastest pit stop is the time that elapses between 
+      **Notice**: At this time, the duration of the fastest pit stop is the time that elapses between 
       entering and leaving the pit lane.
-      So, it does not match the duration of the tire change as measured by the 
+      Therefore, it does not match the duration of the tire change measured by the 
       [DHL Fastest Pit Stop Award](https://inmotion.dhl/en/formula-1/fastest-pit-stop-award).
-      The duration of the tire change might be added in the future.
   - name: Teams
   - name: Drivers
   - name: Engines
