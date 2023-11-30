@@ -15,7 +15,5 @@
 *.sln
 *.sw?
 
-assets/notizen.md
-assets/whiteboard.excalidraw
 .github/workflows/lint.yml
 ansible-generated/
