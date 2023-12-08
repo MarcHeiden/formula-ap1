@@ -26,7 +26,7 @@ Just use HTTP and everything will work.
 
 The API is built in Java with [Spring Boot](https://spring.io/projects/spring-boot) and
 [PostgreSQL](https://www.postgresql.org/). A web scraper, built with [TypeScript](https://www.typescriptlang.org/) and
-[NodeJs](https://nodejs.org/), is used to scrape the data with the [Crawlee library](https://crawlee.dev/) and send
+[Node.js](https://nodejs.org/), is used to scrape the data with the [Crawlee library](https://crawlee.dev/) and send
 it to the API by using the HTTP request library [got](https://github.com/sindresorhus/got).
 [Ansible](https://www.ansible.com/) is used to set up
 an Ubuntu server and deploy the API and the scraper via [Docker Compose](https://docs.docker.com/compose/).

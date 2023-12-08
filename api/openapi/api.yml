@@ -616,7 +616,8 @@ paths:
       summary: Create race result for a driver of a race
       description: |
         **Notice:** The driver must have a qualifying entry for the race. <br>
-        **Notice:** If dnf is undefined/set to null it is interpreted as if it is set to false.
+        **Notice:** Position can only be set if dnf is set to false. 
+        If dnf is undefined/set to null it is interpreted as if it is set to false.
       tags:
         - "Results"
         - "RaceController"
@@ -670,7 +671,8 @@ paths:
       x-internal: true
       summary: Update race result for a driver of a race
       description: |
-        **Notice:** If dnf is undefined/set to null it is interpreted as if it is set to false.
+        **Notice:** Position can only be set if dnf is set to false. 
+        If dnf is undefined/set to null it is interpreted as if it is set to false.
       tags:
         - "Results"
         - "RaceController"
@@ -1538,6 +1540,8 @@ paths:
       tags:
         - "TeamsOfSeasons"
         - "TeamOfSeasonController"
+      description: |
+        **Notice:** A team must have at least 2 drivers.
       requestBody:
         required: true
         content:
@@ -1609,7 +1613,7 @@ paths:
         500:
           $ref: "./components/responses.yml#/500"
     get:
-      summary: Get teamOfSeason / Not particularly needed
+      summary: Get teamOfSeason
       tags:
         - "TeamsOfSeasons"
         - "TeamOfSeasonController"
@@ -1684,7 +1688,7 @@ paths:
   #      500:
   #        $ref: "./components/responses.yml#/500"
   #  get:
-  #    summary: Get driverOfRace / Not particularly needed
+  #    summary: Get driverOfRace
   #    tags:
   #      - "DriversOfRaces"
   #      - "DriverOfRaceController"

@@ -1,6 +1,6 @@
 # Scraper
 
-The scraper is built with TypeScript and NodeJs.
+The scraper is built with TypeScript and Node.js.
 
 It runs in an infinite loop to scrape season and race data
 and pass it to the API (see [`main.ts`](./src/main.ts)). The race data
@@ -36,16 +36,18 @@ around the [winston logger library](https://github.com/winstonjs/winston). All l
 and a logfile, which is named `log<date>.txt` and located in the `./logs` directory. Every month a new
 logfile will be created. Logfiles older than 7 months are deleted.
 
-## Error Handling
-
-Errors are caught by the `uncaughtException` event listener (see [`main.ts`](./src/main.ts)) and handled by the
-[`ErrorHandler`](./src/error/ErrorHandler.ts). Before the process is exited with the exit code 1, the error is logged by
-the [`Logger`](./src/logger/Logger.ts).
+## Errors
 
 ### Base Error
 
 [`AppError`](./src/error/AppError.ts) acts as a general application error
 that is extended by all other app errors.
+
+### Error Handling
+
+Errors are caught by the `uncaughtException` event listener (see [`main.ts`](./src/main.ts)) and handled by the
+[`ErrorHandler`](./src/error/ErrorHandler.ts). Before the process is exited with the exit code 1, the error is logged by
+the [`Logger`](./src/logger/Logger.ts).
 
 ## Environment Variables
 

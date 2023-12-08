@@ -35,7 +35,32 @@ The following model represents the domain layer:
 
 <img alt="Domain Model" src="domain-model.png">
 
+### Explanation and Further Constraints
+
 VO stands for Value Object, which leads to an implementation as Embeddable in Spring.
+
+#### Race
+
+##### `Unique(Season, name)`
+
+There cannot be several races with the same name in one season.
+
+#### TeamOfSeason
+
+A team of a season must have at least 2 drivers.
+
+##### `Unique(Season, Team)`
+
+There cannot be multiple instances of TeamOfSeason for the same team of a season.
+
+#### DriverOfRace
+
+As a driver can be in multiple teams of a season, DriverOfRace instances also save the team for that a driver
+has driven in a race.
+
+##### `Unique(Race, Driver)`
+
+There cannot be multiple instances of DriverOfRace for the same driver of a race.
 
 ## Package Structure
 
@@ -61,18 +86,12 @@ As the validation constraints are not always the same for create and update oper
 [`OnCreate`](./src/main/java/api/validation/OnCreate.java) and
 [`OnUpdate`](./src/main/java/api/validation/OnUpdate.java) are used to
 specify when a constraint should apply, such as in the
-[`DriverInfoDTO`](./src/main/java/api/driverofrace/application/DriverInfoDTO.java).
+[`RaceDTO`](./src/main/java/api/race/application/RaceDTO.java).
 
 More information about validation with Spring can be found in
 [this](https://reflectoring.io/bean-validation-with-spring-boot/) blog post.
 
-## Exception Handling
-
-Every exception that is thrown is caught by the
-[`ApiExceptionHandler`](./src/main/java/api/exception/ApiExceptionHandler.java)
-, which creates and returns a corresponding
-[`ApiExceptionInfo`](./src/main/java/api/exception/ApiExceptionInfo.java)
-from the caught exception.
+## Exceptions
 
 ### Base Exception
 
@@ -80,10 +99,18 @@ from the caught exception.
 acts as abstract base exception that is extended by all project specific
 exceptions.
 
+### Exception Handling
+
+Every exception that is thrown is caught by the
+[`ApiExceptionHandler`](./src/main/java/api/exception/ApiExceptionHandler.java)
+, which creates and returns a corresponding
+[`ApiExceptionInfo`](./src/main/java/api/exception/ApiExceptionInfo.java)
+from the caught exception.
+
 ## Query Parameters / Paging and Sorting
 
 Paging is used to reduce network traffic if only a chunk of data is needed.
-General information about Paging with Spring can be found in these blog posts on
+General information about paging with Spring can be found in these blog posts on
 [Reflectoring](https://reflectoring.io/spring-boot-paging/) and
 [HowToDoInJava](https://howtodoinjava.com/spring-data/pagination-sorting-example/).
 
