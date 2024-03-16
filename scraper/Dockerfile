@@ -12,7 +12,7 @@ RUN npm run build
 # https://playwright.dev/docs/docker
 # https://mcr.microsoft.com/en-us/product/playwright/about
 # Playwright version must match version specified in package.json
-FROM mcr.microsoft.com/playwright:v1.39.0 as prod
+FROM mcr.microsoft.com/playwright:v1.42.1 as prod
 ARG appRootPath
 WORKDIR ${appRootPath}
 COPY package*.json crawlee.json ./
