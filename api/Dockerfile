@@ -23,7 +23,7 @@ USER app:app
 ARG appRootPath
 WORKDIR ${appRootPath}
 EXPOSE 8080
-ENTRYPOINT ["java", "org.springframework.boot.loader.JarLauncher"]
+ENTRYPOINT ["java", "org.springframework.boot.loader.launch.JarLauncher"]
 # Copy application artifacts from build
 ARG extractedJarLayers
 COPY --from=build ${extractedJarLayers}/dependencies/ ./
