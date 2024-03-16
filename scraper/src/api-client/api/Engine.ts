@@ -6,6 +6,10 @@ export class Engine extends ApiType {
 
     constructor(manufacturer: string) {
         super();
+        // Rename Honda RBPT to Honda
+        if (manufacturer === "Honda RBPT") {
+            manufacturer = "Honda";
+        }
         this.manufacturer = manufacturer;
     }
 }

@@ -8,16 +8,16 @@ export class Driver extends ApiType {
 
     private constructor(firstName: string, lastName: string) {
         super();
+        // Internationalize name of Nico Hülkenberg to Nico Hulkenberg
+        if (firstName === "Nico" && lastName === "Hülkenberg") {
+            lastName = "Hulkenberg";
+        }
+        // Remove suffix Jnr from Carlos Sainz' name
+        if (firstName === "Carlos" && lastName.includes("Sainz")) {
+            lastName = lastName.replace("Jnr", "").trim();
+        }
         this.firstName = firstName;
         this.lastName = lastName;
-        // Remove suffix Jnr from Carlos Sainz' name
-        if (this.firstName === "Carlos" && lastName.includes("Sainz")) {
-            this.lastName = lastName.replace("Jnr", "").trim();
-        }
-        // Internationalize name of Nico Hülkenberg to Nico Hulkenberg
-        if (this.firstName === "Nico" && lastName === "Hülkenberg") {
-            this.lastName = "Hulkenberg";
-        }
         // Correct wrong name for Zhou Guanyu
         if (firstName === "Guanyu" && lastName === "Zhou") {
             this.firstName = lastName;

@@ -161,7 +161,7 @@ export class Scraper {
                 }
                 const time = await page
                     .locator("h3 ~ div")
-                    .filter({ hasText: "Race" })
+                    .filter({ has: page.getByText("Race", { exact: true }) })
                     .locator("div")
                     .nth(1)
                     .textContent();
