@@ -6,10 +6,14 @@ export class Team extends ApiType {
 
     constructor(teamName: string) {
         super();
-        this.teamName = teamName;
-        // Use only Haas as team name for Haas F1 team
+        // Rename Haas F1 to Haas
         if (teamName === "Haas F1") {
-            this.teamName = "Haas";
+            teamName = "Haas";
         }
+        // Rename RB to Racing Bulls
+        if (teamName === "RB") {
+            teamName = "Racing Bulls";
+        }
+        this.teamName = teamName;
     }
 }
