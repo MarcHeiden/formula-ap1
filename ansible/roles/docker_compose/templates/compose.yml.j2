@@ -20,7 +20,7 @@ services:
       DB_PASSWORD: {{ docker_compose_postgres_password }}
 
   postgres:
-    image: "postgres:15-alpine"
+    image: "postgres:16-alpine"
     restart: unless-stopped
     environment:
       POSTGRES_DB: postgres
