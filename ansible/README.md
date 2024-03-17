@@ -18,7 +18,7 @@ To run the playbook from a world writable directory, use the
 script:
 
 ```shell
-> ./run_playbook_from_world_writeable_directory.sh setup.yml [--tags <tag1,tag2>]
+> ./run_playbook_from_world_writable_directory.sh setup.yml [--tags <tag1,tag2>]
 ```
 
 otherwise it can be executed with the `ansible-playbook` command:
