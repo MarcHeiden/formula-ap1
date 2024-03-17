@@ -1,5 +1,8 @@
 # Base config
 # Available options: https://docs.spring.io/spring-boot/docs/current/reference/html/application-properties.html
+server:
+  http2:
+    enabled: true
 spring:
   jpa:
     hibernate:
@@ -17,9 +20,6 @@ spring:
       # Needed for NoHandlerFoundException handling
       # https://stackoverflow.com/a/51050702
       add-mappings: false
-  mvc:
-    # Throw NoHandlerFoundException, the default Spring Not Found Exception.
-    throw-exception-if-no-handler-found: true
   jackson:
     # Do not include empty fields in json
     default-property-inclusion: non_empty
