@@ -58,7 +58,7 @@ services:
           cpus: "1.2"
 
   traefik:
-    image: traefik:v2.10
+    image: traefik:v2.11
     restart: unless-stopped
     command:
       - --configFile=/etc/traefik/traefik-static-config.yml
@@ -76,8 +76,12 @@ services:
       - type: volume
         source: traefik-logs
         target: /var/log/traefik
+      - type: volume
+        source: traefik-tls-certificates
+        target: /etc/traefik/acme
     ports:
       - "80:80"
+      - "443:443"
       {% if docker_compose_profile == "dev" %}
       # Traefik api
       - "8080:8080"
@@ -87,3 +91,4 @@ volumes:
   postgres-data:
   scraper-v0-logs:
   traefik-logs:
+  traefik-tls-certificates:

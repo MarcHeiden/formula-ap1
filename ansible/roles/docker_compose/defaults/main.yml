@@ -14,3 +14,5 @@ docker_compose_profile: prod
 docker_compose_postgres_password:
 # Host on which the API will listen
 docker_compose_api_host: api.localhost
+# Basic auth credentials for internal API access
+docker_compose_internal_api_basic_auth_credentials:
