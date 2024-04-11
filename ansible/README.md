@@ -112,19 +112,15 @@ and [`traefik-dynamic-config.yml.j2`](./roles/docker_compose/templates/traefik-d
 
 ###### Only Allow GET Requests
 
-As there is currently no authentication implemented, only GET requests, except to the `/teamsOfSeason` endpoint, are
+Only GET requests, except to the `/teamsOfSeason` endpoint, are
 excepted and forwarded to the API.
 
-###### Rate Limiting and Max Concurrent Connections
+###### Rate Limiting
 
 To prevent excessive use of the API, the
 [RateLimit middleware](https://doc.traefik.io/traefik/middlewares/http/ratelimit/) of Traefik is used.
 It implements the [Token Bucket Algorithm](https://www.krakend.io/docs/throttling/token-bucket/). The configuration
 allows a client/IP up to 7 requests/s. If the rate is exceeded, Traefik responds with `429 Too Many Requests`.
-
-In addition, the [InFlightReq middleware](https://doc.traefik.io/traefik/middlewares/http/inflightreq/) is used
-to allow a client to only have 3 concurrent connections at a time. Here too, Traefik responds with
-`429 Too Many Requests` if the rate is exceeded.
 
 ## Generate Compose Files for Development on the Local Machine
 

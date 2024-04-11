@@ -16,11 +16,7 @@ Therefore, I made the decision to collect the data myself via a web scraper and 
 
 ## Usage
 
-You will find the OpenAPI documentation at [formula-ap1.com](http://formula-ap1.com/). <br>
-**Notice:** If you want to try out the API via Swagger UI, make sure to not load the page over HTTPS, as
-the API is served over HTTP, which leads to a
-[mixed content](https://developer.mozilla.org/en-US/docs/Web/Security/Mixed_content) error.
-Just use HTTP and everything will work.
+You will find the OpenAPI documentation at [formula-ap1.com](https://formula-ap1.com/).
 
 ## How is it built?
 
