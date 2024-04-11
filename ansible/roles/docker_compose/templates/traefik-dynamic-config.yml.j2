@@ -1,32 +1,135 @@
+tls:
+  options:
+    default:
+      minVersion: VersionTLS13
+      curvePreferences:
+        - CurveP521
+        - CurveP384
+      # Require clients to send SNI TLS Extension in the TLS Handshake
+      # to prevent Traefik to serve the default cert
+      # See https://github.com/traefik/traefik/issues/5849#issuecomment-559166453
+      sniStrict: true
+
 http:
   routers:
-    formula-ap1-api-v0:
-      service: formula-ap1-api-v0
-      # Only allow get requests but not to /teamsOfSeasons
-      rule: >- 
+    publicApiV0:
+      entryPoints:
+        - "https"
+      service: apiV0
+      # Set higher priority to avoid conflict with internalApiV0 router
+      priority: 2
+      # Only allow GET requests but not to /teamsOfSeasons
+      rule: >-
         Host(`{{ docker_compose_api_host }}`) &&
         Method(`GET`) &&
         PathPrefix(`/v0`) &&
         !PathPrefix(`/v0/teamsOfSeasons`)
       middlewares:
-        - formula-ap1-api-v0-rate-limit-single
-        - formula-ap1-api-v0-max-connections-single-client
-        - formula-ap1-api-remove-version-prefix
-        - formula-ap1-api-cors
+        - publicApiSingleClientRateLimit
+        - removeVersionPrefix
+        - headers
+        - publicApiCorsHeaders
+
+    internalApiV0:
+      entryPoints:
+        - "https"
+      service: apiV0
+      priority: 1
+      rule: >-
+        Host(`{{ docker_compose_api_host }}`) &&
+        Method(`GET`,`POST`,`PATCH`) &&
+        PathPrefix(`/v0`)
+      middlewares:
+        - internalApiBasicAuth
+        - removeVersionPrefix
+        - headers
+        #- internalApiCorsHeaders
+
+    # Required if non-simple CORS requests are to be support, as OPTIONS requests do not include credentials
+    #internalApiV0Cors:
+    #  service: apiV0
+    #  rule: >-
+    #    Host(`{{ docker_compose_api_host }}`) &&
+    #    Method(`OPTIONS`) &&
+    #    PathPrefix(`/v0`)
+    #  middlewares:
+    #    - headers
+    #    - internalApiCorsHeaders
 
   middlewares:
-    formula-ap1-api-remove-version-prefix:
+    removeVersionPrefix:
       stripPrefixRegex:
         regex:
           - "\\/v(\\d)+"
 
-    # Allow CORS for all origins
-    formula-ap1-api-cors:
+    headers:
+      headers:
+        customResponseHeaders:
+          Content-Security-Policy: >-
+            default-src 'none';
+            frame-ancestors 'none';
+            base-uri 'none';
+            form-action 'none';
+            sandbox;
+          X-XSS-Protection: "0"
+          X-Frame-Options: "DENY"
+          Content-Type: "application/json"
+          X-Content-Type-Options: "nosniff"
+          Strict-Transport-Security: max-age=31536000;
+          Permissions-Policy: >-
+            accelerometer=(), ambient-light-sensor=(),
+            autoplay=(), battery=(), bluetooth=(), camera=(),
+            ch-ua=(), ch-ua-arch=(), ch-ua-bitness=(), ch-ua-full-version=(),
+            ch-ua-full-version-list=(), ch-ua-mobile=(), ch-ua-model=(),
+            ch-ua-platform=(), ch-ua-platform-version=(), ch-ua-wow64=(),
+            cross-origin-isolated=(), display-capture=(), encrypted-media=(),
+            execution-while-not-rendered=(),
+            execution-while-out-of-viewport=(),
+            fullscreen=(), geolocation=(), gyroscope=(),  hid=(),
+            idle-detection=(), keyboard-map=(), magnetometer=(),
+            microphone=(), midi=(), navigation-override=(), payment=(),
+            picture-in-picture=(), publickey-credentials-get=(),
+            screen-wake-lock=(), serial=(), sync-xhr=(), usb=(),
+            web-share=(), window-management=(), xr-spatial-tracking=(),
+            clipboard-read=(), clipboard-write=(), gamepad=(),
+            shared-autofill=(), speaker-selection=(), browsing-topics=(),
+            conversion-measurement=(), focus-without-user-activation=(),
+            join-ad-interest-group=(), local-fonts=(), run-ad-auction=(),
+            sync-script=(), trust-token-redemption=(), unload=(),
+            vertical-scroll=(), document-domain=(), window-placement=(),
+            attribution-reporting=(), identity-credentials-get=(),
+            otp-credentials=(), publickey-credentials-create=(),
+            storage-access=()
+          Referrer-Policy: "no-referrer"
+
+    publicApiCorsHeaders:
       headers:
         accessControlAllowOriginList:
           - "*"
 
-    formula-ap1-api-v0-rate-limit-single:
+    #internalApiCorsHeaders:
+    #  headers:
+    #    accessControlAllowOriginList:
+    #      - "https://example.com"
+    #    accessControlAllowMethods:
+    #      - "GET"
+    #      - "POST"
+    #      - "PATCH"
+    #    accessControlAllowHeaders:
+    #      - "Authorization"
+    #      - "Content-Type"
+    #    # See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Max-Age
+    #    accessControlMaxAge: 100
+
+    internalApiBasicAuth:
+      basicAuth:
+        realm: "formula-ap1"
+        users:
+          - "{{ docker_compose_internal_api_basic_auth_credentials }}"
+        # Remove Authorization Header before passing the request to the service
+        removeHeader: true
+
+    publicApiSingleClientRateLimit:
       # Uses Token Bucket Algorithm
       # Single client/IP can do 7 requests/s
       rateLimit:
@@ -34,7 +137,16 @@ http:
         period: 1s
         burst: 0
 
-    #formula-ap1-api-ban-clients:
+    #singleClientMaxConnections:
+    #  # ! Does not work like expected
+    #  # Single client/IP can have 3 open connections at a time
+    #  inFlightReq:
+    #    amount: 3
+    #    sourceCriterion:
+    #      ipStrategy:
+    #        depth: 1
+
+    #ban-clients:
     #  # Ban clients with more than 500 requests/h for 1h
     #  plugin:
     #    fail2ban:
@@ -48,23 +160,15 @@ http:
     #        bantime: 1h
     #        enabled: true # Enable plugin
 
-    #formula-ap1-api-max-connections:
+    #api-max-connections:
     #  # Server will handle 100 connections at a time
     #  inFlightReq:
     #    amount: 100
     #    sourceCriterion:
     #      requestHost: true
 
-    formula-ap1-api-v0-max-connections-single-client:
-      # Single client/IP can have 3 open connections at a time
-      inFlightReq:
-        amount: 3
-        sourceCriterion:
-          ipStrategy:
-            depth: 0
-
   services:
-    formula-ap1-api-v0:
+    apiV0:
       loadBalancer:
         servers:
           - url: "http://api-v0:8080"

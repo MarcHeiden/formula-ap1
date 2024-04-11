@@ -4,6 +4,30 @@ global:
 entryPoints:
   http:
     address: :80
+    http:
+      # Redirect HTTP to HTTPS
+      redirections:
+        entryPoint:
+          to: https
+          scheme: https
+
+  https:
+    address: :443
+    http:
+      # Default TLS config for all routers that listen to this entrypoint
+      # Certificates are issued for hosts in the host rule of the routers
+      tls:
+        certResolver: acme
+
+certificatesResolvers:
+  acme:
+    acme:
+      # caServer: https://acme-staging-v02.api.letsencrypt.org/directory # ACME Test Server
+      keyType: 'EC384'
+      # File in which the certificates are saved
+      storage: /etc/traefik/acme/acme.json
+      httpChallenge:
+        entryPoint: http
 
 # Use config file to define dynamic configuration
 providers:

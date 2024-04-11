@@ -44,3 +44,4 @@
       docker_compose_project_directory: "/home/{{ user }}/formula-ap1"
       docker_compose_postgres_password: "{{ vault_docker_compose_postgres_password }}"
       docker_compose_api_host: api.formula-ap1.com
+      docker_compose_internal_api_basic_auth_credentials: "{{ vault_docker_compose_internal_api_basic_auth_credentials }}"

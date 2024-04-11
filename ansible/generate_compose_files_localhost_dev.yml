@@ -8,3 +8,5 @@
       docker_compose_user: marc
       docker_compose_profile: dev
       docker_compose_postgres_password: postgres
+      # Credentials: api:api
+      docker_compose_internal_api_basic_auth_credentials: "api:$2y$12$yBPBnLFjPG8IN0PCOWEmL.jUUE.idJq1f2yOlDfXAZqbLErPQD9y2"
