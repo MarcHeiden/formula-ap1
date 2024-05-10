@@ -1,7 +1,6 @@
 # formula-ap1
 
 > **The API is not ready for production yet.** <br>
-> Due to university stuff I won't have time to contribute to the project for a few months 😢
 
 formula-ap1 is a REST API that provides data about the formula one racing series.
 
@@ -16,7 +15,7 @@ Therefore, I made the decision to collect the data myself via a web scraper and 
 
 ## Usage
 
-You will find the OpenAPI documentation at [formula-ap1.com](https://formula-ap1.com/).
+You will find the API documentation at [formula-ap1.com](https://formula-ap1.com/).
 
 ## How is it built?
 
