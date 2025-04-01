@@ -1,6 +1,6 @@
 # formula-ap1
 
-> **The API is not ready for production yet.** <br>
+> **Due to lack of time, the API will no longer be available and the project will be paused indefinitely.** <br>
 
 formula-ap1 is a REST API that provides data about the formula one racing series.
 
